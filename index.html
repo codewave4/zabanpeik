@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>زبان‌پیک — مترجم متن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #1C2541;
+    --paper: #E9E3D3;
+    --paper-light: #F2EEE2;
+    --postal-red: #B23A2E;
+    --sage: #6B7C5A;
+    --gold: #B8912F;
+    --line: rgba(28,37,65,0.18);
+    --dot: rgba(28,37,65,0.06);
+  }
+
+  html[data-theme="dark"]{
+    --ink: #EDE6D6;
+    --paper: #14192B;
+    --paper-light: #1C2541;
+    --postal-red: #D9584A;
+    --sage: #93A87D;
+    --gold: #D9B657;
+    --line: rgba(237,230,214,0.18);
+    --dot: rgba(237,230,214,0.06);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Vazirmatn','Inter',sans-serif;
+    min-height:100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  body{
+    background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .header-left{ display:flex; align-items:baseline; gap:10px; flex-wrap: wrap; }
+
+  .wordmark{
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 40px);
+    letter-spacing: 0.3px;
+  }
+  .wordmark span{ color: var(--postal-red); }
+
+  .tagline{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.65;
+  }
+
+  .header-right{ display:flex; align-items:center; gap:14px; }
+
+  .theme-toggle{
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper-light);
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background 0.2s ease, transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover{ transform: rotate(20deg); }
+  .theme-toggle svg{ width: 18px; height: 18px; stroke: var(--ink); fill: none; }
+  .theme-toggle .moon{ display:none; }
+  html[data-theme="dark"] .theme-toggle .sun{ display:none; }
+  html[data-theme="dark"] .theme-toggle .moon{ display:block; }
+
+  .envelope{
+    position:relative;
+    background: var(--paper-light);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    box-shadow: 6px 6px 0 var(--dot);
+  }
+
+  .panes{
+    display:grid;
+    grid-template-columns: 1fr 64px 1fr;
+    align-items: stretch;
+  }
+
+  @media (max-width: 720px){
+    .panes{ grid-template-columns: 1fr; }
+    .swap-col{ order: 2; flex-direction: row !important; padding: 6px 0 !important; }
+    .pane.from{ order: 1; }
+    .pane.to{ order: 3; }
+  }
+
+  .pane{
+    padding: 22px 22px 18px;
+    display:flex;
+    flex-direction: column;
+    min-height: 260px;
+  }
+
+  .address-label{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .address-label .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .to .address-label{ justify-content: space-between; }
+  .to-controls{ display:flex; align-items:center; gap: 8px; }
+
+  select{
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--ink);
+    font-family:'Vazirmatn', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    padding: 4px 18px 4px 2px;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position: left 4px center, left 9px center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+  select option{ background: var(--paper-light); color: var(--ink); }
+
+  select:focus-visible, textarea:focus-visible, button:focus-visible{
+    outline: 2px solid var(--postal-red);
+    outline-offset: 2px;
+  }
+
+  .copy-btn{
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .copy-btn:hover{ background: var(--dot); border-color: var(--ink); }
+  .copy-btn svg{ width: 13px; height: 13px; stroke: var(--ink); fill:none; }
+  .copy-btn.copied svg{ stroke: var(--sage); }
+
+  textarea{
+    flex:1;
+    resize: none;
+    border: none;
+    background: transparent;
+    font-family:'Vazirmatn', sans-serif;
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink);
+    min-height: 180px;
+  }
+  textarea::placeholder{ color: var(--line); }
+
+  .to textarea{ cursor: default; }
+
+  .weight{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    opacity: 0.5;
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .swap-col{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-right: 1px dashed var(--line);
+    border-left: 1px dashed var(--line);
+    position: relative;
+  }
+
+  .swap-btn{
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper-light);
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform 0.25s ease, background 0.2s ease;
+  }
+  .swap-btn:hover{ background: var(--paper); }
+  .swap-btn.spin{ transform: rotate(180deg); }
+  .swap-btn svg{ width: 20px; height: 20px; stroke: var(--ink); }
+
+  .divider-row{ border-top: 1.5px dashed var(--line); }
+
+  .action-row{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .translate-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--paper-light);
+    background: var(--postal-red);
+    border: none;
+    padding: 13px 26px;
+    border-radius: 3px;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  .translate-btn:hover{ filter: brightness(0.92); }
+  .translate-btn:active{ transform: translateY(1px); }
+  .translate-btn:disabled{ opacity: 0.55; cursor: default; }
+
+  .status{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.7;
+    min-height: 16px;
+  }
+  .status.error{ color: var(--postal-red); opacity: 1; }
+
+  .postmark{
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 92px;
+    height: 92px;
+    opacity: 0;
+    transform: rotate(-18deg) scale(1.4);
+    pointer-events: none;
+  }
+  .postmark.stamped{
+    transition: opacity 0.15s ease, transform 0.35s cubic-bezier(.2,1.4,.4,1);
+    opacity: 0.9;
+    transform: rotate(-14deg) scale(1);
+  }
+  .postmark svg{ width:100%; height:100%; }
+  .postmark .ring{ fill:none; stroke: var(--ink); stroke-width: 1.4; }
+  .postmark text{ font-family:'JetBrains Mono', monospace; fill: var(--ink); }
+
+  /* History / dispatch log */
+  .log-section{ margin-top: 34px; }
+
+  .log-header{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    border-bottom: 1.5px dashed var(--line);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+
+  .log-title{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+  }
+
+  .log-clear{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    opacity: 0.55;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .log-clear:hover{ opacity: 0.9; }
+
+  .log-list{ list-style: none; margin: 0; padding: 0; }
+
+  .log-empty{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    opacity: 0.5;
+    padding: 18px 4px;
+  }
+
+  .log-item{
+    display:grid;
+    grid-template-columns: 90px 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 4px;
+    border-bottom: 1px dotted var(--line);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .log-item:hover{ background: var(--dot); }
+
+  @media (max-width: 640px){
+    .log-item{ grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  .log-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    opacity: 0.55;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+  }
+  @media (max-width: 640px){ .log-meta{ text-align: right; direction: rtl; } }
+
+  .log-src, .log-tgt{
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .log-tgt{ color: var(--sage); }
+
+  footer{
+    margin-top: 30px;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .swap-btn, .postmark, .translate-btn, .theme-toggle{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-left">
+      <div>
+        <div class="wordmark">زبان<span>‌پیک</span></div>
+        <div class="tagline">پیام شما، رسیده به هر زبان</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="tagline" id="dateStamp"></div>
+      <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تاریک" aria-label="تغییر حالت روشن و تاریک">
+        <svg class="sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.5"/>
+          <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/>
+        </svg>
+        <svg class="moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="envelope">
+    <div class="postmark" id="postmark" aria-hidden="true">
+      <svg viewBox="0 0 100 100">
+        <circle class="ring" cx="50" cy="50" r="46"></circle>
+        <circle class="ring" cx="50" cy="50" r="40"></circle>
+        <path id="topArc" fill="none"/>
+        <text font-size="9" letter-spacing="1">
+          <textPath id="topArcText" href="#topArc" startOffset="50%" text-anchor="middle"></textPath>
+        </text>
+        <text x="50" y="56" font-size="15" font-weight="600" text-anchor="middle" id="pmCode">FA</text>
+        <text x="50" y="72" font-size="7" text-anchor="middle" id="pmWord">RESALIDE</text>
+      </svg>
+    </div>
+
+    <div class="panes">
+      <div class="pane from">
+        <div class="address-label">
+          <span class="eyebrow">فرستنده</span>
+          <select id="fromLang" aria-label="زبان مبدأ"></select>
+        </div>
+        <textarea id="sourceText" placeholder="متن خود را اینجا بنویسید…"></textarea>
+        <div class="weight" id="charCount">۰ نویسه</div>
+      </div>
+
+      <div class="swap-col">
+        <button class="swap-btn" id="swapBtn" title="جابه‌جایی زبان‌ها" aria-label="جابه‌جایی زبان‌ها">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 7h11l-3-3M17 17H6l3 3"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="pane to">
+        <div class="address-label">
+          <span class="eyebrow">گیرنده</span>
+          <div class="to-controls">
+            <button class="copy-btn" id="copyBtn" title="کپی متن ترجمه‌شده" aria-label="کپی متن ترجمه‌شده">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="8" width="12" height="12" rx="1.5"/>
+                <path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>
+              </svg>
+            </button>
+            <select id="toLang" aria-label="زبان مقصد"></select>
+          </div>
+        </div>
+        <textarea id="targetText" placeholder="ترجمه اینجا نمایش داده می‌شود…" readonly></textarea>
+        <div class="weight" id="matchInfo">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="divider-row action-row">
+      <button class="translate-btn" id="translateBtn">
+        <span id="btnLabel">مهر و ارسال</span>
+      </button>
+      <div class="status" id="statusMsg">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-header">
+      <div class="log-title">دفترچهٔ ارسال</div>
+      <button class="log-clear" id="clearLog">پاک کردن تاریخچه</button>
+    </div>
+    <ul class="log-list" id="logList"></ul>
+    <div class="log-empty" id="logEmpty">هنوز نامه‌ای ثبت نشده — اولین ترجمه‌تان اینجا نمایش داده می‌شود.</div>
+  </div>
+
+  <footer>
+    <span>سرویس ترجمه: MyMemory Translated.net</span>
+      <span>ساخته شده توسط abdolrahem.p</span>
+  </footer>
+
+</div>
+
+<script>
+  const LANGS = [
+    ["fa","فارسی"], ["en","English"], ["ar","العربية"], ["tr","Türkçe"],
+    ["fr","Français"], ["de","Deutsch"], ["es","Español"], ["it","Italiano"],
+    ["ru","Русский"], ["zh","中文"], ["ja","日本語"], ["ko","한국어"],
+    ["hi","हिन्दी"], ["ur","اردو"], ["pt","Português"], ["nl","Nederlands"]
+  ];
+  const LANG_NAMES = Object.fromEntries(LANGS);
+  const HISTORY_KEY = 'zabanpeik_history';
+  const THEME_KEY = 'zabanpeik_theme';
+  const MAX_HISTORY = 30;
+
+  const fromSel = document.getElementById('fromLang');
+  const toSel = document.getElementById('toLang');
+  const sourceText = document.getElementById('sourceText');
+  const targetText = document.getElementById('targetText');
+  const translateBtn = document.getElementById('translateBtn');
+  const btnLabel = document.getElementById('btnLabel');
+  const statusMsg = document.getElementById('statusMsg');
+  const charCount = document.getElementById('charCount');
+  const matchInfo = document.getElementById('matchInfo');
+  const swapBtn = document.getElementById('swapBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const postmark = document.getElementById('postmark');
+  const pmCode = document.getElementById('pmCode');
+  const topArc = document.getElementById('topArc');
+  const topArcText = document.getElementById('topArcText');
+  const dateStamp = document.getElementById('dateStamp');
+  const themeToggle = document.getElementById('themeToggle');
+  const logList = document.getElementById('logList');
+  const logEmpty = document.getElementById('logEmpty');
+  const clearLogBtn = document.getElementById('clearLog');
+
+  function populate(sel, def){
+    LANGS.forEach(([code, name])=>{
+      const opt = document.createElement('option');
+      opt.value = code; opt.textContent = name;
+      if(code === def) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+  populate(fromSel, 'fa');
+  populate(toSel, 'en');
+
+  topArc.setAttribute('d','M 14 50 A 36 36 0 0 1 86 50');
+
+  function toFarsiDigits(str){
+    const map = {'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};
+    return String(str).replace(/[0-9]/g, d=>map[d]);
+  }
+
+  function updateCharCount(){
+    charCount.textContent = toFarsiDigits(sourceText.value.length) + ' نویسه';
+  }
+  sourceText.addEventListener('input', updateCharCount);
+  updateCharCount();
+
+  function now(){
+    const d = new Date();
+    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short' }).toUpperCase();
+  }
+  dateStamp.textContent = now();
+
+  function stampPostmark(sourceCode){
+    pmCode.textContent = sourceCode.toUpperCase();
+    topArcText.textContent = 'ZABANPEIK · ' + now();
+    postmark.classList.remove('stamped');
+    void postmark.offsetWidth;
+    postmark.classList.add('stamped');
+  }
+
+  /* ---------- Theme ---------- */
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    try{ localStorage.setItem(THEME_KEY, theme); }catch(e){}
+  }
+  (function initTheme(){
+    let saved = null;
+    try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+    if(saved === 'dark' || saved === 'light'){
+      applyTheme(saved);
+    } else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+      applyTheme('dark');
+    }
+  })();
+  themeToggle.addEventListener('click', ()=>{
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- Swap ---------- */
+  swapBtn.addEventListener('click', ()=>{
+    swapBtn.classList.add('spin');
+    setTimeout(()=> swapBtn.classList.remove('spin'), 260);
+    const f = fromSel.value, t = toSel.value;
+    fromSel.value = t; toSel.value = f;
+    const srcVal = sourceText.value;
+    sourceText.value = targetText.value;
+    targetText.value = srcVal;
+    updateCharCount();
+  });
+
+  /* ---------- Copy ---------- */
+  copyBtn.addEventListener('click', async ()=>{
+    if(!targetText.value){ return; }
+    try{
+      await navigator.clipboard.writeText(targetText.value);
+    } catch(e){
+      targetText.select();
+      document.execCommand('copy');
+    }
+    copyBtn.classList.add('copied');
+    setTimeout(()=> copyBtn.classList.remove('copied'), 1200);
+  });
+
+  /* ---------- History ---------- */
+  function loadHistory(){
+    try{
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e){ return []; }
+  }
+  function saveHistory(items){
+    try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(items)); }catch(e){}
+  }
+  function addHistoryEntry(entry){
+    const items = loadHistory();
+    items.unshift(entry);
+    while(items.length > MAX_HISTORY) items.pop();
+    saveHistory(items);
+    renderHistory();
+  }
+  function renderHistory(){
+    const items = loadHistory();
+    logList.innerHTML = '';
+    logEmpty.style.display = items.length ? 'none' : 'block';
+    items.forEach((item, idx)=>{
+      const li = document.createElement('li');
+      li.className = 'log-item';
+      li.tabIndex = 0;
+      li.innerHTML =
+        '<div class="log-meta">' + item.time + '<br>' +
+          (LANG_NAMES[item.from] || item.from.toUpperCase()) + ' \u2192 ' + (LANG_NAMES[item.to] || item.to.toUpperCase()) +
+        '</div>' +
+        '<div class="log-src">' + escapeHtml(item.src) + '</div>' +
+        '<div class="log-tgt">' + escapeHtml(item.tgt) + '</div>';
+      li.addEventListener('click', ()=> restoreEntry(item));
+      li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') restoreEntry(item); });
+      logList.appendChild(li);
+    });
+  }
+  function restoreEntry(item){
+    fromSel.value = item.from;
+    toSel.value = item.to;
+    sourceText.value = item.src;
+    targetText.value = item.tgt;
+    updateCharCount();
+    matchInfo.textContent = '\u00A0';
+    statusMsg.textContent = 'از دفترچهٔ ارسال بازیابی شد.';
+    statusMsg.classList.remove('error');
+  }
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+  clearLogBtn.addEventListener('click', ()=>{
+    saveHistory([]);
+    renderHistory();
+  });
+  renderHistory();
+
+  /* ---------- Translate ---------- */
+  async function translate(){
+    const text = sourceText.value.trim();
+    if(!text){
+      statusMsg.textContent = 'ابتدا متنی بنویسید.';
+      statusMsg.classList.add('error');
+      return;
+    }
+    if(fromSel.value === toSel.value){
+      statusMsg.textContent = 'زبان مبدأ و مقصد باید متفاوت باشند.';
+      statusMsg.classList.add('error');
+      return;
+    }
+
+    translateBtn.disabled = true;
+    btnLabel.textContent = 'در حال ارسال…';
+    statusMsg.classList.remove('error');
+    statusMsg.textContent = 'در حال برقراری تماس با سرویس ترجمه…';
+    matchInfo.textContent = '\u00A0';
+
+    const langpair = fromSel.value + '|' + toSel.value;
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + langpair;
+
+    try{
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if(data && data.responseData && data.responseData.translatedText){
+        targetText.value = data.responseData.translatedText;
+        const quality = data.responseData.match;
+        if(quality !== undefined){
+          matchInfo.textContent = 'دقت تطابق تقریبی: ' + toFarsiDigits(Math.round(quality*100)) + '٪';
+        }
+        statusMsg.textContent = 'تحویل داده شد.';
+        stampPostmark(fromSel.value);
+
+        addHistoryEntry({
+          time: new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }),
+          from: fromSel.value,
+          to: toSel.value,
+          src: text,
+          tgt: data.responseData.translatedText
+        });
+      } else {
+        throw new Error((data && data.responseDetails) || 'پاسخ نامعتبر از سرویس دریافت شد.');
+      }
+    } catch(err){
+      statusMsg.classList.add('error');
+      statusMsg.textContent = 'مشکلی پیش آمد: ' + (err.message || 'اتصال برقرار نشد.') + ' — دوباره تلاش کنید.';
+    } finally {
+      translateBtn.disabled = false;
+      btnLabel.textContent = 'مهر و ارسال';
+    }
+  }
+
+  translateBtn.addEventListener('click', translate);
+  sourceText.addEventListener('keydown', (e)=>{
+    if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ translate(); }
+  });
+</script>
+
+</body>
+</html>
