@@ -382,6 +382,7 @@
   @media (prefers-reduced-motion: reduce){
     .swap-btn, .postmark, .translate-btn, .theme-toggle{ transition: none !important; }
   }
+
 </style>
 </head>
 <body>
@@ -427,7 +428,16 @@
       <div class="pane from">
         <div class="address-label">
           <span class="eyebrow">فرستنده</span>
-          <select id="fromLang" aria-label="زبان مبدأ"></select>
+          <div class="to-controls">
+            <button class="copy-btn" id="speakSourceBtn" title="شنیدن تلفظ متن مبدأ" aria-label="شنیدن تلفظ متن مبدأ">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9v6h3.5l4.5 3.5V5.5L7.5 9H4z"/>
+                <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+                <path d="M17.8 6a8.5 8.5 0 0 1 0 12"/>
+              </svg>
+            </button>
+            <select id="fromLang" aria-label="زبان مبدأ"></select>
+          </div>
         </div>
         <textarea id="sourceText" placeholder="متن خود را اینجا بنویسید…"></textarea>
         <div class="weight" id="charCount">۰ نویسه</div>
@@ -445,6 +455,13 @@
         <div class="address-label">
           <span class="eyebrow">گیرنده</span>
           <div class="to-controls">
+            <button class="copy-btn" id="speakTargetBtn" title="شنیدن تلفظ متن ترجمه‌شده" aria-label="شنیدن تلفظ متن ترجمه‌شده">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9v6h3.5l4.5 3.5V5.5L7.5 9H4z"/>
+                <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+                <path d="M17.8 6a8.5 8.5 0 0 1 0 12"/>
+              </svg>
+            </button>
             <button class="copy-btn" id="copyBtn" title="کپی متن ترجمه‌شده" aria-label="کپی متن ترجمه‌شده">
               <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="8" y="8" width="12" height="12" rx="1.5"/>
@@ -466,6 +483,7 @@
       <div class="status" id="statusMsg">&nbsp;</div>
     </div>
   </div>
+
 
   <div class="log-section">
     <div class="log-header">
@@ -490,6 +508,14 @@
     ["ru","Русский"], ["zh","中文"], ["ja","日本語"], ["ko","한국어"],
     ["hi","हिन्दी"], ["ur","اردو"], ["pt","Português"], ["nl","Nederlands"]
   ];
+  const FLAGS = {
+    fa:'🇮🇷', en:'🇺🇸', ar:'🇸🇦', tr:'🇹🇷', fr:'🇫🇷', de:'🇩🇪', es:'🇪🇸', it:'🇮🇹',
+    ru:'🇷🇺', zh:'🇨🇳', ja:'🇯🇵', ko:'🇰🇷', hi:'🇮🇳', ur:'🇵🇰', pt:'🇵🇹', nl:'🇳🇱'
+  };
+  const TTS_LOCALE = {
+    fa:'fa-IR', en:'en-US', ar:'ar-SA', tr:'tr-TR', fr:'fr-FR', de:'de-DE', es:'es-ES', it:'it-IT',
+    ru:'ru-RU', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', hi:'hi-IN', ur:'ur-PK', pt:'pt-PT', nl:'nl-NL'
+  };
   const LANG_NAMES = Object.fromEntries(LANGS);
   const HISTORY_KEY = 'zabanpeik_history';
   const THEME_KEY = 'zabanpeik_theme';
@@ -506,6 +532,8 @@
   const matchInfo = document.getElementById('matchInfo');
   const swapBtn = document.getElementById('swapBtn');
   const copyBtn = document.getElementById('copyBtn');
+  const speakSourceBtn = document.getElementById('speakSourceBtn');
+  const speakTargetBtn = document.getElementById('speakTargetBtn');
   const postmark = document.getElementById('postmark');
   const pmCode = document.getElementById('pmCode');
   const topArc = document.getElementById('topArc');
@@ -516,15 +544,23 @@
   const logEmpty = document.getElementById('logEmpty');
   const clearLogBtn = document.getElementById('clearLog');
 
-  function populate(sel, def){
+  let lastDetectedFrom = null;
+
+  function populate(sel, def, includeAuto){
+    if(includeAuto){
+      const autoOpt = document.createElement('option');
+      autoOpt.value = 'auto';
+      autoOpt.textContent = '🌐 تشخیص خودکار';
+      sel.appendChild(autoOpt);
+    }
     LANGS.forEach(([code, name])=>{
       const opt = document.createElement('option');
-      opt.value = code; opt.textContent = name;
+      opt.value = code; opt.textContent = (FLAGS[code] || '') + ' ' + name;
       if(code === def) opt.selected = true;
       sel.appendChild(opt);
     });
   }
-  populate(fromSel, 'fa');
+  populate(fromSel, 'fa', true);
   populate(toSel, 'en');
 
   topArc.setAttribute('d','M 14 50 A 36 36 0 0 1 86 50');
@@ -577,7 +613,8 @@
   swapBtn.addEventListener('click', ()=>{
     swapBtn.classList.add('spin');
     setTimeout(()=> swapBtn.classList.remove('spin'), 260);
-    const f = fromSel.value, t = toSel.value;
+    const f = fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value;
+    const t = toSel.value;
     fromSel.value = t; toSel.value = f;
     const srcVal = sourceText.value;
     sourceText.value = targetText.value;
@@ -596,6 +633,64 @@
     }
     copyBtn.classList.add('copied');
     setTimeout(()=> copyBtn.classList.remove('copied'), 1200);
+  });
+
+  /* ---------- Language detection (lightweight heuristic) ---------- */
+  function detectLanguage(text){
+    const t = text.trim();
+    if(!t) return 'en';
+
+    if(/[\u3040-\u30ff]/.test(t)) return 'ja';
+    if(/[\uac00-\ud7af]/.test(t)) return 'ko';
+    if(/[\u4e00-\u9fff]/.test(t)) return 'zh';
+    if(/[\u0600-\u06FF\u0750-\u077F]/.test(t)){
+      if(/[ٹڈڑے]/.test(t)) return 'ur';
+      if(/[پچژگ]/.test(t)) return 'fa';
+      return 'ar';
+    }
+    if(/[\u0900-\u097F]/.test(t)) return 'hi';
+    if(/[\u0400-\u04FF]/.test(t)) return 'ru';
+
+    const lower = ' ' + t.toLowerCase() + ' ';
+    const stopwords = {
+      en: [' the ',' and ',' is ',' you ',' to ',' of ',' are '],
+      fr: [' le ',' la ',' et ',' les ',' des ',' est ',' une '],
+      de: [' der ',' die ',' und ',' das ',' ist ',' nicht ',' ein '],
+      es: [' el ',' la ',' y ',' los ',' es ',' que ',' una '],
+      it: [' il ',' la ',' e ',' che ',' di ',' non ',' una '],
+      pt: [' o ',' a ',' e ',' de ',' que ',' não ',' uma '],
+      nl: [' de ',' het ',' en ',' een ',' niet ',' van ',' is '],
+      tr: [' ve ',' bir ',' bu ',' için ',' değil ',' ile ',' mi ']
+    };
+    let best = 'en', bestScore = 0;
+    for(const [lang, words] of Object.entries(stopwords)){
+      const score = words.reduce((acc,w)=> acc + (lower.includes(w) ? 1 : 0), 0);
+      if(score > bestScore){ bestScore = score; best = lang; }
+    }
+    return best;
+  }
+
+  /* ---------- Text to speech ---------- */
+  function speak(text, langCode){
+    if(!('speechSynthesis' in window) || !text || !text.trim()) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = TTS_LOCALE[langCode] || 'en-US';
+    window.speechSynthesis.speak(u);
+  }
+
+  const ttsSupported = 'speechSynthesis' in window;
+  if(!ttsSupported){
+    speakSourceBtn.style.display = 'none';
+    speakTargetBtn.style.display = 'none';
+  }
+
+  speakSourceBtn.addEventListener('click', ()=>{
+    const code = fromSel.value === 'auto' ? (lastDetectedFrom || detectLanguage(sourceText.value)) : fromSel.value;
+    speak(sourceText.value, code);
+  });
+  speakTargetBtn.addEventListener('click', ()=>{
+    speak(targetText.value, toSel.value);
   });
 
   /* ---------- History ---------- */
@@ -663,7 +758,14 @@
       statusMsg.classList.add('error');
       return;
     }
-    if(fromSel.value === toSel.value){
+
+    let effectiveFrom = fromSel.value;
+    if(effectiveFrom === 'auto'){
+      effectiveFrom = detectLanguage(text);
+      lastDetectedFrom = effectiveFrom;
+    }
+
+    if(effectiveFrom === toSel.value){
       statusMsg.textContent = 'زبان مبدأ و مقصد باید متفاوت باشند.';
       statusMsg.classList.add('error');
       return;
@@ -672,10 +774,12 @@
     translateBtn.disabled = true;
     btnLabel.textContent = 'در حال ارسال…';
     statusMsg.classList.remove('error');
-    statusMsg.textContent = 'در حال برقراری تماس با سرویس ترجمه…';
+    statusMsg.textContent = fromSel.value === 'auto'
+      ? 'زبان تشخیص داده‌شده: ' + (LANG_NAMES[effectiveFrom] || effectiveFrom.toUpperCase()) + ' — در حال ارسال…'
+      : 'در حال برقراری تماس با سرویس ترجمه…';
     matchInfo.textContent = '\u00A0';
 
-    const langpair = fromSel.value + '|' + toSel.value;
+    const langpair = effectiveFrom + '|' + toSel.value;
     const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + langpair;
 
     try{
@@ -688,12 +792,14 @@
         if(quality !== undefined){
           matchInfo.textContent = 'دقت تطابق تقریبی: ' + toFarsiDigits(Math.round(quality*100)) + '٪';
         }
-        statusMsg.textContent = 'تحویل داده شد.';
-        stampPostmark(fromSel.value);
+        statusMsg.textContent = fromSel.value === 'auto'
+          ? 'تحویل داده شد. (زبان تشخیص داده‌شده: ' + (LANG_NAMES[effectiveFrom] || effectiveFrom.toUpperCase()) + ')'
+          : 'تحویل داده شد.';
+        stampPostmark(effectiveFrom);
 
         addHistoryEntry({
           time: new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }),
-          from: fromSel.value,
+          from: effectiveFrom,
           to: toSel.value,
           src: text,
           tgt: data.responseData.translatedText
@@ -714,6 +820,7 @@
   sourceText.addEventListener('keydown', (e)=>{
     if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ translate(); }
   });
+
 </script>
 
 </body>
