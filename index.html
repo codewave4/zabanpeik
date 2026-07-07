@@ -83,7 +83,9 @@
     opacity: 0.65;
   }
 
-  .header-right{ display:flex; align-items:center; gap:14px; }
+  .header-right{ display:flex; align-items:center; gap:22px; }
+  .icon-group{ display:flex; align-items:center; gap:10px; }
+  a.theme-toggle{ text-decoration:none; color: var(--ink); }
 
   .theme-toggle{
     width: 38px; height: 38px;
@@ -305,6 +307,40 @@
     opacity: 0.5;
   }
 
+  .explain-body{ font-size: 14.5px; line-height: 1.9; }
+  .explain-entry{ margin-bottom: 12px; }
+  .explain-entry:last-child{ margin-bottom: 0; }
+  .explain-pos{
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--postal-red);
+    border: 1px solid var(--postal-red);
+    border-radius: 10px;
+    padding: 1px 9px;
+    margin-inline-end: 8px;
+    direction: ltr;
+  }
+  .explain-defs{ margin: 6px 0 0; padding-inline-start: 20px; }
+  .explain-defs li{ margin-bottom: 8px; }
+  .explain-en{
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    opacity: 0.5;
+    margin-top: 2px;
+    direction: ltr;
+    text-align: left;
+  }
+  .explain-lang-note{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    opacity: 0.5;
+    margin-top: 10px;
+  }
+
   .translate-btn{
     font-family:'JetBrains Mono', monospace;
     font-weight: 500;
@@ -461,16 +497,28 @@
       </div>
     </div>
     <div class="header-right">
+      <div class="icon-group">
+        <a class="theme-toggle" id="telegramLink" href="https://t.me/DeepRed_Code" target="_blank" rel="noopener" title="تلگرام" aria-label="ورود به تلگرام">
+          <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-1.267 8.928-.157.933-.469 1.245-.769 1.276-.652.061-1.148-.43-1.78-.845-.99-.65-1.55-1.055-2.51-1.688-1.112-.734-.392-1.138.243-1.798.166-.173 3.045-2.793 3.1-3.032.007-.03.014-.14-.052-.198-.066-.058-.163-.038-.234-.023-.1.023-1.687 1.073-4.762 3.15-.451.309-.86.46-1.226.452-.404-.009-1.18-.228-1.756-.416-.708-.23-1.27-.352-1.222-.744.025-.204.306-.413.843-.628 3.3-1.437 5.503-2.384 6.61-2.841 3.148-1.302 3.803-1.53 4.23-1.537.094-.001.303.022.438.13.114.093.145.216.16.303.017.098.037.293.02.44z"/>
+          </svg>
+        </a>
+        <a class="theme-toggle" id="githubLink" href="https://github.com/codewave4" target="_blank" rel="noopener" title="گیت‌هاب" aria-label="ورود به گیت‌هاب">
+          <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.56-.01 2.81-.01 3.19 0 .31.21.66.79.55A10.51 10.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
+          </svg>
+        </a>
+        <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تاریک" aria-label="تغییر حالت روشن و تاریک">
+          <svg class="sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4.5"/>
+            <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/>
+          </svg>
+          <svg class="moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
+          </svg>
+        </button>
+      </div>
       <div class="tagline" id="dateStamp"></div>
-      <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تاریک" aria-label="تغییر حالت روشن و تاریک">
-        <svg class="sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="4.5"/>
-          <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/>
-        </svg>
-        <svg class="moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
-        </svg>
-      </button>
     </div>
   </header>
 
@@ -548,6 +596,9 @@
         <button class="alt-btn" id="altBtn" disabled title="فقط برای کلمات یا عبارات کوتاه">
           معانی مشابه
         </button>
+        <button class="alt-btn" id="explainBtn" disabled title="فقط برای کلمات یا عبارات کوتاه">
+          توضیح
+        </button>
       </div>
       <div class="status" id="statusMsg">&nbsp;</div>
     </div>
@@ -555,6 +606,11 @@
     <div class="alt-panel" id="altPanel">
       <div class="alt-title">معانی مشابه <span id="altLoading"></span></div>
       <div class="alt-chips" id="altChips"></div>
+    </div>
+
+    <div class="alt-panel" id="explainPanel">
+      <div class="alt-title">توضیح کوتاه <span id="explainLoading"></span></div>
+      <div class="explain-body" id="explainBody"></div>
     </div>
   </div>
 
@@ -577,17 +633,17 @@
 
 <script>
   const LANGS = [
-    ["fa","فارسی"], ["en","English"], ["ar","العربية"], ["tr","Türkçe"],
+    ["fa","فارسی"], ["en","English"], ["tr","Türkçe"],
     ["fr","Français"], ["de","Deutsch"], ["es","Español"], ["it","Italiano"],
     ["ru","Русский"], ["zh","中文"], ["ja","日本語"], ["ko","한국어"],
     ["hi","हिन्दी"], ["ur","اردو"], ["pt","Português"], ["nl","Nederlands"]
   ];
   const FLAGS = {
-    fa:'🇮🇷', en:'🇺🇸', ar:'🇸🇦', tr:'🇹🇷', fr:'🇫🇷', de:'🇩🇪', es:'🇪🇸', it:'🇮🇹',
+    fa:'🇮🇷', en:'🇺🇸', tr:'🇹🇷', fr:'🇫🇷', de:'🇩🇪', es:'🇪🇸', it:'🇮🇹',
     ru:'🇷🇺', zh:'🇨🇳', ja:'🇯🇵', ko:'🇰🇷', hi:'🇮🇳', ur:'🇵🇰', pt:'🇵🇹', nl:'🇳🇱'
   };
   const TTS_LOCALE = {
-    fa:'fa-IR', en:'en-US', ar:'ar-SA', tr:'tr-TR', fr:'fr-FR', de:'de-DE', es:'es-ES', it:'it-IT',
+    fa:'fa-IR', en:'en-US', tr:'tr-TR', fr:'fr-FR', de:'de-DE', es:'es-ES', it:'it-IT',
     ru:'ru-RU', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', hi:'hi-IN', ur:'ur-PK', pt:'pt-PT', nl:'nl-NL'
   };
   const LANG_NAMES = Object.fromEntries(LANGS);
@@ -621,6 +677,10 @@
   const altPanel = document.getElementById('altPanel');
   const altChips = document.getElementById('altChips');
   const altLoading = document.getElementById('altLoading');
+  const explainBtn = document.getElementById('explainBtn');
+  const explainPanel = document.getElementById('explainPanel');
+  const explainBody = document.getElementById('explainBody');
+  const explainLoading = document.getElementById('explainLoading');
 
   let lastDetectedFrom = null;
 
@@ -657,9 +717,13 @@
 
   function updateCharCount(){
     charCount.textContent = toFarsiDigits(sourceText.value.length) + ' نویسه';
-    altBtn.disabled = !isShortInput(sourceText.value);
+    const short = isShortInput(sourceText.value);
+    altBtn.disabled = !short;
     altBtn.title = altBtn.disabled ? 'فقط برای کلمات یا عبارات کوتاه (حداکثر ۳ کلمه)' : 'دیدن معانی و ترجمه‌های مشابه';
+    explainBtn.disabled = !short;
+    explainBtn.title = explainBtn.disabled ? 'فقط برای کلمات یا عبارات کوتاه (حداکثر ۳ کلمه)' : 'دیدن توضیح کوتاه دربارهٔ این کلمه';
     altPanel.classList.remove('visible');
+    explainPanel.classList.remove('visible');
   }
   sourceText.addEventListener('input', updateCharCount);
   updateCharCount();
@@ -733,8 +797,7 @@
     if(/[\u4e00-\u9fff]/.test(t)) return 'zh';
     if(/[\u0600-\u06FF\u0750-\u077F]/.test(t)){
       if(/[ٹڈڑے]/.test(t)) return 'ur';
-      if(/[پچژگ]/.test(t)) return 'fa';
-      return 'ar';
+      return 'fa';
     }
     if(/[\u0900-\u097F]/.test(t)) return 'hi';
     if(/[\u0400-\u04FF]/.test(t)) return 'ru';
@@ -977,6 +1040,111 @@
   }
 
   altBtn.addEventListener('click', showAlternatives);
+
+  /* ---------- Short explanation (word meaning, via Wiktionary) ---------- */
+  const POS_FA = {
+    noun: 'اسم', verb: 'فعل', adjective: 'صفت', adverb: 'قید',
+    pronoun: 'ضمیر', preposition: 'حرف‌اضافه', conjunction: 'حرف‌ربط',
+    interjection: 'صوت', article: 'حرف‌تعریف', numeral: 'عدد', proper_noun: 'اسم‌خاص'
+  };
+
+  function stripTags(html){
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    return (d.textContent || '').trim();
+  }
+
+  function cleanWordForLookup(text){
+    return text.trim().split(/\s+/)[0].replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+  }
+
+  async function translateSnippet(text, targetLang){
+    try{
+      const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|' + targetLang;
+      const res = await fetch(url);
+      const data = await res.json();
+      if(data && data.responseData && data.responseData.translatedText){
+        return data.responseData.translatedText;
+      }
+    } catch(e){}
+    return null;
+  }
+
+  async function explainWord(){
+    const rawWord = targetText.value.trim() || sourceText.value.trim();
+    if(!rawWord) return;
+    const word = cleanWordForLookup(rawWord);
+    if(!word) return;
+
+    const usedFromTarget = !!targetText.value.trim();
+    const primaryLang = usedFromTarget ? toSel.value : (fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value);
+    const fallbackLang = usedFromTarget ? (fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value) : toSel.value;
+    const candidateLangs = [primaryLang, fallbackLang, 'en'];
+
+    explainBtn.disabled = true;
+    explainLoading.textContent = '… در حال جست‌وجو';
+    explainPanel.classList.add('visible');
+    explainBody.innerHTML = '';
+
+    try{
+      const res = await fetch('https://en.wiktionary.org/api/rest_v1/page/definition/' + encodeURIComponent(word));
+      if(!res.ok) throw new Error('not-found');
+      const data = await res.json();
+
+      let matchedLang = candidateLangs.find(l => Array.isArray(data[l]) && data[l].length);
+      if(!matchedLang){
+        const anyKey = Object.keys(data)[0];
+        if(anyKey) matchedLang = anyKey;
+      }
+
+      if(!matchedLang || !Array.isArray(data[matchedLang]) || !data[matchedLang].length){
+        explainLoading.textContent = '';
+        explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه در واژه‌نامه پیدا نشد.</span>';
+        return;
+      }
+
+      explainLoading.textContent = '… در حال ترجمهٔ توضیح به فارسی';
+
+      const blocks = data[matchedLang].slice(0, 3);
+      let html = '';
+
+      for(const block of blocks){
+        const posFa = POS_FA[block.partOfSpeech] || block.partOfSpeech || '';
+        const rawDefs = (block.definitions || []).slice(0, 2).map(d => stripTags(d.definition)).filter(Boolean);
+        if(!rawDefs.length) continue;
+
+        const translated = await Promise.all(rawDefs.map(d => translateSnippet(d, 'fa')));
+
+        html += '<div class="explain-entry">';
+        if(posFa) html += '<span class="explain-pos">' + posFa + '</span>';
+        html += '<ul class="explain-defs">';
+        rawDefs.forEach((d, i)=>{
+          const fa = translated[i];
+          html += '<li>' + (fa ? fa.replace(/</g,'&lt;') : d.replace(/</g,'&lt;'));
+          if(fa) html += '<span class="explain-en">' + d.replace(/</g,'&lt;') + '</span>';
+          html += '</li>';
+        });
+        html += '</ul></div>';
+      }
+
+      explainLoading.textContent = '';
+
+      if(!html){
+        explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه در واژه‌نامه پیدا نشد.</span>';
+        return;
+      }
+
+      html += '<div class="explain-lang-note">منبع: Wiktionary، ترجمه با MyMemory (' + word + ')</div>';
+      explainBody.innerHTML = html;
+    } catch(err){
+      explainLoading.textContent = '';
+      explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه پیدا نشد — معمولاً این واژه‌نامه فقط کلمات رایج را پوشش می‌دهد.</span>';
+    } finally {
+      explainBtn.disabled = !isShortInput(sourceText.value);
+    }
+  }
+
+  explainBtn.addEventListener('click', explainWord);
 </script>
 
 </body>
