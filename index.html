@@ -241,6 +241,70 @@
     gap: 14px;
   }
 
+  .action-buttons{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .alt-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--line);
+    padding: 12px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  }
+  .alt-btn:hover:not(:disabled){ background: var(--dot); border-color: var(--ink); }
+  .alt-btn:disabled{ opacity: 0.4; cursor: not-allowed; }
+
+  .alt-panel{
+    display: none;
+    border-top: 1.5px dashed var(--line);
+    padding: 16px 22px 20px;
+  }
+  .alt-panel.visible{ display: block; }
+
+  .alt-title{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .alt-chips{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .alt-chip{
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 7px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .alt-chip:hover{ background: var(--dot); border-color: var(--postal-red); }
+
+  .alt-empty{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    opacity: 0.5;
+  }
+
   .translate-btn{
     font-family:'JetBrains Mono', monospace;
     font-weight: 500;
@@ -477,10 +541,20 @@
     </div>
 
     <div class="divider-row action-row">
-      <button class="translate-btn" id="translateBtn">
-        <span id="btnLabel">مهر و ارسال</span>
-      </button>
+      <div class="action-buttons">
+        <button class="translate-btn" id="translateBtn">
+          <span id="btnLabel">مهر و ارسال</span>
+        </button>
+        <button class="alt-btn" id="altBtn" disabled title="فقط برای کلمات یا عبارات کوتاه">
+          معانی مشابه
+        </button>
+      </div>
       <div class="status" id="statusMsg">&nbsp;</div>
+    </div>
+
+    <div class="alt-panel" id="altPanel">
+      <div class="alt-title">معانی مشابه <span id="altLoading"></span></div>
+      <div class="alt-chips" id="altChips"></div>
     </div>
   </div>
 
@@ -543,6 +617,10 @@
   const logList = document.getElementById('logList');
   const logEmpty = document.getElementById('logEmpty');
   const clearLogBtn = document.getElementById('clearLog');
+  const altBtn = document.getElementById('altBtn');
+  const altPanel = document.getElementById('altPanel');
+  const altChips = document.getElementById('altChips');
+  const altLoading = document.getElementById('altLoading');
 
   let lastDetectedFrom = null;
 
@@ -570,8 +648,18 @@
     return String(str).replace(/[0-9]/g, d=>map[d]);
   }
 
+  function isShortInput(text){
+    const trimmed = text.trim();
+    if(!trimmed) return false;
+    const words = trimmed.split(/\s+/).filter(Boolean);
+    return words.length <= 3 && trimmed.length <= 30;
+  }
+
   function updateCharCount(){
     charCount.textContent = toFarsiDigits(sourceText.value.length) + ' نویسه';
+    altBtn.disabled = !isShortInput(sourceText.value);
+    altBtn.title = altBtn.disabled ? 'فقط برای کلمات یا عبارات کوتاه (حداکثر ۳ کلمه)' : 'دیدن معانی و ترجمه‌های مشابه';
+    altPanel.classList.remove('visible');
   }
   sourceText.addEventListener('input', updateCharCount);
   updateCharCount();
@@ -821,6 +909,74 @@
     if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ translate(); }
   });
 
+  /* ---------- Similar meanings (for short words/phrases) ---------- */
+  async function showAlternatives(){
+    const text = sourceText.value.trim();
+    if(!isShortInput(text)) return;
+
+    let effectiveFrom = fromSel.value === 'auto' ? detectLanguage(text) : fromSel.value;
+    if(effectiveFrom === toSel.value) return;
+
+    altBtn.disabled = true;
+    altLoading.textContent = '… در حال جست‌وجو';
+    altPanel.classList.add('visible');
+    altChips.innerHTML = '';
+
+    const langpair = effectiveFrom + '|' + toSel.value;
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + langpair;
+
+    try{
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const seen = new Set();
+      const results = [];
+
+      if(data && data.responseData && data.responseData.translatedText){
+        const main = data.responseData.translatedText.trim();
+        seen.add(main.toLowerCase());
+        results.push(main);
+      }
+
+      if(Array.isArray(data.matches)){
+        const sorted = data.matches
+          .filter(m => m && m.translation)
+          .sort((a,b) => (b.match || 0) - (a.match || 0));
+        for(const m of sorted){
+          const candidate = m.translation.trim();
+          const key = candidate.toLowerCase();
+          if(!candidate || seen.has(key)) continue;
+          if(candidate.split(/\s+/).length > 4) continue;
+          seen.add(key);
+          results.push(candidate);
+          if(results.length >= 6) break;
+        }
+      }
+
+      altLoading.textContent = '';
+      if(results.length <= 1){
+        altChips.innerHTML = '<span class="alt-empty">معنای جایگزین دیگری در پایگاه ترجمه پیدا نشد.</span>';
+      } else {
+        results.forEach(r=>{
+          const chip = document.createElement('button');
+          chip.className = 'alt-chip';
+          chip.type = 'button';
+          chip.textContent = r;
+          chip.addEventListener('click', ()=>{
+            targetText.value = r;
+          });
+          altChips.appendChild(chip);
+        });
+      }
+    } catch(err){
+      altLoading.textContent = '';
+      altChips.innerHTML = '<span class="alt-empty">مشکلی در دریافت معانی مشابه پیش آمد.</span>';
+    } finally {
+      altBtn.disabled = !isShortInput(sourceText.value);
+    }
+  }
+
+  altBtn.addEventListener('click', showAlternatives);
 </script>
 
 </body>
