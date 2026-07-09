@@ -1,19 +1,24 @@
 # 🌍 ZabanPeik | زبان‌پیک
 
-> 🇬🇧 Fast, simple, and responsive online text translator.
->
-> 🇮🇷 مترجم آنلاین سریع، ساده و واکنش‌گرا.
+<p align="center">
+  <strong>Fast, Simple & Responsive Online Text Translator</strong><br>
+  <strong>مترجم آنلاین سریع، ساده و واکنش‌گرا</strong>
+</p>
 
 ---
 
 ## 🇬🇧 English
 
+### 📖 About
+
+ZabanPeik is a lightweight online text translator built with HTML. It provides fast translation between multiple languages with a clean interface and useful features like Text-to-Speech and Copy.
+
 ### ✨ Features
 
-- 🌐 Translate text between multiple languages
-- ⚡ Fast translation
+- 🌐 Translate between multiple languages
+- ⚡ Fast and lightweight
 - 📱 Responsive design
-- 🔊 Text-to-Speech (TTS)
+- 🔊 Text-to-Speech support
 - 📋 Copy translated text
 - 🌙 Dark mode
 - 🆓 Free to use
@@ -22,32 +27,38 @@
 
 https://codewave4.github.io/zabanpeik/
 
-### 🛠 Technologies
+### 🛠 Built With
 
-- HTML5
+- HTML
 - MyMemory Translation API
 
-### 📖 How to Use
+### 📸 Screenshots
 
-1. Select the source language.
-2. Type your text.
-3. Select the target language.
-4. Translation appears automatically.
-5. Copy or listen to the translated text.
+#### Home Page
 
-### 📸 Screenshot
+![Home](images/screenshot-1.jpg)
 
-![ZabanPeik](screenshot.jpg)
+#### Translation
+
+![Translation](images/screenshot-2.jpg)
+
+#### Mobile View
+
+![Mobile](images/screenshot-3.jpg)
 
 ---
 
 ## 🇮🇷 فارسی
 
+### 📖 درباره پروژه
+
+زبان‌پیک یک مترجم آنلاین سبک و سریع است که با HTML توسعه داده شده است. این پروژه امکان ترجمه متن بین زبان‌های مختلف را با رابط کاربری ساده و امکانات کاربردی فراهم می‌کند.
+
 ### ✨ امکانات
 
-- 🌐 ترجمه متن بین زبان‌های مختلف
-- ⚡ ترجمه سریع
-- 📱 طراحی واکنش‌گرا برای موبایل و دسکتاپ
+- 🌐 ترجمه بین زبان‌های مختلف
+- ⚡ سرعت بالا
+- 📱 طراحی واکنش‌گرا
 - 🔊 تبدیل متن به گفتار
 - 📋 کپی متن ترجمه‌شده
 - 🌙 حالت تیره
@@ -59,20 +70,42 @@ https://codewave4.github.io/zabanpeik/
 
 ### 🛠 فناوری‌های استفاده‌شده
 
-- HTML5
+- HTML
 - MyMemory Translation API
 
-### 📖 نحوه استفاده
+### 📸 تصاویر پروژه
 
-1. زبان مبدأ را انتخاب کنید.
-2. متن خود را وارد کنید.
-3. زبان مقصد را انتخاب کنید.
-4. ترجمه به‌صورت خودکار نمایش داده می‌شود.
-5. در صورت نیاز، متن را کپی یا پخش کنید.
+#### صفحه اصلی
 
-### 📸 تصویر پروژه
+![صفحه اصلی](images/screenshot-1.jpg)
 
-![زبان‌پیک](screenshot.jpg)
+#### ترجمه متن
+
+![ترجمه](images/screenshot-2.jpg)
+
+#### نمای موبایل
+
+![موبایل](images/screenshot-3.jpg)
 
 ---
 
+## 📂 Project Structure
+
+```
+zabanpeik/
+│
+├── index.html
+├── README.md
+├── LICENSE
+└── images/
+    ├── screenshot-1.jpg
+    ├── screenshot-2.jpg
+    └── screenshot-3.jpg
+```
+
+
+---
+
+## ⭐ Support
+
+If you like this project, please give it a ⭐ on GitHub.
