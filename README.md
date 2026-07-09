@@ -34,17 +34,11 @@ https://codewave4.github.io/zabanpeik/
 
 ### 📸 Screenshots
 
-#### Home Page
+![Screenshot 1](images/screenshot-1.jpg)
 
-![Home](images/screenshot-1.jpg)
+![Screenshot 2](images/screenshot-2.jpg)
 
-#### Translation
-
-![Translation](images/screenshot-2.jpg)
-
-#### Mobile View
-
-![Mobile](images/screenshot-3.jpg)
+![Screenshot 3](images/screenshot-3.jpg)
 
 ---
 
@@ -73,25 +67,11 @@ https://codewave4.github.io/zabanpeik/
 - HTML
 - MyMemory Translation API
 
-### 📸 تصاویر پروژه
-
-#### صفحه اصلی
-
-![صفحه اصلی](images/screenshot-1.jpg)
-
-#### ترجمه متن
-
-![ترجمه](images/screenshot-2.jpg)
-
-#### نمای موبایل
-
-![موبایل](images/screenshot-3.jpg)
-
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 zabanpeik/
 │
 ├── index.html
@@ -103,9 +83,10 @@ zabanpeik/
     └── screenshot-3.jpg
 ```
 
-
 ---
 
 ## ⭐ Support
 
-If you like this project, please give it a ⭐ on GitHub.
+If you like this project, please consider giving it a ⭐ on GitHub.
+
+
