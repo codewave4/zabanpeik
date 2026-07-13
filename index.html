@@ -1,1150 +1,1335 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" data-theme="light">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>زبان‌پیک — مترجم متن</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Translify — مترجم متن</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink: #1C2541;
-    --paper: #E9E3D3;
-    --paper-light: #F2EEE2;
-    --postal-red: #B23A2E;
-    --sage: #6B7C5A;
-    --gold: #B8912F;
-    --line: rgba(28,37,65,0.18);
-    --dot: rgba(28,37,65,0.06);
+    --bg: #0c1220;
+    --card: #141b2c;
+    --card-2: #1a2338;
+    --border: rgba(255,255,255,0.08);
+    --text: #eef1f6;
+    --text-dim: rgba(238,241,246,0.55);
+    --text-dim2: rgba(238,241,246,0.38);
+    --accent1: #2dd4bf;
+    --accent2: #3b82f6;
+    --accent-grad: linear-gradient(90deg, var(--accent1), var(--accent2));
+    --success: #22c55e;
+    --danger: #ef4444;
+    --star: #f5b942;
+    --radius: 16px;
   }
-
-  html[data-theme="dark"]{
-    --ink: #EDE6D6;
-    --paper: #14192B;
-    --paper-light: #1C2541;
-    --postal-red: #D9584A;
-    --sage: #93A87D;
-    --gold: #D9B657;
-    --line: rgba(237,230,214,0.18);
-    --dot: rgba(237,230,214,0.06);
+  html[data-theme="light"]{
+    --bg: #f3f5f9;
+    --card: #ffffff;
+    --card-2: #f1f3f8;
+    --border: rgba(15,20,30,0.08);
+    --text: #10131a;
+    --text-dim: rgba(16,19,26,0.55);
+    --text-dim2: rgba(16,19,26,0.38);
   }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{ margin:0; padding:0; background: var(--bg); color: var(--text); font-family:'Vazirmatn','Inter',sans-serif; }
+  body{ padding-bottom: 84px; min-height:100vh; transition: background .25s ease, color .25s ease; }
+  button, input, select, textarea{ font-family: inherit; color: inherit; }
+  a{ color: inherit; }
 
-  *{ box-sizing: border-box; }
+  .shell{ max-width: 560px; margin: 0 auto; padding: 0 16px; }
 
-  html,body{
-    margin:0; padding:0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Vazirmatn','Inter',sans-serif;
-    min-height:100vh;
-    transition: background 0.3s ease, color 0.3s ease;
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 0 14px; gap: 10px;
   }
-
-  body{
-    background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-
-  .wrap{
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-  }
-
-  header{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 18px;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-
-  .header-left{ display:flex; align-items:baseline; gap:10px; flex-wrap: wrap; }
-
-  .wordmark{
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
-    font-size: clamp(28px, 5vw, 40px);
-    letter-spacing: 0.3px;
-  }
-  .wordmark span{ color: var(--postal-red); }
-
-  .tagline{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-    opacity: 0.65;
-  }
-
-  .header-right{ display:flex; align-items:center; gap:22px; }
-  .icon-group{ display:flex; align-items:center; gap:10px; }
-  a.theme-toggle{ text-decoration:none; color: var(--ink); }
-
-  .theme-toggle{
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    border: 1.5px solid var(--ink);
-    background: var(--paper-light);
-    cursor: pointer;
+  .topbar-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .app-icon{
+    width:44px; height:44px; border-radius:13px; flex-shrink:0;
+    background: var(--accent-grad);
     display:flex; align-items:center; justify-content:center;
-    transition: background 0.2s ease, transform 0.3s ease;
-    flex-shrink: 0;
+    font-family:'Inter',sans-serif; font-weight:800; font-size:19px; color:#fff;
+    box-shadow: 0 4px 14px rgba(45,212,191,0.25);
   }
-  .theme-toggle:hover{ transform: rotate(20deg); }
-  .theme-toggle svg{ width: 18px; height: 18px; stroke: var(--ink); fill: none; }
-  .theme-toggle .moon{ display:none; }
-  html[data-theme="dark"] .theme-toggle .sun{ display:none; }
-  html[data-theme="dark"] .theme-toggle .moon{ display:block; }
-
-  .envelope{
-    position:relative;
-    background: var(--paper-light);
-    border: 1.5px solid var(--ink);
-    border-radius: 4px;
-    box-shadow: 6px 6px 0 var(--dot);
+  .topbar-titles{ min-width:0; }
+  .topbar-titles h1{ margin:0; font-size:19px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar-titles p{ margin:2px 0 0; font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar-actions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .icon-circle{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--border);
+    background: var(--card); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--text);
   }
+  .icon-circle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .icon-circle .moon{ display:none; }
+  html[data-theme="dark"] .icon-circle .sun{ display:none; }
+  html[data-theme="dark"] .icon-circle .moon{ display:flex; }
 
-  .panes{
-    display:grid;
-    grid-template-columns: 1fr 64px 1fr;
-    align-items: stretch;
+  /* ---------- Cards ---------- */
+  .card{ background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding:16px; margin-bottom:14px; }
+  .card-title{ font-size:14px; font-weight:700; margin:0 0 4px; }
+  .card-sub{ font-size:12px; color:var(--text-dim); margin:0 0 12px; }
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+
+  /* ---------- Pages ---------- */
+  .page{ display:none; }
+  .page.active{ display:block; animation: fadein .2s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  /* ---------- Translate: input card ---------- */
+  .input-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .input-head span{ font-size:13px; font-weight:600; color:var(--text-dim); }
+  .chip-btn{
+    display:flex; align-items:center; gap:6px;
+    background: rgba(45,212,191,0.12); color: var(--accent1);
+    border:none; border-radius:10px; padding:7px 12px; font-size:12.5px; font-weight:600; cursor:pointer;
   }
+  .chip-btn svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .chip-btn.danger{ background: rgba(239,68,68,0.1); color: var(--danger); }
 
-  @media (max-width: 720px){
-    .panes{ grid-template-columns: 1fr; }
-    .swap-col{ order: 2; flex-direction: row !important; padding: 6px 0 !important; }
-    .pane.from{ order: 1; }
-    .pane.to{ order: 3; }
+  textarea.main-input{
+    width:100%; min-height:120px; resize:vertical; border:none; background:transparent;
+    font-size:16px; line-height:1.8; color:var(--text); padding:0;
   }
+  textarea.main-input::placeholder{ color: var(--text-dim2); }
 
-  .pane{
-    padding: 22px 22px 18px;
-    display:flex;
-    flex-direction: column;
-    min-height: 260px;
+  .input-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; font-size:11.5px; color: var(--text-dim2); font-family:'Inter',sans-serif; direction:ltr; }
+
+  .lang-row{ display:grid; grid-template-columns: 1fr 44px 1fr; align-items:center; gap:8px; margin-top:16px; }
+  .lang-field{
+    display:flex; align-items:center; gap:8px; border:1px solid var(--border); background: var(--card-2);
+    border-radius:12px; padding:10px 12px; cursor:pointer; min-width:0;
   }
-
-  .address-label{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    gap: 8px;
+  .lang-field img{ width:20px; height:15px; border-radius:2px; object-fit:cover; flex-shrink:0; }
+  .lang-field .auto-dot{ width:16px; height:16px; flex-shrink:0; }
+  .lang-field span{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lang-field svg.chev{ width:13px; height:13px; stroke:var(--text-dim); fill:none; stroke-width:2; margin-inline-start:auto; flex-shrink:0; }
+  .swap-circle{
+    width:40px; height:40px; border-radius:50%; border:none; background: rgba(45,212,191,0.14); color:var(--accent1);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; margin:0 auto;
   }
+  .swap-circle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; }
 
-  .address-label .eyebrow{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.55;
+  /* ---------- Output settings card ---------- */
+  .tone-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tone-chip{
+    border:1px solid var(--border); background: var(--card-2); color: var(--text-dim);
+    border-radius:10px; padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer;
+    display:flex; align-items:center; gap:6px;
   }
+  .tone-chip.active{ border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.1); }
+  .tone-chip svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.4; }
 
-  .to .address-label{ justify-content: space-between; }
-  .to-controls{ display:flex; align-items:center; gap: 8px; }
+  .collapse-head{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+  .collapse-head svg.chev{ width:15px; height:15px; stroke:var(--text-dim); fill:none; stroke-width:2; transition: transform .2s ease; }
+  .collapse-head.open svg.chev{ transform: rotate(180deg); }
+  .collapse-body{ max-height:0; overflow:hidden; transition: max-height .3s ease; }
+  .collapse-body.open{ max-height:1200px; margin-top:12px; }
+  .adv-note{ font-size:12px; color: var(--text-dim2); line-height:1.7; margin-top:10px; }
 
-  select{
-    appearance: none;
-    background: transparent;
-    border: none;
-    border-bottom: 1.5px solid var(--ink);
-    font-family:'Vazirmatn', sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--ink);
-    padding: 4px 18px 4px 2px;
-    cursor: pointer;
-    background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
-    background-position: left 4px center, left 9px center;
-    background-size: 6px 6px, 6px 6px;
-    background-repeat: no-repeat;
+  .translate-cta{
+    width:100%; border:none; border-radius:14px; padding:15px; margin:16px 0 0;
+    background: var(--accent-grad); color:#04120f; font-size:15px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
   }
-  select option{ background: var(--paper-light); color: var(--ink); }
+  .translate-cta:disabled{ opacity:.6; cursor:default; }
+  .translate-cta svg{ width:17px; height:17px; stroke:#04120f; fill:none; stroke-width:2.3; }
 
-  select:focus-visible, textarea:focus-visible, button:focus-visible{
-    outline: 2px solid var(--postal-red);
-    outline-offset: 2px;
+  /* ---------- Output card ---------- */
+  .out-actions{ display:flex; align-items:center; gap:6px; }
+  .out-actions button{
+    width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background: var(--card-2);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text);
   }
+  .out-actions button svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .out-actions button.copied{ color: var(--success); border-color: var(--success); }
+  .out-box{ font-size:16px; line-height:1.85; min-height:60px; white-space:pre-wrap; }
+  .out-box.placeholder{ color: var(--text-dim2); }
+  .out-box.zen{ font-size:22px; }
 
-  .copy-btn{
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: transparent;
-    cursor: pointer;
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink: 0;
-    transition: background 0.15s ease, border-color 0.15s ease;
+  .status-card .row{ margin-bottom:12px; }
+  .conf-chip{
+    background: rgba(34,197,94,0.14); color: var(--success); font-size:11.5px; font-weight:700;
+    border-radius:8px; padding:3px 10px; font-family:'Inter',sans-serif;
   }
-  .copy-btn:hover{ background: var(--dot); border-color: var(--ink); }
-  .copy-btn svg{ width: 13px; height: 13px; stroke: var(--ink); fill:none; }
-  .copy-btn.copied svg{ stroke: var(--sage); }
+  .stat-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; text-align:center; }
+  .stat-grid .k{ font-size:10.5px; color: var(--text-dim); margin-bottom:6px; }
+  .stat-grid .v{ font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .stat-grid img{ width:16px; height:12px; border-radius:2px; }
+  .engine-note{ text-align:center; font-size:10.5px; color: var(--text-dim2); margin-top:10px; font-family:'Inter',sans-serif; }
 
-  textarea{
-    flex:1;
-    resize: none;
-    border: none;
-    background: transparent;
-    font-family:'Vazirmatn', sans-serif;
-    font-size: 17px;
-    line-height: 1.9;
-    color: var(--ink);
-    min-height: 180px;
+  /* alt / explain (inside "پیشنهادهای ترجمه") */
+  .sub-actions{ display:flex; gap:8px; margin-top:4px; flex-wrap:wrap; }
+  .sub-btn{
+    border:1px solid var(--border); background: var(--card-2); color: var(--text);
+    border-radius:10px; padding:8px 13px; font-size:12.5px; font-weight:600; cursor:pointer;
   }
-  textarea::placeholder{ color: var(--line); }
-
-  .to textarea{ cursor: default; }
-
-  .weight{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px;
-    opacity: 0.5;
-    margin-top: 8px;
-    text-align: left;
-  }
-
-  .swap-col{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-right: 1px dashed var(--line);
-    border-left: 1px dashed var(--line);
-    position: relative;
-  }
-
-  .swap-btn{
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    border: 1.5px solid var(--ink);
-    background: var(--paper-light);
-    cursor: pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition: transform 0.25s ease, background 0.2s ease;
-  }
-  .swap-btn:hover{ background: var(--paper); }
-  .swap-btn.spin{ transform: rotate(180deg); }
-  .swap-btn svg{ width: 20px; height: 20px; stroke: var(--ink); }
-
-  .divider-row{ border-top: 1.5px dashed var(--line); }
-
-  .action-row{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    padding: 18px 22px;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-
-  .action-buttons{
-    display:flex;
-    align-items:center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .alt-btn{
-    font-family:'JetBrains Mono', monospace;
-    font-weight: 500;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    color: var(--ink);
-    background: transparent;
-    border: 1.5px solid var(--line);
-    padding: 12px 18px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
-  }
-  .alt-btn:hover:not(:disabled){ background: var(--dot); border-color: var(--ink); }
-  .alt-btn:disabled{ opacity: 0.4; cursor: not-allowed; }
-
-  .alt-panel{
-    display: none;
-    border-top: 1.5px dashed var(--line);
-    padding: 16px 22px 20px;
-  }
-  .alt-panel.visible{ display: block; }
-
-  .alt-title{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    opacity: 0.6;
-    margin-bottom: 10px;
-  }
-
-  .alt-chips{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
+  .sub-btn:disabled{ opacity:.45; cursor:default; }
+  .alt-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
   .alt-chip{
-    font-family: 'Vazirmatn', sans-serif;
-    font-size: 14px;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    color: var(--ink);
-    padding: 7px 14px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    background: var(--card-2); border:1px solid var(--border); border-radius:16px; padding:6px 13px;
+    font-size:13px; cursor:pointer;
   }
-  .alt-chip:hover{ background: var(--dot); border-color: var(--postal-red); }
-
-  .alt-empty{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    opacity: 0.5;
-  }
-
-  .explain-body{ font-size: 14.5px; line-height: 1.9; }
-  .explain-entry{ margin-bottom: 12px; }
-  .explain-entry:last-child{ margin-bottom: 0; }
+  .mini-loading{ font-size:11.5px; color: var(--text-dim2); margin-top:8px; }
+  .explain-entry{ margin-top:12px; }
   .explain-pos{
-    display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--postal-red);
-    border: 1px solid var(--postal-red);
-    border-radius: 10px;
-    padding: 1px 9px;
-    margin-inline-end: 8px;
-    direction: ltr;
+    display:inline-block; font-size:10.5px; font-weight:700; color: var(--accent1);
+    border:1px solid var(--accent1); border-radius:10px; padding:1px 8px; margin-bottom:6px; font-family:'Inter',sans-serif;
   }
-  .explain-defs{ margin: 6px 0 0; padding-inline-start: 20px; }
-  .explain-defs li{ margin-bottom: 8px; }
-  .explain-en{
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    opacity: 0.5;
-    margin-top: 2px;
-    direction: ltr;
-    text-align: left;
-  }
-  .explain-lang-note{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    opacity: 0.5;
-    margin-top: 10px;
-  }
+  .explain-defs{ margin:4px 0 0; padding-inline-start:18px; font-size:13.5px; line-height:1.8; }
+  .explain-en{ display:block; font-size:10.5px; color: var(--text-dim2); font-family:'Inter',sans-serif; direction:ltr; text-align:left; margin-top:2px; }
 
-  .translate-btn{
-    font-family:'JetBrains Mono', monospace;
-    font-weight: 500;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--paper-light);
-    background: var(--postal-red);
-    border: none;
-    padding: 13px 26px;
-    border-radius: 3px;
-    cursor: pointer;
-    display:flex;
-    align-items:center;
-    gap: 10px;
-    transition: background 0.2s ease, transform 0.1s ease;
+  .recent-item{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); font-size:13px; }
+  .recent-item:first-of-type{ border-top:none; }
+  .recent-item .txt{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:75%; }
+  .see-all{ display:block; text-align:center; margin-top:10px; font-size:12.5px; color: var(--accent1); text-decoration:none; cursor:pointer; background:none; border:none; width:100%; padding:6px; font-family:inherit; }
+
+  /* ---------- History page ---------- */
+  .search-row{ display:flex; gap:8px; align-items:center; margin-bottom:6px; }
+  .search-box{ flex:1; display:flex; align-items:center; gap:8px; background: var(--card); border:1px solid var(--border); border-radius:12px; padding:11px 14px; }
+  .search-box svg{ width:16px; height:16px; stroke: var(--text-dim); fill:none; stroke-width:2; flex-shrink:0; }
+  .search-box input{ border:none; background:transparent; outline:none; font-size:14px; width:100%; color:var(--text); }
+  .filter-btn{ width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background: rgba(45,212,191,0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .filter-btn svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; }
+
+  .date-sep{ display:flex; align-items:center; gap:10px; margin: 20px 0 10px; font-size:12px; color: var(--text-dim); }
+  .date-sep::before, .date-sep::after{ content:''; flex:1; height:1px; background: var(--border); }
+
+  .hist-card{ background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding:14px; margin-bottom:10px; }
+  .hist-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .hist-pair{ font-family:'Inter',sans-serif; font-size:11px; color: var(--text-dim); display:flex; align-items:center; gap:5px; direction:ltr; }
+  .hist-actions{ display:flex; gap:6px; }
+  .hist-actions button{ width:28px; height:28px; border-radius:50%; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text-dim); }
+  .hist-actions button svg{ width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; }
+  .hist-actions button.starred svg{ fill: var(--star); stroke: var(--star); }
+  .hist-actions button.copied{ color: var(--success); }
+  .hist-src{ font-size:14.5px; margin-bottom:4px; }
+  .hist-tgt{ font-size:14.5px; color: var(--accent1); }
+  .hist-time{ font-size:10.5px; color: var(--text-dim2); margin-top:6px; font-family:'Inter',sans-serif; }
+  .empty-state{ text-align:center; padding:60px 20px; color: var(--text-dim); font-size:13.5px; }
+
+  /* ---------- Settings page ---------- */
+  .settings-section-title{ font-size:12px; font-weight:700; color: var(--text-dim); margin: 22px 4px 8px; display:flex; align-items:center; gap:6px; }
+  .settings-section-title:first-child{ margin-top:4px; }
+  .settings-section-title svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+  .setting-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-top:1px solid var(--border); gap:10px; }
+  .setting-row:first-child{ border-top:none; }
+  .setting-label{ font-size:14px; font-weight:500; }
+  .setting-desc{ font-size:11.5px; color: var(--text-dim); margin-top:2px; }
+  .setting-value{ display:flex; align-items:center; gap:6px; font-size:13px; color: var(--text-dim); flex-shrink:0; }
+  .setting-value img{ width:18px; height:13px; border-radius:2px; }
+  .toggle{ position:relative; width:42px; height:24px; border-radius:12px; background: var(--card-2); border:1px solid var(--border); cursor:pointer; flex-shrink:0; }
+  .toggle::after{ content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background: var(--text-dim); transition: transform .2s ease, background .2s ease; }
+  .toggle.on{ background: rgba(34,197,94,0.25); border-color: var(--success); }
+  .toggle.on::after{ transform: translateX(-18px); background: var(--success); }
+  html[dir="rtl"] .toggle::after{ left:auto; right:2px; }
+  html[dir="rtl"] .toggle.on::after{ transform: translateX(18px); }
+  .chevron-row{ cursor:pointer; }
+  .chevron-row svg.rowchev{ width:15px; height:15px; stroke: var(--text-dim); fill:none; stroke-width:2; }
+
+  /* ---------- About page ---------- */
+  .about-hero{ text-align:center; padding:20px 0 6px; }
+  .about-hero .app-icon{ width:64px; height:64px; margin:0 auto 14px; font-size:26px; border-radius:18px; }
+  .about-hero h2{ margin:0 0 4px; font-size:20px; }
+  .about-hero .ver{ font-size:12px; color: var(--accent1); font-family:'Inter',sans-serif; margin-bottom:10px; }
+  .about-hero p{ font-size:13.5px; color: var(--text-dim); line-height:1.8; max-width:380px; margin:0 auto; }
+  .feature-item{ display:flex; align-items:flex-start; gap:12px; padding:13px 0; border-top:1px solid var(--border); }
+  .feature-item:first-child{ border-top:none; }
+  .feature-icon{ width:36px; height:36px; border-radius:10px; background: rgba(45,212,191,0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .feature-icon svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; }
+  .feature-text b{ display:block; font-size:14px; margin-bottom:2px; }
+  .feature-text span{ font-size:12px; color: var(--text-dim); }
+  .contact-buttons{ display:flex; gap:10px; margin-top:14px; }
+  .contact-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    border-radius:12px; padding:12px; font-size:13px; font-weight:600; text-decoration:none; cursor:pointer; border:1px solid var(--border);
   }
-  .translate-btn:hover{ filter: brightness(0.92); }
-  .translate-btn:active{ transform: translateY(1px); }
-  .translate-btn:disabled{ opacity: 0.55; cursor: default; }
+  .contact-btn svg{ width:16px; height:16px; fill:currentColor; }
+  .contact-btn.gh{ background: var(--card-2); color: var(--text); }
+  .contact-btn.tg{ background: var(--accent-grad); color:#04120f; border:none; }
+  .about-footer{ text-align:center; font-size:11px; color: var(--text-dim2); margin: 22px 0 6px; }
 
-  .status{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--ink);
-    opacity: 0.7;
-    min-height: 16px;
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav{
+    position: fixed; bottom:0; left:0; right:0; z-index: 40;
+    background: var(--card); border-top:1px solid var(--border);
+    display:flex; padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
   }
-  .status.error{ color: var(--postal-red); opacity: 1; }
-
-  .postmark{
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    width: 92px;
-    height: 92px;
-    opacity: 0;
-    transform: rotate(-18deg) scale(1.4);
-    pointer-events: none;
+  .nav-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    background:none; border:none; cursor:pointer; color: var(--text-dim); padding:7px 2px; border-radius:12px;
   }
-  .postmark.stamped{
-    transition: opacity 0.15s ease, transform 0.35s cubic-bezier(.2,1.4,.4,1);
-    opacity: 0.9;
-    transform: rotate(-14deg) scale(1);
+  .nav-btn svg{ width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .nav-btn span{ font-size:10.5px; font-weight:600; }
+  .nav-btn.active{ color: var(--accent1); background: rgba(45,212,191,0.1); }
+
+  /* ---------- Language picker sheet ---------- */
+  .sheet-overlay{
+    position: fixed; inset:0; background: rgba(0,0,0,0.55); z-index:100;
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none; transition: opacity .2s ease;
   }
-  .postmark svg{ width:100%; height:100%; }
-  .postmark .ring{ fill:none; stroke: var(--ink); stroke-width: 1.4; }
-  .postmark text{ font-family:'JetBrains Mono', monospace; fill: var(--ink); }
-
-  /* History / dispatch log */
-  .log-section{ margin-top: 34px; }
-
-  .log-header{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    border-bottom: 1.5px dashed var(--line);
-    padding-bottom: 10px;
-    margin-bottom: 4px;
+  .sheet-overlay.visible{ opacity:1; pointer-events:auto; }
+  .sheet{
+    width:100%; max-width:560px; max-height:78vh; background: var(--card);
+    border-radius: 20px 20px 0 0; padding: 16px; display:flex; flex-direction:column;
+    transform: translateY(20px); transition: transform .25s ease;
   }
+  .sheet-overlay.visible .sheet{ transform: translateY(0); }
+  .sheet-handle{ width:38px; height:4px; background: var(--border); border-radius:2px; margin: 0 auto 14px; }
+  .sheet-title{ font-size:15px; font-weight:700; margin-bottom:12px; }
+  .sheet-search{ display:flex; align-items:center; gap:8px; background: var(--card-2); border:1px solid var(--border); border-radius:12px; padding:10px 13px; margin-bottom:10px; }
+  .sheet-search svg{ width:15px; height:15px; stroke: var(--text-dim); fill:none; stroke-width:2; flex-shrink:0; }
+  .sheet-search input{ border:none; background:transparent; outline:none; width:100%; font-size:14px; }
+  .sheet-list{ overflow-y:auto; flex:1; }
+  .sheet-item{ display:flex; align-items:center; gap:12px; padding:11px 6px; border-radius:10px; cursor:pointer; }
+  .sheet-item:hover{ background: var(--card-2); }
+  .sheet-item img{ width:24px; height:18px; border-radius:3px; object-fit:cover; flex-shrink:0; }
+  .sheet-item .auto-ic{ width:24px; height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color: var(--accent1); }
+  .sheet-item span{ font-size:14.5px; }
+  .sheet-item.selected{ background: rgba(45,212,191,0.1); }
 
-  .log-title{
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 19px;
+  .toast{
+    position: fixed; bottom: 92px; left:50%; transform: translateX(-50%);
+    background: var(--card); border:1px solid var(--border); color: var(--text);
+    padding: 10px 18px; border-radius: 30px; font-size:12.5px; z-index: 200;
+    opacity:0; pointer-events:none; transition: opacity .25s ease, transform .25s ease;
   }
+  .toast.visible{ opacity:1; transform: translateX(-50%) translateY(-4px); }
 
-  .log-clear{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    color: var(--ink);
-    opacity: 0.55;
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .log-clear:hover{ opacity: 0.9; }
-
-  .log-list{ list-style: none; margin: 0; padding: 0; }
-
-  .log-empty{
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    opacity: 0.5;
-    padding: 18px 4px;
-  }
-
-  .log-item{
-    display:grid;
-    grid-template-columns: 90px 1fr 1fr;
-    gap: 14px;
-    align-items: start;
-    padding: 14px 4px;
-    border-bottom: 1px dotted var(--line);
-    cursor: pointer;
-    transition: background 0.15s ease;
-  }
-  .log-item:hover{ background: var(--dot); }
-
-  @media (max-width: 640px){
-    .log-item{ grid-template-columns: 1fr; gap: 4px; }
-  }
-
-  .log-meta{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    opacity: 0.55;
-    line-height: 1.6;
-    direction: ltr;
-    text-align: left;
-  }
-  @media (max-width: 640px){ .log-meta{ text-align: right; direction: rtl; } }
-
-  .log-src, .log-tgt{
-    font-size: 14px;
-    line-height: 1.6;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  .log-tgt{ color: var(--sage); }
-
-  footer{
-    margin-top: 30px;
-    display:flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    opacity: 0.55;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .swap-btn, .postmark, .translate-btn, .theme-toggle{ transition: none !important; }
-  }
-
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<div class="shell">
 
-  <header>
-    <div class="header-left">
-      <div>
-        <div class="wordmark">زبان<span>‌پیک</span></div>
-        <div class="tagline">پیام شما، رسیده به هر زبان</div>
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="app-icon">A</div>
+      <div class="topbar-titles">
+        <h1 id="pageTitle">Translify</h1>
+        <p id="pageSubtitle">ابزار ترجمهٔ سریع و حرفه‌ای</p>
       </div>
     </div>
-    <div class="header-right">
-      <div class="icon-group">
-        <a class="theme-toggle" id="telegramLink" href="https://t.me/DeepRed_Code" target="_blank" rel="noopener" title="تلگرام" aria-label="ورود به تلگرام">
-          <svg viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-1.267 8.928-.157.933-.469 1.245-.769 1.276-.652.061-1.148-.43-1.78-.845-.99-.65-1.55-1.055-2.51-1.688-1.112-.734-.392-1.138.243-1.798.166-.173 3.045-2.793 3.1-3.032.007-.03.014-.14-.052-.198-.066-.058-.163-.038-.234-.023-.1.023-1.687 1.073-4.762 3.15-.451.309-.86.46-1.226.452-.404-.009-1.18-.228-1.756-.416-.708-.23-1.27-.352-1.222-.744.025-.204.306-.413.843-.628 3.3-1.437 5.503-2.384 6.61-2.841 3.148-1.302 3.803-1.53 4.23-1.537.094-.001.303.022.438.13.114.093.145.216.16.303.017.098.037.293.02.44z"/>
-          </svg>
-        </a>
-        <a class="theme-toggle" id="githubLink" href="https://github.com/codewave4" target="_blank" rel="noopener" title="گیت‌هاب" aria-label="ورود به گیت‌هاب">
-          <svg viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.56-.01 2.81-.01 3.19 0 .31.21.66.79.55A10.51 10.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/>
-          </svg>
-        </a>
-        <button class="theme-toggle" id="themeToggle" title="تغییر حالت روشن/تاریک" aria-label="تغییر حالت روشن و تاریک">
-          <svg class="sun" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="4.5"/>
-            <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/>
-          </svg>
-          <svg class="moon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
-          </svg>
-        </button>
-      </div>
-      <div class="tagline" id="dateStamp"></div>
+    <div class="topbar-actions">
+      <button class="icon-circle" id="themeToggle" aria-label="تغییر حالت تاریک/روشن">
+        <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/></svg>
+        <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      </button>
+      <button class="icon-circle" id="menuBtn" aria-label="منو">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none"/></svg>
+      </button>
     </div>
   </header>
 
-  <div class="envelope">
-    <div class="postmark" id="postmark" aria-hidden="true">
-      <svg viewBox="0 0 100 100">
-        <circle class="ring" cx="50" cy="50" r="46"></circle>
-        <circle class="ring" cx="50" cy="50" r="40"></circle>
-        <path id="topArc" fill="none"/>
-        <text font-size="9" letter-spacing="1">
-          <textPath id="topArcText" href="#topArc" startOffset="50%" text-anchor="middle"></textPath>
-        </text>
-        <text x="50" y="56" font-size="15" font-weight="600" text-anchor="middle" id="pmCode">FA</text>
-        <text x="50" y="72" font-size="7" text-anchor="middle" id="pmWord">RESALIDE</text>
-      </svg>
+  <!-- ===================== TRANSLATE (shared by Home & Translate tabs) ===================== -->
+  <section class="page" id="page-home" data-template="translate" data-extras="1"></section>
+  <section class="page" id="page-translate" data-template="translate" data-extras="0"></section>
+
+  <!-- ===================== HISTORY ===================== -->
+  <section class="page" id="page-history">
+    <div class="search-row">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="histSearch" placeholder="جست‌وجو در تاریخچه…">
+      </div>
+      <button class="filter-btn" id="histFilterBtn" aria-label="فیلتر">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+      </button>
     </div>
+    <div id="histFilterRow" style="display:none; margin-bottom:10px;">
+      <select id="histFilterOnly" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card-2); color:var(--text); font-size:13px;">
+        <option value="all">همهٔ ترجمه‌ها</option>
+        <option value="starred">فقط نشان‌شده‌ها ⭐</option>
+      </select>
+    </div>
+    <div id="histList"></div>
+  </section>
 
-    <div class="panes">
-      <div class="pane from">
-        <div class="address-label">
-          <span class="eyebrow">فرستنده</span>
-          <div class="to-controls">
-            <button class="copy-btn" id="speakSourceBtn" title="شنیدن تلفظ متن مبدأ" aria-label="شنیدن تلفظ متن مبدأ">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 9v6h3.5l4.5 3.5V5.5L7.5 9H4z"/>
-                <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
-                <path d="M17.8 6a8.5 8.5 0 0 1 0 12"/>
-              </svg>
-            </button>
-            <select id="fromLang" aria-label="زبان مبدأ"></select>
-          </div>
-        </div>
-        <textarea id="sourceText" placeholder="متن خود را اینجا بنویسید…"></textarea>
-        <div class="weight" id="charCount">۰ نویسه</div>
+  <!-- ===================== SETTINGS ===================== -->
+  <section class="page" id="page-settings">
+    <div class="settings-section-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>عمومی</div>
+    <div class="card">
+      <div class="setting-row chevron-row" id="rowTheme">
+        <div><div class="setting-label">تم برنامه</div></div>
+        <div class="setting-value"><span id="themeValueText">تیره</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
       </div>
-
-      <div class="swap-col">
-        <button class="swap-btn" id="swapBtn" title="جابه‌جایی زبان‌ها" aria-label="جابه‌جایی زبان‌ها">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 7h11l-3-3M17 17H6l3 3"/>
-          </svg>
-        </button>
+      <div class="setting-row">
+        <div><div class="setting-label">زبان برنامه</div></div>
+        <div class="setting-value">🇮🇷<span>فارسی</span></div>
       </div>
-
-      <div class="pane to">
-        <div class="address-label">
-          <span class="eyebrow">گیرنده</span>
-          <div class="to-controls">
-            <button class="copy-btn" id="speakTargetBtn" title="شنیدن تلفظ متن ترجمه‌شده" aria-label="شنیدن تلفظ متن ترجمه‌شده">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 9v6h3.5l4.5 3.5V5.5L7.5 9H4z"/>
-                <path d="M15.5 8.5a5 5 0 0 1 0 7"/>
-                <path d="M17.8 6a8.5 8.5 0 0 1 0 12"/>
-              </svg>
-            </button>
-            <button class="copy-btn" id="copyBtn" title="کپی متن ترجمه‌شده" aria-label="کپی متن ترجمه‌شده">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="8" y="8" width="12" height="12" rx="1.5"/>
-                <path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>
-              </svg>
-            </button>
-            <select id="toLang" aria-label="زبان مقصد"></select>
-          </div>
-        </div>
-        <textarea id="targetText" placeholder="ترجمه اینجا نمایش داده می‌شود…" readonly></textarea>
-        <div class="weight" id="matchInfo">&nbsp;</div>
+      <div class="setting-row chevron-row" id="rowDefaultFrom">
+        <div><div class="setting-label">زبان پیش‌فرض مبدأ</div></div>
+        <div class="setting-value" id="defaultFromValue"><span>تشخیص خودکار</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+      <div class="setting-row chevron-row" id="rowDefaultTo">
+        <div><div class="setting-label">زبان پیش‌فرض مقصد</div></div>
+        <div class="setting-value" id="defaultToValue"><span>English</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">تنظیمات خروجی پیش‌فرض</div></div>
+        <div class="setting-value"><span id="defaultToneValue">استاندارد</span> <span style="color:var(--success)">✓</span></div>
       </div>
     </div>
 
-    <div class="divider-row action-row">
-      <div class="action-buttons">
-        <button class="translate-btn" id="translateBtn">
-          <span id="btnLabel">مهر و ارسال</span>
-        </button>
-        <button class="alt-btn" id="altBtn" disabled title="فقط برای کلمات یا عبارات کوتاه">
-          معانی مشابه
-        </button>
-        <button class="alt-btn" id="explainBtn" disabled title="فقط برای کلمات یا عبارات کوتاه">
-          توضیح
-        </button>
+    <div class="settings-section-title"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg>ترجمه</div>
+    <div class="card">
+      <div class="setting-row">
+        <div><div class="setting-label">تشخیص خودکار زبان</div><div class="setting-desc">تشخیص خودکار زبان مبدأ</div></div>
+        <div class="toggle on" id="toggleAutoDetect"></div>
       </div>
-      <div class="status" id="statusMsg">&nbsp;</div>
+      <div class="setting-row">
+        <div><div class="setting-label">تلفظ متن</div><div class="setting-desc">نمایش دکمهٔ پخش صدا</div></div>
+        <div class="toggle on" id="toggleTTS"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">نمایش آمار ترجمه</div><div class="setting-desc">نمایش وضعیت و جزئیات ترجمه</div></div>
+        <div class="toggle on" id="toggleStats"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">ذخیرهٔ تاریخچه</div><div class="setting-desc">ذخیرهٔ خودکار ترجمه‌ها</div></div>
+        <div class="toggle on" id="toggleSaveHistory"></div>
+      </div>
     </div>
 
-    <div class="alt-panel" id="altPanel">
-      <div class="alt-title">معانی مشابه <span id="altLoading"></span></div>
-      <div class="alt-chips" id="altChips"></div>
+    <div class="settings-section-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>درباره</div>
+    <div class="card">
+      <div class="setting-row">
+        <div><div class="setting-label">نسخهٔ برنامه</div></div>
+        <div class="setting-value">2.0.0</div>
+      </div>
+      <div class="setting-row chevron-row" id="rowPrivacy">
+        <div><div class="setting-label">سیاست حریم خصوصی</div></div>
+        <svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+      <div class="setting-row chevron-row" id="rowAboutLink">
+        <div><div class="setting-label">دربارهٔ ما</div></div>
+        <svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
     </div>
-
-    <div class="alt-panel" id="explainPanel">
-      <div class="alt-title">توضیح کوتاه <span id="explainLoading"></span></div>
-      <div class="explain-body" id="explainBody"></div>
+    <div class="card" id="privacyBox" style="display:none;">
+      <div class="card-title">حریم خصوصی</div>
+      <p style="font-size:12.5px; line-height:2; color:var(--text-dim);">تمام تنظیمات و تاریخچهٔ ترجمهٔ شما فقط روی همین دستگاه و در همین مرورگر ذخیره می‌شود (localStorage). هیچ داده‌ای به هیچ سروری متعلق به سازندهٔ این سایت ارسال نمی‌شود. متن‌هایی که برای ترجمه می‌فرستید فقط به سرویس‌های ترجمه (Google / MyMemory) ارسال می‌شوند تا ترجمه انجام شود.</p>
     </div>
-  </div>
+  </section>
 
-
-  <div class="log-section">
-    <div class="log-header">
-      <div class="log-title">دفترچهٔ ارسال</div>
-      <button class="log-clear" id="clearLog">پاک کردن تاریخچه</button>
+  <!-- ===================== ABOUT ===================== -->
+  <section class="page" id="page-about">
+    <div class="about-hero">
+      <div class="app-icon">A</div>
+      <h2>Translify</h2>
+      <div class="ver">نسخهٔ ۲.۰.۰</div>
+      <p>این صفحه با هدف ارائهٔ یک تجربهٔ ترجمهٔ سریع، دقیق و حرفه‌ای برای کاربران فارسی‌زبان ساخته شده است.</p>
     </div>
-    <ul class="log-list" id="logList"></ul>
-    <div class="log-empty" id="logEmpty">هنوز نامه‌ای ثبت نشده — اولین ترجمه‌تان اینجا نمایش داده می‌شود.</div>
-  </div>
-
-  <footer>
-    <span>سرویس ترجمه: MyMemory Translated.net</span>
-      <span>ساخته شده توسط abdolrahem.p</span>
-  </footer>
+    <div class="card">
+      <div class="feature-item">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8L12 17.7 5.9 20.8l1.3-6.8-5-4.8 6.9-.9L12 2z"/></svg></div>
+        <div class="feature-text"><b>ترجمهٔ سریع و دقیق</b><span>استفاده از بهترین سرویس‌های ترجمه</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg></div>
+        <div class="feature-text"><b>پشتیبانی از زبان‌های مختلف</b><span>بیش از ۱۰۰ زبان زندهٔ دنیا</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+        <div class="feature-text"><b>رابط کاربری مدرن و ساده</b><span>طراحی زیبا و کاربرپسند</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.6 2.8 5.5 3.1 5.5 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.1 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></div>
+        <div class="feature-text"><b>مناسب GitHub Pages</b><span>ساخته‌شده با HTML, CSS, JavaScript</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ارتباط با ما</div>
+      <div class="card-sub">اگر سؤال یا پیشنهادی دارید، خوشحال می‌شویم از طریق راه‌های زیر با ما در ارتباط باشید.</div>
+      <div class="contact-buttons">
+        <a class="contact-btn gh" href="https://github.com/codewave4" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.56-.01 2.81-.01 3.19 0 .31.21.66.79.55A10.51 10.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+          GitHub Repository
+        </a>
+        <a class="contact-btn tg" href="https://t.me/DeepRed_Code" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16c-.169 1.858-.896 6.728-1.267 8.928-.157.933-.469 1.245-.769 1.276-.652.061-1.148-.43-1.78-.845-.99-.65-1.55-1.055-2.51-1.688-1.112-.734-.392-1.138.243-1.798.166-.173 3.045-2.793 3.1-3.032.007-.03.014-.14-.052-.198-.066-.058-.163-.038-.234-.023-.1.023-1.687 1.073-4.762 3.15-.451.309-.86.46-1.226.452-.404-.009-1.18-.228-1.756-.416-.708-.23-1.27-.352-1.222-.744.025-.204.306-.413.843-.628 3.3-1.437 5.503-2.384 6.61-2.841 3.148-1.302 3.803-1.53 4.23-1.537.094-.001.303.022.438.13.114.093.145.216.16.303.017.098.037.293.02.44z"/></svg>
+          ارسال پیام
+        </a>
+      </div>
+    </div>
+    <div class="about-footer">© 2026 Translify. All rights reserved.</div>
+  </section>
 
 </div>
 
+<nav class="bottom-nav">
+  <button class="nav-btn" data-page="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span>خانه</span></button>
+  <button class="nav-btn" data-page="translate"><svg viewBox="0 0 24 24"><path d="M4 6h9M4 6c0 4 2 7 6 9M13 6c-1 5-4 8-9 10M14 21l4-9 4 9M15.5 18h5"/></svg><span>ترجمه</span></button>
+  <button class="nav-btn" data-page="history"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span>تاریخچه</span></button>
+  <button class="nav-btn" data-page="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg><span>تنظیمات</span></button>
+  <button class="nav-btn" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>دربارهٔ ما</span></button>
+</nav>
+
+<div class="sheet-overlay" id="sheetOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheetTitle">انتخاب زبان</div>
+    <div class="sheet-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="sheetSearchInput" placeholder="جست‌وجوی زبان…">
+    </div>
+    <div class="sheet-list" id="sheetList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<template id="translateTemplate">
+  <div class="card">
+    <div class="input-head">
+      <span>متن خود را وارد کنید</span>
+      <button class="chip-btn" data-action="paste">
+        <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>
+        چسباندن
+      </button>
+    </div>
+    <textarea class="main-input" data-el="sourceText" maxlength="5000" placeholder="متن خود را وارد کنید…"></textarea>
+    <div class="input-foot">
+      <span data-el="charCount">0 / 5000</span>
+      <button class="chip-btn danger" data-action="clear">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg>
+        پاک کردن
+      </button>
+    </div>
+
+    <div class="lang-row">
+      <div class="lang-field" data-action="pick-from">
+        <span data-el="fromLabel">تشخیص خودکار</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <button class="swap-circle" data-action="swap"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></button>
+      <div class="lang-field" data-action="pick-to">
+        <span data-el="toLabel">English</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">تنظیمات خروجی</div>
+    <div class="card-sub">سبک ترجمه</div>
+    <div class="tone-row" data-el="toneRow">
+      <button class="tone-chip active" data-tone="standard">استاندارد <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>
+      <button class="tone-chip" data-tone="formal">رسمی</button>
+      <button class="tone-chip" data-tone="casual">صمیمی</button>
+      <button class="tone-chip" data-tone="summary">خلاصه</button>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="collapse-head" data-action="toggle-advanced">
+        <span style="font-size:13px; font-weight:600;">تنظیمات پیشرفته</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="collapse-body" data-el="advancedBody">
+        <div class="adv-note">
+          ترجمه ابتدا از طریق موتور گوگل انجام می‌شود؛ اگر در دسترس نبود، به‌صورت خودکار از MyMemory استفاده می‌شود.
+          حالت‌های «رسمی» و «صمیمی» فعلاً فقط جنبهٔ نمایشی دارند و نیاز به مدل هوش مصنوعی دارند که در این نسخهٔ رایگان در دسترس نیست. حالت «خلاصه» فقط جملهٔ اول ترجمه را نمایش می‌دهد.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="translate-cta" data-action="translate">
+    <svg viewBox="0 0 24 24"><path d="M4 6h9M4 6c0 4 2 7 6 9M13 6c-1 5-4 8-9 10M14 21l4-9 4 9M15.5 18h5"/></svg>
+    <span data-el="ctaLabel">ترجمه کن</span>
+  </button>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:10px;">
+      <div class="card-title" style="margin:0;">خروجی ترجمه</div>
+      <div class="out-actions">
+        <button data-action="share" aria-label="اشتراک‌گذاری"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><path d="M8.1 10.7l7.8-4.4M8.1 13.3l7.8 4.4"/></svg></button>
+        <button data-action="zen" aria-label="نمای ساده"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button data-action="speak-target" aria-label="پخش صدا"><svg viewBox="0 0 24 24"><path d="M4 9v6h3.5l4.5 3.5V5.5L7.5 9H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button>
+        <button data-action="copy" aria-label="کپی"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg></button>
+      </div>
+    </div>
+    <div class="out-box placeholder" data-el="targetText">ترجمه اینجا نمایش داده می‌شود…</div>
+  </div>
+
+  <div class="card status-card" data-el="statusCard" style="display:none;">
+    <div class="row">
+      <div class="card-title" style="margin:0;">وضعیت ترجمه</div>
+      <span class="conf-chip" data-el="confChip">high</span>
+    </div>
+    <div class="stat-grid">
+      <div>
+        <div class="k">زبان تشخیص داده‌شده</div>
+        <div class="v" data-el="statDetected">—</div>
+      </div>
+      <div>
+        <div class="k">آخرین اجرا</div>
+        <div class="v" data-el="statTime">—</div>
+      </div>
+      <div>
+        <div class="k">زبان خروجی</div>
+        <div class="v" data-el="statOut">—</div>
+      </div>
+    </div>
+    <div class="engine-note" data-el="engineNote"></div>
+  </div>
+
+  <div class="card" data-el="extraSuggestions">
+    <div class="collapse-head" data-action="toggle-suggestions">
+      <span class="card-title" style="margin:0;">پیشنهادهای ترجمه</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="collapse-body" data-el="suggestionsBody">
+      <div class="card-sub" style="margin-top:12px;">متن‌های جایگزین و سبک‌های مختلف ترجمه</div>
+      <div class="sub-actions">
+        <button class="sub-btn" data-action="alt-meanings" disabled>معانی مشابه</button>
+        <button class="sub-btn" data-action="explain" disabled>توضیح کوتاه</button>
+      </div>
+      <div class="mini-loading" data-el="altLoading"></div>
+      <div class="alt-chips" data-el="altChips"></div>
+      <div data-el="explainBody"></div>
+    </div>
+  </div>
+
+  <div class="card" data-el="extraRecent">
+    <div class="collapse-head" data-action="toggle-recent">
+      <span class="card-title" style="margin:0;">تاریخچهٔ اخیر</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="collapse-body" data-el="recentBody">
+      <div data-el="recentList" style="margin-top:8px;"></div>
+      <button class="see-all" data-action="see-all-history">مشاهدهٔ همه ›</button>
+    </div>
+  </div>
+</template>
+
 <script>
-  const LANGS = [
-    ["fa","فارسی"], ["en","English"], ["tr","Türkçe"],
-    ["fr","Français"], ["de","Deutsch"], ["es","Español"], ["it","Italiano"],
-    ["ru","Русский"], ["zh","中文"], ["ja","日本語"], ["ko","한국어"],
-    ["hi","हिन्दी"], ["ur","اردو"], ["pt","Português"], ["nl","Nederlands"]
-  ];
-  const FLAGS = {
-    fa:'🇮🇷', en:'🇺🇸', tr:'🇹🇷', fr:'🇫🇷', de:'🇩🇪', es:'🇪🇸', it:'🇮🇹',
-    ru:'🇷🇺', zh:'🇨🇳', ja:'🇯🇵', ko:'🇰🇷', hi:'🇮🇳', ur:'🇵🇰', pt:'🇵🇹', nl:'🇳🇱'
+/* ============================================================
+   LANGUAGES  (code, Persian name, flag country-code)
+============================================================ */
+const LANGS = [
+["fa","فارسی","ir"],["en","انگلیسی","us"],["ar","عربی","sa"],["tr","ترکی","tr"],
+["fr","فرانسوی","fr"],["de","آلمانی","de"],["es","اسپانیایی","es"],["it","ایتالیایی","it"],
+["pt","پرتغالی","pt"],["ru","روسی","ru"],["zh","چینی","cn"],["ja","ژاپنی","jp"],
+["ko","کره‌ای","kr"],["hi","هندی","in"],["ur","اردو","pk"],["bn","بنگالی","bd"],
+["pa","پنجابی","in"],["ta","تامیلی","in"],["te","تلوگویی","in"],["mr","مراتی","in"],
+["gu","گجراتی","in"],["kn","کانادایی هند","in"],["ml","مالایالامی","in"],["si","سینهالی","lk"],
+["ne","نپالی","np"],["th","تایلندی","th"],["vi","ویتنامی","vn"],["id","اندونزیایی","id"],
+["ms","مالایی","my"],["tl","فیلیپینی","ph"],["km","خمری","kh"],["lo","لائوسی","la"],
+["my","برمه‌ای","mm"],["mn","مغولی","mn"],["kk","قزاقی","kz"],["uz","ازبکی","uz"],
+["tg","تاجیکی","tj"],["ky","قرقیزی","kg"],["tk","ترکمنی","tm"],["az","آذربایجانی","az"],
+["hy","ارمنی","am"],["ka","گرجی","ge"],["he","عبری","il"],["ku","کردی","iq"],
+["ps","پشتو","af"],["sd","سندی","pk"],["ug","اویغوری","cn"],["nl","هلندی","nl"],
+["sv","سوئدی","se"],["no","نروژی","no"],["da","دانمارکی","dk"],["fi","فنلاندی","fi"],
+["is","ایسلندی","is"],["pl","لهستانی","pl"],["cs","چکی","cz"],["sk","اسلواکی","sk"],
+["hu","مجارستانی","hu"],["ro","رومانیایی","ro"],["bg","بلغاری","bg"],["hr","کرواتی","hr"],
+["sr","صربی","rs"],["sl","اسلوونیایی","si"],["et","استونیایی","ee"],["lv","لتونیایی","lv"],
+["lt","لیتوانیایی","lt"],["uk","اوکراینی","ua"],["be","بلاروسی","by"],["el","یونانی","gr"],
+["mt","مالتی","mt"],["ga","ایرلندی","ie"],["cy","ولزی","gb"],["gd","گیلی اسکاتلندی","gb"],
+["eu","باسکی","es"],["ca","کاتالان","es"],["gl","گالیسی","es"],["af","آفریکانسی","za"],
+["sw","سواحیلی","tz"],["am","امهری","et"],["zu","زولو","za"],["xh","خوسا","za"],
+["yo","یوروبا","ng"],["ig","ایگبو","ng"],["ha","هوسا","ng"],["so","سومالیایی","so"],
+["rw","کینیارواندایی","rw"],["mg","مالاگاسی","mg"],["ny","چیچوایی","mw"],["st","سسوتو","ls"],
+["sn","شونا","zw"],["ht","کریول هائیتی","ht"],["sq","آلبانیایی","al"],["mk","مقدونی","mk"],
+["bs","بوسنیایی","ba"],["co","کورسی","fr"],["fy","فریزی","nl"],["lb","لوکزامبورگی","lu"],
+["yi","ییدیش","il"],["jw","جاوه‌ای","id"],["su","سوندانی","id"],["ceb","سبوانو","ph"],
+["haw","هاوایی","us"],["mi","مائوری","nz"],["sm","ساموآیی","ws"],["to","تونگایی","to"],
+["fj","فیجیایی","fj"]
+];
+const LANG_MAP = Object.fromEntries(LANGS.map(l=>[l[0],l]));
+const TTS_LOCALE_OVERRIDES = { fa:'fa-IR', en:'en-US', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', ur:'ur-PK', ar:'ar-SA' };
+
+function flagUrl(cc){ return 'https://flagcdn.com/24x18/' + cc + '.png'; }
+function ttsLocale(code){ return TTS_LOCALE_OVERRIDES[code] || (code + '-' + code.toUpperCase()); }
+
+/* ============================================================
+   STORAGE HELPERS
+============================================================ */
+const LS = {
+  get(key, fallback){ try{ const v = localStorage.getItem(key); return v===null ? fallback : JSON.parse(v);}catch(e){ return fallback; } },
+  set(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+};
+
+const state = {
+  theme: LS.get('tf_theme','dark'),
+  defaultFrom: LS.get('tf_default_from','auto'),
+  defaultTo: LS.get('tf_default_to','en'),
+  tone: LS.get('tf_tone','standard'),
+  autoDetect: LS.get('tf_autodetect', true),
+  ttsEnabled: LS.get('tf_tts', true),
+  statsEnabled: LS.get('tf_stats', true),
+  saveHistory: LS.get('tf_savehistory', true),
+  history: LS.get('tf_history', [])
+};
+
+function persistSettings(){
+  LS.set('tf_theme', state.theme);
+  LS.set('tf_default_from', state.defaultFrom);
+  LS.set('tf_default_to', state.defaultTo);
+  LS.set('tf_tone', state.tone);
+  LS.set('tf_autodetect', state.autoDetect);
+  LS.set('tf_tts', state.ttsEnabled);
+  LS.set('tf_stats', state.statsEnabled);
+  LS.set('tf_savehistory', state.saveHistory);
+}
+
+/* ============================================================
+   THEME
+============================================================ */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const txt = document.getElementById('themeValueText');
+  if(txt) txt.textContent = state.theme === 'dark' ? 'تیره' : 'روشن';
+}
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); persistSettings();
+});
+document.getElementById('rowTheme').addEventListener('click', ()=>{
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); persistSettings();
+});
+applyTheme();
+
+/* ============================================================
+   TOAST
+============================================================ */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('visible'), 1800);
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+const PAGE_META = {
+  home: { title:'Translify', sub:'ترجمهٔ سریع، دقیق و حرفه‌ای بین بیش از ۱۰۰ زبان' },
+  translate: { title:'ترجمه', sub:'ابزار ترجمهٔ سریع و حرفه‌ای' },
+  history: { title:'تاریخچه', sub:'سابقهٔ ترجمه‌های شما' },
+  settings: { title:'تنظیمات', sub:'شخصی‌سازی تجربهٔ ترجمه' },
+  about: { title:'دربارهٔ ما', sub:'اطلاعات بیشتر دربارهٔ این پروژه' }
+};
+
+function goToPage(name){
+  document.querySelectorAll('.page').forEach(p=> p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.page === name));
+  const meta = PAGE_META[name];
+  document.getElementById('pageTitle').textContent = meta.title;
+  document.getElementById('pageSubtitle').textContent = meta.sub;
+  if(name === 'history') renderHistoryPage();
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> goToPage(btn.dataset.page));
+});
+document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
+
+/* ============================================================
+   TRANSLATE PANEL (templated twice: home + translate)
+============================================================ */
+const panels = {};
+
+function buildPanel(pageId, showExtras){
+  const container = document.getElementById(pageId);
+  const tpl = document.getElementById('translateTemplate');
+  const node = tpl.content.cloneNode(true);
+  container.appendChild(node);
+
+  const el = (sel)=> container.querySelector('[data-el="'+sel+'"]');
+  const p = {
+    root: container,
+    sourceText: el('sourceText'),
+    charCount: el('charCount'),
+    fromLabel: el('fromLabel'),
+    toLabel: el('toLabel'),
+    toneRow: el('toneRow'),
+    advancedBody: el('advancedBody'),
+    ctaLabel: el('ctaLabel'),
+    targetText: el('targetText'),
+    statusCard: el('statusCard'),
+    confChip: el('confChip'),
+    statDetected: el('statDetected'),
+    statTime: el('statTime'),
+    statOut: el('statOut'),
+    engineNote: el('engineNote'),
+    altLoading: el('altLoading'),
+    altChips: el('altChips'),
+    explainBody: el('explainBody'),
+    suggestionsBody: el('suggestionsBody'),
+    recentBody: el('recentBody'),
+    recentList: el('recentList'),
+    extraSuggestions: el('extraSuggestions'),
+    extraRecent: el('extraRecent'),
+    from: state.defaultFrom,
+    to: state.defaultTo,
+    lastDetected: null,
+    zen: false
   };
-  const TTS_LOCALE = {
-    fa:'fa-IR', en:'en-US', tr:'tr-TR', fr:'fr-FR', de:'de-DE', es:'es-ES', it:'it-IT',
-    ru:'ru-RU', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', hi:'hi-IN', ur:'ur-PK', pt:'pt-PT', nl:'nl-NL'
-  };
-  const LANG_NAMES = Object.fromEntries(LANGS);
-  const HISTORY_KEY = 'zabanpeik_history';
-  const THEME_KEY = 'zabanpeik_theme';
-  const MAX_HISTORY = 30;
 
-  const fromSel = document.getElementById('fromLang');
-  const toSel = document.getElementById('toLang');
-  const sourceText = document.getElementById('sourceText');
-  const targetText = document.getElementById('targetText');
-  const translateBtn = document.getElementById('translateBtn');
-  const btnLabel = document.getElementById('btnLabel');
-  const statusMsg = document.getElementById('statusMsg');
-  const charCount = document.getElementById('charCount');
-  const matchInfo = document.getElementById('matchInfo');
-  const swapBtn = document.getElementById('swapBtn');
-  const copyBtn = document.getElementById('copyBtn');
-  const speakSourceBtn = document.getElementById('speakSourceBtn');
-  const speakTargetBtn = document.getElementById('speakTargetBtn');
-  const postmark = document.getElementById('postmark');
-  const pmCode = document.getElementById('pmCode');
-  const topArc = document.getElementById('topArc');
-  const topArcText = document.getElementById('topArcText');
-  const dateStamp = document.getElementById('dateStamp');
-  const themeToggle = document.getElementById('themeToggle');
-  const logList = document.getElementById('logList');
-  const logEmpty = document.getElementById('logEmpty');
-  const clearLogBtn = document.getElementById('clearLog');
-  const altBtn = document.getElementById('altBtn');
-  const altPanel = document.getElementById('altPanel');
-  const altChips = document.getElementById('altChips');
-  const altLoading = document.getElementById('altLoading');
-  const explainBtn = document.getElementById('explainBtn');
-  const explainPanel = document.getElementById('explainPanel');
-  const explainBody = document.getElementById('explainBody');
-  const explainLoading = document.getElementById('explainLoading');
+  if(!showExtras){
+    p.extraSuggestions.style.display = 'none';
+    p.extraRecent.style.display = 'none';
+  }
 
-  let lastDetectedFrom = null;
+  updateLangLabels(p);
+  updateCharCount(p);
 
-  function populate(sel, def, includeAuto){
-    if(includeAuto){
-      const autoOpt = document.createElement('option');
-      autoOpt.value = 'auto';
-      autoOpt.textContent = '🌐 تشخیص خودکار';
-      sel.appendChild(autoOpt);
-    }
-    LANGS.forEach(([code, name])=>{
-      const opt = document.createElement('option');
-      opt.value = code; opt.textContent = (FLAGS[code] || '') + ' ' + name;
-      if(code === def) opt.selected = true;
-      sel.appendChild(opt);
+  container.querySelector('[data-action="paste"]').addEventListener('click', async ()=>{
+    try{
+      const txt = await navigator.clipboard.readText();
+      p.sourceText.value = txt;
+      updateCharCount(p);
+    }catch(e){ showToast('اجازهٔ دسترسی به کلیپ‌بورد داده نشد'); }
+  });
+  container.querySelector('[data-action="clear"]').addEventListener('click', ()=>{
+    p.sourceText.value = '';
+    p.targetText.textContent = 'ترجمه اینجا نمایش داده می‌شود…';
+    p.targetText.classList.add('placeholder');
+    updateCharCount(p);
+  });
+  p.sourceText.addEventListener('input', ()=> updateCharCount(p));
+
+  container.querySelector('[data-action="pick-from"]').addEventListener('click', ()=> openLangSheet(p, 'from'));
+  container.querySelector('[data-action="pick-to"]').addEventListener('click', ()=> openLangSheet(p, 'to'));
+  container.querySelector('[data-action="swap"]').addEventListener('click', ()=>{
+    const realFrom = p.from === 'auto' ? (p.lastDetected || 'en') : p.from;
+    const t = p.to;
+    p.from = t; p.to = realFrom;
+    updateLangLabels(p);
+    const s = p.sourceText.value;
+    p.sourceText.value = p.targetText.classList.contains('placeholder') ? '' : p.targetText.textContent;
+    p.targetText.textContent = s || 'ترجمه اینجا نمایش داده می‌شود…';
+    p.targetText.classList.toggle('placeholder', !s);
+    updateCharCount(p);
+  });
+
+  p.toneRow.querySelectorAll('.tone-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      p.toneRow.querySelectorAll('.tone-chip').forEach(c=> c.classList.remove('active'));
+      chip.classList.add('active');
+      p.tone = chip.dataset.tone;
+      if(chip.dataset.tone !== 'standard' && chip.dataset.tone !== 'summary'){
+        showToast('این حالت فعلاً فقط نمایشی است (نیاز به هوش مصنوعی دارد)');
+      }
     });
-  }
-  populate(fromSel, 'fa', true);
-  populate(toSel, 'en');
-
-  topArc.setAttribute('d','M 14 50 A 36 36 0 0 1 86 50');
-
-  function toFarsiDigits(str){
-    const map = {'0':'۰','1':'۱','2':'۲','3':'۳','4':'۴','5':'۵','6':'۶','7':'۷','8':'۸','9':'۹'};
-    return String(str).replace(/[0-9]/g, d=>map[d]);
-  }
-
-  function isShortInput(text){
-    const trimmed = text.trim();
-    if(!trimmed) return false;
-    const words = trimmed.split(/\s+/).filter(Boolean);
-    return words.length <= 3 && trimmed.length <= 30;
-  }
-
-  function updateCharCount(){
-    charCount.textContent = toFarsiDigits(sourceText.value.length) + ' نویسه';
-    const short = isShortInput(sourceText.value);
-    altBtn.disabled = !short;
-    altBtn.title = altBtn.disabled ? 'فقط برای کلمات یا عبارات کوتاه (حداکثر ۳ کلمه)' : 'دیدن معانی و ترجمه‌های مشابه';
-    explainBtn.disabled = !short;
-    explainBtn.title = explainBtn.disabled ? 'فقط برای کلمات یا عبارات کوتاه (حداکثر ۳ کلمه)' : 'دیدن توضیح کوتاه دربارهٔ این کلمه';
-    altPanel.classList.remove('visible');
-    explainPanel.classList.remove('visible');
-  }
-  sourceText.addEventListener('input', updateCharCount);
-  updateCharCount();
-
-  function now(){
-    const d = new Date();
-    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short' }).toUpperCase();
-  }
-  dateStamp.textContent = now();
-
-  function stampPostmark(sourceCode){
-    pmCode.textContent = sourceCode.toUpperCase();
-    topArcText.textContent = 'ZABANPEIK · ' + now();
-    postmark.classList.remove('stamped');
-    void postmark.offsetWidth;
-    postmark.classList.add('stamped');
-  }
-
-  /* ---------- Theme ---------- */
-  function applyTheme(theme){
-    document.documentElement.setAttribute('data-theme', theme);
-    try{ localStorage.setItem(THEME_KEY, theme); }catch(e){}
-  }
-  (function initTheme(){
-    let saved = null;
-    try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
-    if(saved === 'dark' || saved === 'light'){
-      applyTheme(saved);
-    } else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
-      applyTheme('dark');
-    }
-  })();
-  themeToggle.addEventListener('click', ()=>{
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    applyTheme(current === 'dark' ? 'light' : 'dark');
   });
 
-  /* ---------- Swap ---------- */
-  swapBtn.addEventListener('click', ()=>{
-    swapBtn.classList.add('spin');
-    setTimeout(()=> swapBtn.classList.remove('spin'), 260);
-    const f = fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value;
-    const t = toSel.value;
-    fromSel.value = t; toSel.value = f;
-    const srcVal = sourceText.value;
-    sourceText.value = targetText.value;
-    targetText.value = srcVal;
-    updateCharCount();
+  container.querySelector('[data-action="toggle-advanced"]').addEventListener('click', function(){
+    this.classList.toggle('open');
+    p.advancedBody.classList.toggle('open');
+  });
+  container.querySelector('[data-action="toggle-suggestions"]').addEventListener('click', function(){
+    this.classList.toggle('open');
+    p.suggestionsBody.classList.toggle('open');
+  });
+  container.querySelector('[data-action="toggle-recent"]').addEventListener('click', function(){
+    this.classList.toggle('open');
+    p.recentBody.classList.toggle('open');
+    if(p.recentBody.classList.contains('open')) renderRecent(p);
   });
 
-  /* ---------- Copy ---------- */
-  copyBtn.addEventListener('click', async ()=>{
-    if(!targetText.value){ return; }
-    try{
-      await navigator.clipboard.writeText(targetText.value);
-    } catch(e){
-      targetText.select();
-      document.execCommand('copy');
-    }
-    copyBtn.classList.add('copied');
-    setTimeout(()=> copyBtn.classList.remove('copied'), 1200);
+  container.querySelector('[data-action="translate"]').addEventListener('click', ()=> runTranslate(p));
+  container.querySelector('[data-action="copy"]').addEventListener('click', (e)=> copyTarget(p, e.currentTarget));
+  container.querySelector('[data-action="share"]').addEventListener('click', ()=> shareTarget(p));
+  container.querySelector('[data-action="zen"]').addEventListener('click', (e)=>{
+    p.zen = !p.zen;
+    p.targetText.classList.toggle('zen', p.zen);
   });
+  container.querySelector('[data-action="speak-target"]').addEventListener('click', ()=> speak(p.targetText.textContent, p.to));
+  container.querySelector('[data-action="alt-meanings"]').addEventListener('click', ()=> showAlternatives(p));
+  container.querySelector('[data-action="explain"]').addEventListener('click', ()=> explainWord(p));
+  const seeAllBtn = container.querySelector('[data-action="see-all-history"]');
+  if(seeAllBtn) seeAllBtn.addEventListener('click', ()=> goToPage('history'));
 
-  /* ---------- Language detection (lightweight heuristic) ---------- */
-  function detectLanguage(text){
-    const t = text.trim();
-    if(!t) return 'en';
+  panels[pageId] = p;
+}
 
-    if(/[\u3040-\u30ff]/.test(t)) return 'ja';
-    if(/[\uac00-\ud7af]/.test(t)) return 'ko';
-    if(/[\u4e00-\u9fff]/.test(t)) return 'zh';
-    if(/[\u0600-\u06FF\u0750-\u077F]/.test(t)){
-      if(/[ٹڈڑے]/.test(t)) return 'ur';
-      return 'fa';
-    }
-    if(/[\u0900-\u097F]/.test(t)) return 'hi';
-    if(/[\u0400-\u04FF]/.test(t)) return 'ru';
-
-    const lower = ' ' + t.toLowerCase() + ' ';
-    const stopwords = {
-      en: [' the ',' and ',' is ',' you ',' to ',' of ',' are '],
-      fr: [' le ',' la ',' et ',' les ',' des ',' est ',' une '],
-      de: [' der ',' die ',' und ',' das ',' ist ',' nicht ',' ein '],
-      es: [' el ',' la ',' y ',' los ',' es ',' que ',' una '],
-      it: [' il ',' la ',' e ',' che ',' di ',' non ',' una '],
-      pt: [' o ',' a ',' e ',' de ',' que ',' não ',' uma '],
-      nl: [' de ',' het ',' en ',' een ',' niet ',' van ',' is '],
-      tr: [' ve ',' bir ',' bu ',' için ',' değil ',' ile ',' mi ']
-    };
-    let best = 'en', bestScore = 0;
-    for(const [lang, words] of Object.entries(stopwords)){
-      const score = words.reduce((acc,w)=> acc + (lower.includes(w) ? 1 : 0), 0);
-      if(score > bestScore){ bestScore = score; best = lang; }
-    }
-    return best;
+function updateLangLabels(p){
+  if(p.from === 'auto'){
+    p.fromLabel.parentElement.querySelector('img')?.remove();
+    p.fromLabel.textContent = 'تشخیص خودکار';
+  } else {
+    const l = LANG_MAP[p.from];
+    setFieldFlag(p.fromLabel.parentElement, l);
+    p.fromLabel.textContent = l ? l[1] : p.from;
   }
+  const lt = LANG_MAP[p.to];
+  setFieldFlag(p.toLabel.parentElement, lt);
+  p.toLabel.textContent = lt ? lt[1] : p.to;
+}
+function setFieldFlag(field, lang){
+  let img = field.querySelector('img');
+  if(!lang){ if(img) img.remove(); return; }
+  if(!img){
+    img = document.createElement('img');
+    field.insertBefore(img, field.firstChild);
+  }
+  img.src = flagUrl(lang[2]);
+  img.alt = '';
+}
 
-  /* ---------- Text to speech ---------- */
-  function speak(text, langCode){
-    if(!('speechSynthesis' in window) || !text || !text.trim()) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = TTS_LOCALE[langCode] || 'en-US';
-    window.speechSynthesis.speak(u);
-  }
+function updateCharCount(p){
+  const n = p.sourceText.value.length;
+  p.charCount.textContent = n + ' / 5000';
+  const short = isShortInput(p.sourceText.value);
+  const altBtn = p.root.querySelector('[data-action="alt-meanings"]');
+  const expBtn = p.root.querySelector('[data-action="explain"]');
+  if(altBtn) altBtn.disabled = !short;
+  if(expBtn) expBtn.disabled = !short;
+}
+function isShortInput(text){
+  const t = text.trim();
+  if(!t) return false;
+  const words = t.split(/\s+/).filter(Boolean);
+  return words.length <= 3 && t.length <= 30;
+}
 
-  const ttsSupported = 'speechSynthesis' in window;
-  if(!ttsSupported){
-    speakSourceBtn.style.display = 'none';
-    speakTargetBtn.style.display = 'none';
-  }
+/* ============================================================
+   LANGUAGE PICKER SHEET
+============================================================ */
+let sheetTarget = null;
+const sheetOverlay = document.getElementById('sheetOverlay');
+const sheetList = document.getElementById('sheetList');
+const sheetSearchInput = document.getElementById('sheetSearchInput');
+const sheetTitleEl = document.getElementById('sheetTitle');
 
-  speakSourceBtn.addEventListener('click', ()=>{
-    const code = fromSel.value === 'auto' ? (lastDetectedFrom || detectLanguage(sourceText.value)) : fromSel.value;
-    speak(sourceText.value, code);
-  });
-  speakTargetBtn.addEventListener('click', ()=>{
-    speak(targetText.value, toSel.value);
-  });
+function openLangSheet(panel, which){
+  sheetTarget = { panel, which };
+  sheetTitleEl.textContent = which === 'from' ? 'زبان مبدأ' : 'زبان مقصد';
+  sheetSearchInput.value = '';
+  renderSheetList('');
+  sheetOverlay.classList.add('visible');
+  setTimeout(()=> sheetSearchInput.focus(), 200);
+}
+function closeSheet(){ sheetOverlay.classList.remove('visible'); sheetTarget = null; }
+sheetOverlay.addEventListener('click', (e)=>{ if(e.target === sheetOverlay) closeSheet(); });
+sheetSearchInput.addEventListener('input', ()=> renderSheetList(sheetSearchInput.value.trim().toLowerCase()));
 
-  /* ---------- History ---------- */
-  function loadHistory(){
-    try{
-      const raw = localStorage.getItem(HISTORY_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch(e){ return []; }
+function renderSheetList(query){
+  sheetList.innerHTML = '';
+  const { panel, which } = sheetTarget || {};
+  if(which === 'from'){
+    const row = document.createElement('div');
+    row.className = 'sheet-item' + (panel.from === 'auto' ? ' selected' : '');
+    row.innerHTML = '<div class="auto-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg></div><span>تشخیص خودکار</span>';
+    row.addEventListener('click', ()=>{ panel.from = 'auto'; updateLangLabels(panel); closeSheet(); });
+    sheetList.appendChild(row);
   }
-  function saveHistory(items){
-    try{ localStorage.setItem(HISTORY_KEY, JSON.stringify(items)); }catch(e){}
-  }
-  function addHistoryEntry(entry){
-    const items = loadHistory();
-    items.unshift(entry);
-    while(items.length > MAX_HISTORY) items.pop();
-    saveHistory(items);
-    renderHistory();
-  }
-  function renderHistory(){
-    const items = loadHistory();
-    logList.innerHTML = '';
-    logEmpty.style.display = items.length ? 'none' : 'block';
-    items.forEach((item, idx)=>{
-      const li = document.createElement('li');
-      li.className = 'log-item';
-      li.tabIndex = 0;
-      li.innerHTML =
-        '<div class="log-meta">' + item.time + '<br>' +
-          (LANG_NAMES[item.from] || item.from.toUpperCase()) + ' \u2192 ' + (LANG_NAMES[item.to] || item.to.toUpperCase()) +
-        '</div>' +
-        '<div class="log-src">' + escapeHtml(item.src) + '</div>' +
-        '<div class="log-tgt">' + escapeHtml(item.tgt) + '</div>';
-      li.addEventListener('click', ()=> restoreEntry(item));
-      li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') restoreEntry(item); });
-      logList.appendChild(li);
+  const filtered = LANGS.filter(l => !query || l[1].toLowerCase().includes(query) || l[0].includes(query));
+  filtered.forEach(l=>{
+    const current = which === 'from' ? panel.from : panel.to;
+    const row = document.createElement('div');
+    row.className = 'sheet-item' + (current === l[0] ? ' selected' : '');
+    row.innerHTML = '<img src="'+flagUrl(l[2])+'" alt=""><span>'+l[1]+'</span>';
+    row.addEventListener('click', ()=>{
+      if(which === 'from') panel.from = l[0]; else panel.to = l[0];
+      updateLangLabels(panel);
+      closeSheet();
     });
-  }
-  function restoreEntry(item){
-    fromSel.value = item.from;
-    toSel.value = item.to;
-    sourceText.value = item.src;
-    targetText.value = item.tgt;
-    updateCharCount();
-    matchInfo.textContent = '\u00A0';
-    statusMsg.textContent = 'از دفترچهٔ ارسال بازیابی شد.';
-    statusMsg.classList.remove('error');
-  }
-  function escapeHtml(str){
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-  }
-  clearLogBtn.addEventListener('click', ()=>{
-    saveHistory([]);
-    renderHistory();
+    sheetList.appendChild(row);
   });
-  renderHistory();
+}
 
-  /* ---------- Translate ---------- */
-  async function translate(){
-    const text = sourceText.value.trim();
-    if(!text){
-      statusMsg.textContent = 'ابتدا متنی بنویسید.';
-      statusMsg.classList.add('error');
-      return;
-    }
-
-    let effectiveFrom = fromSel.value;
-    if(effectiveFrom === 'auto'){
-      effectiveFrom = detectLanguage(text);
-      lastDetectedFrom = effectiveFrom;
-    }
-
-    if(effectiveFrom === toSel.value){
-      statusMsg.textContent = 'زبان مبدأ و مقصد باید متفاوت باشند.';
-      statusMsg.classList.add('error');
-      return;
-    }
-
-    translateBtn.disabled = true;
-    btnLabel.textContent = 'در حال ارسال…';
-    statusMsg.classList.remove('error');
-    statusMsg.textContent = fromSel.value === 'auto'
-      ? 'زبان تشخیص داده‌شده: ' + (LANG_NAMES[effectiveFrom] || effectiveFrom.toUpperCase()) + ' — در حال ارسال…'
-      : 'در حال برقراری تماس با سرویس ترجمه…';
-    matchInfo.textContent = '\u00A0';
-
-    const langpair = effectiveFrom + '|' + toSel.value;
-    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + langpair;
-
-    try{
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if(data && data.responseData && data.responseData.translatedText){
-        targetText.value = data.responseData.translatedText;
-        const quality = data.responseData.match;
-        if(quality !== undefined){
-          matchInfo.textContent = 'دقت تطابق تقریبی: ' + toFarsiDigits(Math.round(quality*100)) + '٪';
-        }
-        statusMsg.textContent = fromSel.value === 'auto'
-          ? 'تحویل داده شد. (زبان تشخیص داده‌شده: ' + (LANG_NAMES[effectiveFrom] || effectiveFrom.toUpperCase()) + ')'
-          : 'تحویل داده شد.';
-        stampPostmark(effectiveFrom);
-
-        addHistoryEntry({
-          time: new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }),
-          from: effectiveFrom,
-          to: toSel.value,
-          src: text,
-          tgt: data.responseData.translatedText
-        });
-      } else {
-        throw new Error((data && data.responseDetails) || 'پاسخ نامعتبر از سرویس دریافت شد.');
-      }
-    } catch(err){
-      statusMsg.classList.add('error');
-      statusMsg.textContent = 'مشکلی پیش آمد: ' + (err.message || 'اتصال برقرار نشد.') + ' — دوباره تلاش کنید.';
-    } finally {
-      translateBtn.disabled = false;
-      btnLabel.textContent = 'مهر و ارسال';
-    }
+/* ============================================================
+   TRANSLATION ENGINES
+============================================================ */
+function detectLanguage(text){
+  const t = text.trim();
+  if(!t) return 'en';
+  if(/[\u3040-\u30ff]/.test(t)) return 'ja';
+  if(/[\uac00-\ud7af]/.test(t)) return 'ko';
+  if(/[\u4e00-\u9fff]/.test(t)) return 'zh';
+  if(/[\u0600-\u06FF\u0750-\u077F]/.test(t)){
+    if(/[ٹڈڑے]/.test(t)) return 'ur';
+    if(/[پچژگ]/.test(t)) return 'fa';
+    return 'ar';
   }
-
-  translateBtn.addEventListener('click', translate);
-  sourceText.addEventListener('keydown', (e)=>{
-    if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ translate(); }
-  });
-
-  /* ---------- Similar meanings (for short words/phrases) ---------- */
-  async function showAlternatives(){
-    const text = sourceText.value.trim();
-    if(!isShortInput(text)) return;
-
-    let effectiveFrom = fromSel.value === 'auto' ? detectLanguage(text) : fromSel.value;
-    if(effectiveFrom === toSel.value) return;
-
-    altBtn.disabled = true;
-    altLoading.textContent = '… در حال جست‌وجو';
-    altPanel.classList.add('visible');
-    altChips.innerHTML = '';
-
-    const langpair = effectiveFrom + '|' + toSel.value;
-    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + langpair;
-
-    try{
-      const res = await fetch(url);
-      const data = await res.json();
-
-      const seen = new Set();
-      const results = [];
-
-      if(data && data.responseData && data.responseData.translatedText){
-        const main = data.responseData.translatedText.trim();
-        seen.add(main.toLowerCase());
-        results.push(main);
-      }
-
-      if(Array.isArray(data.matches)){
-        const sorted = data.matches
-          .filter(m => m && m.translation)
-          .sort((a,b) => (b.match || 0) - (a.match || 0));
-        for(const m of sorted){
-          const candidate = m.translation.trim();
-          const key = candidate.toLowerCase();
-          if(!candidate || seen.has(key)) continue;
-          if(candidate.split(/\s+/).length > 4) continue;
-          seen.add(key);
-          results.push(candidate);
-          if(results.length >= 6) break;
-        }
-      }
-
-      altLoading.textContent = '';
-      if(results.length <= 1){
-        altChips.innerHTML = '<span class="alt-empty">معنای جایگزین دیگری در پایگاه ترجمه پیدا نشد.</span>';
-      } else {
-        results.forEach(r=>{
-          const chip = document.createElement('button');
-          chip.className = 'alt-chip';
-          chip.type = 'button';
-          chip.textContent = r;
-          chip.addEventListener('click', ()=>{
-            targetText.value = r;
-          });
-          altChips.appendChild(chip);
-        });
-      }
-    } catch(err){
-      altLoading.textContent = '';
-      altChips.innerHTML = '<span class="alt-empty">مشکلی در دریافت معانی مشابه پیش آمد.</span>';
-    } finally {
-      altBtn.disabled = !isShortInput(sourceText.value);
-    }
-  }
-
-  altBtn.addEventListener('click', showAlternatives);
-
-  /* ---------- Short explanation (word meaning, via Wiktionary) ---------- */
-  const POS_FA = {
-    noun: 'اسم', verb: 'فعل', adjective: 'صفت', adverb: 'قید',
-    pronoun: 'ضمیر', preposition: 'حرف‌اضافه', conjunction: 'حرف‌ربط',
-    interjection: 'صوت', article: 'حرف‌تعریف', numeral: 'عدد', proper_noun: 'اسم‌خاص'
+  if(/[\u0900-\u097F]/.test(t)) return 'hi';
+  if(/[\u0400-\u04FF]/.test(t)) return 'ru';
+  const lower = ' ' + t.toLowerCase() + ' ';
+  const stop = {
+    en:[' the ',' and ',' is ',' you ',' to ',' of ',' are '], fr:[' le ',' la ',' et ',' les ',' des ',' est '],
+    de:[' der ',' die ',' und ',' das ',' ist ',' nicht '], es:[' el ',' la ',' y ',' los ',' es ',' que '],
+    it:[' il ',' la ',' e ',' che ',' di ',' non '], pt:[' o ',' a ',' e ',' de ',' que ',' não '],
+    nl:[' de ',' het ',' en ',' een ',' niet '], tr:[' ve ',' bir ',' bu ',' için ',' değil ']
   };
-
-  function stripTags(html){
-    const d = document.createElement('div');
-    d.innerHTML = html;
-    return (d.textContent || '').trim();
+  let best='en', bestScore=0;
+  for(const [lang, words] of Object.entries(stop)){
+    const score = words.reduce((a,w)=> a + (lower.includes(w)?1:0), 0);
+    if(score > bestScore){ bestScore = score; best = lang; }
   }
+  return best;
+}
 
-  function cleanWordForLookup(text){
-    return text.trim().split(/\s+/)[0].replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+async function tryGoogleTranslate(text, sl, tl){
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('google-http-' + res.status);
+  const data = await res.json();
+  const translated = data[0].map(chunk=> chunk[0]).join('');
+  const detected = data[2] || null;
+  if(!translated) throw new Error('google-empty');
+  return { translated, detected, engine: 'Google Translate' };
+}
+
+async function tryMyMemory(text, sl, tl){
+  const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sl+'|'+tl;
+  const res = await fetch(url);
+  const data = await res.json();
+  if(data && data.responseData && data.responseData.translatedText){
+    return { translated: data.responseData.translatedText, match: data.responseData.match, engine: 'MyMemory' };
   }
+  throw new Error((data && data.responseDetails) || 'mymemory-failed');
+}
 
-  async function translateSnippet(text, targetLang){
-    try{
-      const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|' + targetLang;
-      const res = await fetch(url);
-      const data = await res.json();
-      if(data && data.responseData && data.responseData.translatedText){
-        return data.responseData.translatedText;
-      }
-    } catch(e){}
-    return null;
+async function translateText(text, fromCode, toCode){
+  let sourceForApi = fromCode === 'auto' ? 'auto' : fromCode;
+  try{
+    const g = await tryGoogleTranslate(text, sourceForApi, toCode);
+    const detected = fromCode === 'auto' ? (g.detected || detectLanguage(text)) : fromCode;
+    return { translated: g.translated, detected, engine: g.engine, confidence: null };
+  } catch(e){
+    const detected = fromCode === 'auto' ? detectLanguage(text) : fromCode;
+    const m = await tryMyMemory(text, detected, toCode);
+    return { translated: m.translated, detected, engine: m.engine, confidence: m.match };
   }
+}
 
-  async function explainWord(){
-    const rawWord = targetText.value.trim() || sourceText.value.trim();
-    if(!rawWord) return;
-    const word = cleanWordForLookup(rawWord);
-    if(!word) return;
+/* ============================================================
+   RUN TRANSLATE
+============================================================ */
+async function runTranslate(p){
+  const text = p.sourceText.value.trim();
+  if(!text){ showToast('ابتدا متنی وارد کنید'); return; }
 
-    const usedFromTarget = !!targetText.value.trim();
-    const primaryLang = usedFromTarget ? toSel.value : (fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value);
-    const fallbackLang = usedFromTarget ? (fromSel.value === 'auto' ? (lastDetectedFrom || 'en') : fromSel.value) : toSel.value;
-    const candidateLangs = [primaryLang, fallbackLang, 'en'];
+  const btn = p.root.querySelector('[data-action="translate"]');
+  btn.disabled = true;
+  p.ctaLabel.textContent = 'در حال ترجمه…';
 
-    explainBtn.disabled = true;
-    explainLoading.textContent = '… در حال جست‌وجو';
-    explainPanel.classList.add('visible');
-    explainBody.innerHTML = '';
-
-    try{
-      const res = await fetch('https://en.wiktionary.org/api/rest_v1/page/definition/' + encodeURIComponent(word));
-      if(!res.ok) throw new Error('not-found');
-      const data = await res.json();
-
-      let matchedLang = candidateLangs.find(l => Array.isArray(data[l]) && data[l].length);
-      if(!matchedLang){
-        const anyKey = Object.keys(data)[0];
-        if(anyKey) matchedLang = anyKey;
-      }
-
-      if(!matchedLang || !Array.isArray(data[matchedLang]) || !data[matchedLang].length){
-        explainLoading.textContent = '';
-        explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه در واژه‌نامه پیدا نشد.</span>';
-        return;
-      }
-
-      explainLoading.textContent = '… در حال ترجمهٔ توضیح به فارسی';
-
-      const blocks = data[matchedLang].slice(0, 3);
-      let html = '';
-
-      for(const block of blocks){
-        const posFa = POS_FA[block.partOfSpeech] || block.partOfSpeech || '';
-        const rawDefs = (block.definitions || []).slice(0, 2).map(d => stripTags(d.definition)).filter(Boolean);
-        if(!rawDefs.length) continue;
-
-        const translated = await Promise.all(rawDefs.map(d => translateSnippet(d, 'fa')));
-
-        html += '<div class="explain-entry">';
-        if(posFa) html += '<span class="explain-pos">' + posFa + '</span>';
-        html += '<ul class="explain-defs">';
-        rawDefs.forEach((d, i)=>{
-          const fa = translated[i];
-          html += '<li>' + (fa ? fa.replace(/</g,'&lt;') : d.replace(/</g,'&lt;'));
-          if(fa) html += '<span class="explain-en">' + d.replace(/</g,'&lt;') + '</span>';
-          html += '</li>';
-        });
-        html += '</ul></div>';
-      }
-
-      explainLoading.textContent = '';
-
-      if(!html){
-        explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه در واژه‌نامه پیدا نشد.</span>';
-        return;
-      }
-
-      html += '<div class="explain-lang-note">منبع: Wiktionary، ترجمه با MyMemory (' + word + ')</div>';
-      explainBody.innerHTML = html;
-    } catch(err){
-      explainLoading.textContent = '';
-      explainBody.innerHTML = '<span class="alt-empty">توضیحی برای این کلمه پیدا نشد — معمولاً این واژه‌نامه فقط کلمات رایج را پوشش می‌دهد.</span>';
-    } finally {
-      explainBtn.disabled = !isShortInput(sourceText.value);
+  try{
+    const result = await translateText(text, p.from, p.to);
+    let finalText = result.translated;
+    if(p.tone === 'summary'){
+      const firstSentence = finalText.split(/(?<=[.!?۔])\s/)[0];
+      if(firstSentence && firstSentence.length < finalText.length) finalText = firstSentence;
     }
-  }
+    p.lastDetected = result.detected;
+    p.targetText.textContent = finalText;
+    p.targetText.classList.remove('placeholder');
 
-  explainBtn.addEventListener('click', explainWord);
+    if(state.statsEnabled){
+      p.statusCard.style.display = 'block';
+      p.confChip.textContent = result.confidence != null ? Math.round(result.confidence*100)+'%' : 'high';
+      const detLang = LANG_MAP[result.detected];
+      p.statDetected.innerHTML = (detLang ? '<img src="'+flagUrl(detLang[2])+'">' : '') + '<span>'+(detLang ? detLang[1] : result.detected)+'</span>';
+      p.statTime.textContent = new Date().toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
+      const outLang = LANG_MAP[p.to];
+      p.statOut.innerHTML = (outLang ? '<img src="'+flagUrl(outLang[2])+'">' : '') + '<span>'+(outLang ? outLang[1] : p.to)+'</span>';
+      p.engineNote.textContent = 'موتور ترجمه: ' + result.engine;
+    } else {
+      p.statusCard.style.display = 'none';
+    }
+
+    if(state.saveHistory){
+      addHistoryEntry({ time: Date.now(), from: result.detected, to: p.to, src: text, tgt: finalText, fav:false });
+      if(!p.recentBody.classList.contains('open') === false) renderRecent(p);
+    }
+    updateLangLabels(p);
+  } catch(err){
+    showToast('خطا در ترجمه — دوباره تلاش کنید');
+  } finally {
+    btn.disabled = false;
+    p.ctaLabel.textContent = 'ترجمه کن';
+  }
+}
+
+function copyTarget(p, btnEl){
+  const txt = p.targetText.textContent;
+  if(!txt || p.targetText.classList.contains('placeholder')) return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    btnEl.classList.add('copied');
+    setTimeout(()=> btnEl.classList.remove('copied'), 1200);
+  }).catch(()=> showToast('کپی انجام نشد'));
+}
+function shareTarget(p){
+  const txt = p.targetText.textContent;
+  if(!txt || p.targetText.classList.contains('placeholder')) return;
+  if(navigator.share){ navigator.share({ text: txt }).catch(()=>{}); }
+  else { navigator.clipboard.writeText(txt); showToast('متن کپی شد (اشتراک‌گذاری در این مرورگر پشتیبانی نمی‌شود)'); }
+}
+function speak(text, langCode){
+  if(!state.ttsEnabled || !('speechSynthesis' in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = ttsLocale(langCode);
+  window.speechSynthesis.speak(u);
+}
+
+/* ============================================================
+   ALT MEANINGS + EXPLAIN (inside پیشنهادهای ترجمه)
+============================================================ */
+async function showAlternatives(p){
+  const text = p.sourceText.value.trim();
+  if(!isShortInput(text)) return;
+  const from = p.from === 'auto' ? (p.lastDetected || detectLanguage(text)) : p.from;
+  if(from === p.to) return;
+  p.altLoading.textContent = '… در حال جست‌وجو';
+  p.altChips.innerHTML = '';
+  try{
+    const m = await tryMyMemory(text, from, p.to);
+    const seen = new Set([m.translated.toLowerCase()]);
+    const results = [m.translated];
+    const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+from+'|'+p.to;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(Array.isArray(data.matches)){
+      data.matches.sort((a,b)=>(b.match||0)-(a.match||0)).forEach(mm=>{
+        const c = (mm.translation||'').trim();
+        if(!c || seen.has(c.toLowerCase()) || c.split(/\s+/).length>4) return;
+        seen.add(c.toLowerCase()); results.push(c);
+      });
+    }
+    p.altLoading.textContent = '';
+    if(results.length <= 1){
+      p.altChips.innerHTML = '<span style="font-size:12px; color:var(--text-dim2);">معنای جایگزین دیگری پیدا نشد.</span>';
+    } else {
+      results.slice(0,6).forEach(r=>{
+        const chip = document.createElement('button');
+        chip.className = 'alt-chip'; chip.type='button'; chip.textContent = r;
+        chip.addEventListener('click', ()=>{ p.targetText.textContent = r; p.targetText.classList.remove('placeholder'); });
+        p.altChips.appendChild(chip);
+      });
+    }
+  } catch(e){
+    p.altLoading.textContent = '';
+    p.altChips.innerHTML = '<span style="font-size:12px; color:var(--text-dim2);">مشکلی پیش آمد.</span>';
+  }
+}
+
+const POS_FA = { noun:'اسم', verb:'فعل', adjective:'صفت', adverb:'قید', pronoun:'ضمیر', preposition:'حرف‌اضافه', conjunction:'حرف‌ربط', interjection:'صوت', article:'حرف‌تعریف', numeral:'عدد', proper_noun:'اسم‌خاص' };
+function stripTags(html){ const d=document.createElement('div'); d.innerHTML=html; return (d.textContent||'').trim(); }
+function cleanWordForLookup(text){ return text.trim().split(/\s+/)[0].replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,''); }
+async function translateSnippet(text, targetLang){
+  try{
+    const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair=en|'+targetLang;
+    const res = await fetch(url); const data = await res.json();
+    if(data && data.responseData && data.responseData.translatedText) return data.responseData.translatedText;
+  }catch(e){}
+  return null;
+}
+async function explainWord(p){
+  const rawWord = (p.targetText.classList.contains('placeholder') ? '' : p.targetText.textContent) || p.sourceText.value;
+  const word = cleanWordForLookup(rawWord.trim());
+  if(!word) return;
+  p.explainBody.innerHTML = '<div class="mini-loading">… در حال جست‌وجو</div>';
+  try{
+    const res = await fetch('https://en.wiktionary.org/api/rest_v1/page/definition/'+encodeURIComponent(word));
+    if(!res.ok) throw new Error('nf');
+    const data = await res.json();
+    const candidateLangs = [p.to, p.from==='auto'?(p.lastDetected||'en'):p.from, 'en'];
+    let matchedLang = candidateLangs.find(l => Array.isArray(data[l]) && data[l].length) || Object.keys(data)[0];
+    if(!matchedLang || !data[matchedLang] || !data[matchedLang].length){
+      p.explainBody.innerHTML = '<div style="font-size:12px; color:var(--text-dim2); margin-top:8px;">توضیحی پیدا نشد.</div>'; return;
+    }
+    let html = '';
+    for(const block of data[matchedLang].slice(0,3)){
+      const posFa = POS_FA[block.partOfSpeech] || block.partOfSpeech || '';
+      const rawDefs = (block.definitions||[]).slice(0,2).map(d=>stripTags(d.definition)).filter(Boolean);
+      if(!rawDefs.length) continue;
+      const translated = await Promise.all(rawDefs.map(d=> translateSnippet(d,'fa')));
+      html += '<div class="explain-entry">';
+      if(posFa) html += '<span class="explain-pos">'+posFa+'</span>';
+      html += '<ul class="explain-defs">';
+      rawDefs.forEach((d,i)=>{
+        const fa = translated[i];
+        html += '<li>'+(fa?fa.replace(/</g,'&lt;'):d.replace(/</g,'&lt;'));
+        if(fa) html += '<span class="explain-en">'+d.replace(/</g,'&lt;')+'</span>';
+        html += '</li>';
+      });
+      html += '</ul></div>';
+    }
+    p.explainBody.innerHTML = html || '<div style="font-size:12px; color:var(--text-dim2); margin-top:8px;">توضیحی پیدا نشد.</div>';
+  } catch(e){
+    p.explainBody.innerHTML = '<div style="font-size:12px; color:var(--text-dim2); margin-top:8px;">توضیحی برای این کلمه پیدا نشد.</div>';
+  }
+}
+
+/* ============================================================
+   HISTORY
+============================================================ */
+function addHistoryEntry(entry){
+  state.history.unshift(entry);
+  if(state.history.length > 200) state.history.pop();
+  LS.set('tf_history', state.history);
+}
+function toggleFav(idx){
+  state.history[idx].fav = !state.history[idx].fav;
+  LS.set('tf_history', state.history);
+  renderHistoryPage();
+}
+function formatHistDate(ts){
+  const d = new Date(ts);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  const yest = new Date(now); yest.setDate(now.getDate()-1);
+  if(sameDay) return 'امروز';
+  if(d.toDateString() === yest.toDateString()) return 'دیروز';
+  try{ return d.toLocaleDateString('fa-IR', { day:'numeric', month:'long' }); }
+  catch(e){ return d.toLocaleDateString(); }
+}
+function renderRecent(p){
+  const items = state.history.slice(0,3);
+  p.recentList.innerHTML = '';
+  if(!items.length){
+    p.recentList.innerHTML = '<div style="font-size:12px; color:var(--text-dim2); padding:8px 0;">هنوز ترجمه‌ای ثبت نشده.</div>';
+    return;
+  }
+  items.forEach(it=>{
+    const row = document.createElement('div');
+    row.className = 'recent-item';
+    row.innerHTML = '<span class="txt">'+escapeHtml(it.src)+'</span><span class="txt" style="color:var(--accent1)">'+escapeHtml(it.tgt)+'</span>';
+    p.recentList.appendChild(row);
+  });
+}
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function renderHistoryPage(){
+  const listEl = document.getElementById('histList');
+  const query = document.getElementById('histSearch').value.trim().toLowerCase();
+  const onlyStarred = document.getElementById('histFilterOnly').value === 'starred';
+  let items = state.history.map((it, idx)=> ({...it, idx}));
+  if(query) items = items.filter(it => it.src.toLowerCase().includes(query) || it.tgt.toLowerCase().includes(query));
+  if(onlyStarred) items = items.filter(it => it.fav);
+
+  listEl.innerHTML = '';
+  if(!items.length){
+    listEl.innerHTML = '<div class="empty-state">هنوز نامه‌ای در تاریخچه ثبت نشده.</div>';
+    return;
+  }
+  let lastGroup = null;
+  items.forEach(it=>{
+    const group = formatHistDate(it.time);
+    if(group !== lastGroup){
+      const sep = document.createElement('div');
+      sep.className = 'date-sep'; sep.textContent = group;
+      listEl.appendChild(sep);
+      lastGroup = group;
+    }
+    const fromL = LANG_MAP[it.from], toL = LANG_MAP[it.to];
+    const card = document.createElement('div');
+    card.className = 'hist-card';
+    card.innerHTML =
+      '<div class="hist-top">'+
+        '<div class="hist-pair">'+(fromL?fromL[0].toUpperCase():it.from)+' → '+(toL?toL[0].toUpperCase():it.to)+'</div>'+
+        '<div class="hist-actions">'+
+          '<button class="star-btn'+(it.fav?' starred':'')+'" aria-label="نشان"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8L12 17.7 5.9 20.8l1.3-6.8-5-4.8 6.9-.9L12 2z"/></svg></button>'+
+          '<button class="copy-btn2" aria-label="کپی"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg></button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="hist-src">'+escapeHtml(it.src)+'</div>'+
+      '<div class="hist-tgt">'+escapeHtml(it.tgt)+'</div>'+
+      '<div class="hist-time">'+new Date(it.time).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})+'</div>';
+    card.querySelector('.star-btn').addEventListener('click', ()=> toggleFav(it.idx));
+    card.querySelector('.copy-btn2').addEventListener('click', (e)=>{
+      navigator.clipboard.writeText(it.tgt).then(()=>{
+        e.currentTarget.classList.add('copied');
+        setTimeout(()=> e.currentTarget.classList.remove('copied'), 1000);
+      });
+    });
+    listEl.appendChild(card);
+  });
+}
+document.getElementById('histSearch').addEventListener('input', renderHistoryPage);
+document.getElementById('histFilterOnly').addEventListener('change', renderHistoryPage);
+document.getElementById('histFilterBtn').addEventListener('click', ()=>{
+  const row = document.getElementById('histFilterRow');
+  row.style.display = row.style.display === 'none' ? 'block' : 'none';
+});
+
+/* ============================================================
+   SETTINGS PAGE WIRING
+============================================================ */
+function wireToggle(id, key){
+  const el = document.getElementById(id);
+  const sync = ()=> el.classList.toggle('on', !!state[key]);
+  sync();
+  el.addEventListener('click', ()=>{
+    state[key] = !state[key];
+    sync();
+    persistSettings();
+    Object.values(panels).forEach(p=>{
+      if(key === 'ttsEnabled') { /* no-op, checked at speak time */ }
+    });
+  });
+}
+wireToggle('toggleAutoDetect','autoDetect');
+wireToggle('toggleTTS','ttsEnabled');
+wireToggle('toggleStats','statsEnabled');
+wireToggle('toggleSaveHistory','saveHistory');
+
+function refreshDefaultLangDisplays(){
+  const fromEl = document.getElementById('defaultFromValue');
+  const toEl = document.getElementById('defaultToValue');
+  if(state.defaultFrom === 'auto'){
+    fromEl.innerHTML = '<span>تشخیص خودکار</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+  } else {
+    const l = LANG_MAP[state.defaultFrom];
+    fromEl.innerHTML = (l?'<img src="'+flagUrl(l[2])+'">':'')+'<span>'+(l?l[1]:state.defaultFrom)+'</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+  }
+  const lt = LANG_MAP[state.defaultTo];
+  toEl.innerHTML = (lt?'<img src="'+flagUrl(lt[2])+'">':'')+'<span>'+(lt?lt[1]:state.defaultTo)+'</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+}
+document.getElementById('rowDefaultFrom').addEventListener('click', ()=>{
+  sheetTarget = { fakeSettings: 'from' };
+  sheetTitleEl.textContent = 'زبان پیش‌فرض مبدأ';
+  sheetSearchInput.value=''; sheetList.innerHTML='';
+  const row = document.createElement('div');
+  row.className = 'sheet-item';
+  row.innerHTML = '<div class="auto-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg></div><span>تشخیص خودکار</span>';
+  row.addEventListener('click', ()=>{ state.defaultFrom='auto'; persistSettings(); refreshDefaultLangDisplays(); closeSheet(); });
+  sheetList.appendChild(row);
+  LANGS.forEach(l=>{
+    const r = document.createElement('div'); r.className='sheet-item';
+    r.innerHTML = '<img src="'+flagUrl(l[2])+'"><span>'+l[1]+'</span>';
+    r.addEventListener('click', ()=>{ state.defaultFrom=l[0]; persistSettings(); refreshDefaultLangDisplays(); closeSheet(); });
+    sheetList.appendChild(r);
+  });
+  sheetOverlay.classList.add('visible');
+});
+document.getElementById('rowDefaultTo').addEventListener('click', ()=>{
+  sheetTarget = { fakeSettings: 'to' };
+  sheetTitleEl.textContent = 'زبان پیش‌فرض مقصد';
+  sheetSearchInput.value=''; sheetList.innerHTML='';
+  LANGS.forEach(l=>{
+    const r = document.createElement('div'); r.className='sheet-item';
+    r.innerHTML = '<img src="'+flagUrl(l[2])+'"><span>'+l[1]+'</span>';
+    r.addEventListener('click', ()=>{ state.defaultTo=l[0]; persistSettings(); refreshDefaultLangDisplays(); closeSheet(); });
+    sheetList.appendChild(r);
+  });
+  sheetOverlay.classList.add('visible');
+});
+document.getElementById('rowPrivacy').addEventListener('click', ()=>{
+  const box = document.getElementById('privacyBox');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+});
+document.getElementById('rowAboutLink').addEventListener('click', ()=> goToPage('about'));
+
+/* ============================================================
+   INIT
+============================================================ */
+buildPanel('page-home', true);
+buildPanel('page-translate', false);
+refreshDefaultLangDisplays();
+goToPage('home');
 </script>
 
 </body>
