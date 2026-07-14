@@ -17,9 +17,11 @@
     --text-dim: rgba(238,241,246,0.55);
     --text-dim2: rgba(238,241,246,0.38);
     --accent1: #2dd4bf;
+    --accent1-rgb: 45,212,191;
     --accent2: #3b82f6;
     --accent-grad: linear-gradient(90deg, var(--accent1), var(--accent2));
     --success: #22c55e;
+    --success-rgb: 34,197,94;
     --danger: #ef4444;
     --star: #f5b942;
     --radius: 16px;
@@ -32,6 +34,21 @@
     --text: #10131a;
     --text-dim: rgba(16,19,26,0.55);
     --text-dim2: rgba(16,19,26,0.38);
+  }
+  html[data-theme="green"]{
+    --bg: #000000;
+    --card: #060b06;
+    --card-2: #0b140b;
+    --border: rgba(0,255,140,0.16);
+    --text: #e8fff0;
+    --text-dim: rgba(232,255,240,0.55);
+    --text-dim2: rgba(232,255,240,0.35);
+    --accent1: #00e676;
+    --accent1-rgb: 0,230,118;
+    --accent2: #00c853;
+    --success: #00e676;
+    --success-rgb: 0,230,118;
+    --star: #7dffb3;
   }
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html,body{ margin:0; padding:0; background: var(--bg); color: var(--text); font-family:'Vazirmatn','Inter',sans-serif; }
@@ -52,7 +69,7 @@
     background: var(--accent-grad);
     display:flex; align-items:center; justify-content:center;
     font-family:'Inter',sans-serif; font-weight:800; font-size:19px; color:#fff;
-    box-shadow: 0 4px 14px rgba(45,212,191,0.25);
+    box-shadow: 0 4px 14px rgba(var(--accent1-rgb),0.25);
   }
   .topbar-titles{ min-width:0; }
   .topbar-titles h1{ margin:0; font-size:19px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -65,8 +82,12 @@
   }
   .icon-circle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .icon-circle .moon{ display:none; }
+  .icon-circle .term{ display:none; }
   html[data-theme="dark"] .icon-circle .sun{ display:none; }
   html[data-theme="dark"] .icon-circle .moon{ display:flex; }
+  html[data-theme="green"] .icon-circle .sun{ display:none; }
+  html[data-theme="green"] .icon-circle .moon{ display:none; }
+  html[data-theme="green"] .icon-circle .term{ display:flex; }
 
   /* ---------- Cards ---------- */
   .card{ background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding:16px; margin-bottom:14px; }
@@ -84,11 +105,14 @@
   .input-head span{ font-size:13px; font-weight:600; color:var(--text-dim); }
   .chip-btn{
     display:flex; align-items:center; gap:6px;
-    background: rgba(45,212,191,0.12); color: var(--accent1);
+    background: rgba(var(--accent1-rgb),0.12); color: var(--accent1);
     border:none; border-radius:10px; padding:7px 12px; font-size:12.5px; font-weight:600; cursor:pointer;
   }
   .chip-btn svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
   .chip-btn.danger{ background: rgba(239,68,68,0.1); color: var(--danger); }
+  .chip-btn.recording{ background: rgba(239,68,68,0.16); color: var(--danger); }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.55;} }
+  .chip-btn.recording svg{ animation: pulse 1s ease infinite; }
 
   textarea.main-input{
     width:100%; min-height:120px; resize:vertical; border:none; background:transparent;
@@ -103,12 +127,12 @@
     display:flex; align-items:center; gap:8px; border:1px solid var(--border); background: var(--card-2);
     border-radius:12px; padding:10px 12px; cursor:pointer; min-width:0;
   }
-  .lang-field img{ width:20px; height:15px; border-radius:2px; object-fit:cover; flex-shrink:0; }
+  .lang-field img{ width:20px; height:20px; border-radius:50%; object-fit:cover; flex-shrink:0; }
   .lang-field .auto-dot{ width:16px; height:16px; flex-shrink:0; }
   .lang-field span{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .lang-field svg.chev{ width:13px; height:13px; stroke:var(--text-dim); fill:none; stroke-width:2; margin-inline-start:auto; flex-shrink:0; }
   .swap-circle{
-    width:40px; height:40px; border-radius:50%; border:none; background: rgba(45,212,191,0.14); color:var(--accent1);
+    width:40px; height:40px; border-radius:50%; border:none; background: rgba(var(--accent1-rgb),0.14); color:var(--accent1);
     display:flex; align-items:center; justify-content:center; cursor:pointer; margin:0 auto;
   }
   .swap-circle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; }
@@ -120,7 +144,7 @@
     border-radius:10px; padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer;
     display:flex; align-items:center; gap:6px;
   }
-  .tone-chip.active{ border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.1); }
+  .tone-chip.active{ border-color: var(--success); color: var(--success); background: rgba(var(--success-rgb),0.1); }
   .tone-chip svg{ width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2.4; }
 
   .collapse-head{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
@@ -152,13 +176,13 @@
 
   .status-card .row{ margin-bottom:12px; }
   .conf-chip{
-    background: rgba(34,197,94,0.14); color: var(--success); font-size:11.5px; font-weight:700;
+    background: rgba(var(--success-rgb),0.14); color: var(--success); font-size:11.5px; font-weight:700;
     border-radius:8px; padding:3px 10px; font-family:'Inter',sans-serif;
   }
   .stat-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; text-align:center; }
   .stat-grid .k{ font-size:10.5px; color: var(--text-dim); margin-bottom:6px; }
   .stat-grid .v{ font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; }
-  .stat-grid img{ width:16px; height:12px; border-radius:2px; }
+  .stat-grid img{ width:16px; height:16px; border-radius:50%; }
   .engine-note{ text-align:center; font-size:10.5px; color: var(--text-dim2); margin-top:10px; font-family:'Inter',sans-serif; }
 
   /* alt / explain (inside "پیشنهادهای ترجمه") */
@@ -192,7 +216,7 @@
   .search-box{ flex:1; display:flex; align-items:center; gap:8px; background: var(--card); border:1px solid var(--border); border-radius:12px; padding:11px 14px; }
   .search-box svg{ width:16px; height:16px; stroke: var(--text-dim); fill:none; stroke-width:2; flex-shrink:0; }
   .search-box input{ border:none; background:transparent; outline:none; font-size:14px; width:100%; color:var(--text); }
-  .filter-btn{ width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background: rgba(45,212,191,0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
+  .filter-btn{ width:44px; height:44px; border-radius:12px; border:1px solid var(--border); background: rgba(var(--accent1-rgb),0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
   .filter-btn svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; }
 
   .date-sep{ display:flex; align-items:center; gap:10px; margin: 20px 0 10px; font-size:12px; color: var(--text-dim); }
@@ -220,13 +244,11 @@
   .setting-label{ font-size:14px; font-weight:500; }
   .setting-desc{ font-size:11.5px; color: var(--text-dim); margin-top:2px; }
   .setting-value{ display:flex; align-items:center; gap:6px; font-size:13px; color: var(--text-dim); flex-shrink:0; }
-  .setting-value img{ width:18px; height:13px; border-radius:2px; }
+  .setting-value img{ width:18px; height:18px; border-radius:50%; }
   .toggle{ position:relative; width:42px; height:24px; border-radius:12px; background: var(--card-2); border:1px solid var(--border); cursor:pointer; flex-shrink:0; }
-  .toggle::after{ content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background: var(--text-dim); transition: transform .2s ease, background .2s ease; }
-  .toggle.on{ background: rgba(34,197,94,0.25); border-color: var(--success); }
-  .toggle.on::after{ transform: translateX(-18px); background: var(--success); }
-  html[dir="rtl"] .toggle::after{ left:auto; right:2px; }
-  html[dir="rtl"] .toggle.on::after{ transform: translateX(18px); }
+  .toggle::after{ content:''; position:absolute; top:2px; inset-inline-start:2px; width:18px; height:18px; border-radius:50%; background: var(--text-dim); transition: inset-inline-start .2s ease, background .2s ease; }
+  .toggle.on{ background: rgba(var(--success-rgb),0.25); border-color: var(--success); }
+  .toggle.on::after{ inset-inline-start: 22px; background: var(--success); }
   .chevron-row{ cursor:pointer; }
   .chevron-row svg.rowchev{ width:15px; height:15px; stroke: var(--text-dim); fill:none; stroke-width:2; }
 
@@ -238,7 +260,7 @@
   .about-hero p{ font-size:13.5px; color: var(--text-dim); line-height:1.8; max-width:380px; margin:0 auto; }
   .feature-item{ display:flex; align-items:flex-start; gap:12px; padding:13px 0; border-top:1px solid var(--border); }
   .feature-item:first-child{ border-top:none; }
-  .feature-icon{ width:36px; height:36px; border-radius:10px; background: rgba(45,212,191,0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .feature-icon{ width:36px; height:36px; border-radius:10px; background: rgba(var(--accent1-rgb),0.12); color: var(--accent1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .feature-icon svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; }
   .feature-text b{ display:block; font-size:14px; margin-bottom:2px; }
   .feature-text span{ font-size:12px; color: var(--text-dim); }
@@ -264,7 +286,7 @@
   }
   .nav-btn svg{ width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .nav-btn span{ font-size:10.5px; font-weight:600; }
-  .nav-btn.active{ color: var(--accent1); background: rgba(45,212,191,0.1); }
+  .nav-btn.active{ color: var(--accent1); background: rgba(var(--accent1-rgb),0.1); }
 
   /* ---------- Language picker sheet ---------- */
   .sheet-overlay{
@@ -287,10 +309,10 @@
   .sheet-list{ overflow-y:auto; flex:1; }
   .sheet-item{ display:flex; align-items:center; gap:12px; padding:11px 6px; border-radius:10px; cursor:pointer; }
   .sheet-item:hover{ background: var(--card-2); }
-  .sheet-item img{ width:24px; height:18px; border-radius:3px; object-fit:cover; flex-shrink:0; }
+  .sheet-item img{ width:24px; height:24px; border-radius:50%; object-fit:cover; flex-shrink:0; }
   .sheet-item .auto-ic{ width:24px; height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color: var(--accent1); }
   .sheet-item span{ font-size:14.5px; }
-  .sheet-item.selected{ background: rgba(45,212,191,0.1); }
+  .sheet-item.selected{ background: rgba(var(--accent1-rgb),0.1); }
 
   .toast{
     position: fixed; bottom: 92px; left:50%; transform: translateX(-50%);
@@ -309,16 +331,17 @@
 
   <header class="topbar">
     <div class="topbar-left">
-      <div class="app-icon">A</div>
+      <div class="app-icon"><svg viewBox="0 0 48 48" width="58%" height="58%"><path d="M8 10h32a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H20l-7 6v-6h-5a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z" fill="none" stroke="white" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="13" y="25" font-size="10" font-weight="700" fill="white" opacity="0.65">文</text><path d="M23 21q3 3 6 0" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.85"/><text x="27" y="27" font-size="15" font-weight="800" fill="white">A</text></svg></div>
       <div class="topbar-titles">
         <h1 id="pageTitle">Translify</h1>
         <p id="pageSubtitle">ابزار ترجمهٔ سریع و حرفه‌ای</p>
       </div>
     </div>
     <div class="topbar-actions">
-      <button class="icon-circle" id="themeToggle" aria-label="تغییر حالت تاریک/روشن">
+      <button class="icon-circle" id="themeToggle" aria-label="تغییر تم برنامه">
         <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8l1.8-1.8M18 6l1.8-1.8"/></svg>
         <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <svg class="term" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
       </button>
       <button class="icon-circle" id="menuBtn" aria-label="منو">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.4" fill="currentColor" stroke="none"/></svg>
@@ -360,7 +383,7 @@
       </div>
       <div class="setting-row">
         <div><div class="setting-label">زبان برنامه</div></div>
-        <div class="setting-value">🇮🇷<span>فارسی</span></div>
+        <div class="setting-value"><img src="https://cdn.jsdelivr.net/gh/HatScripts/circle-flags/flags/ir.svg" alt=""><span>فارسی</span></div>
       </div>
       <div class="setting-row chevron-row" id="rowDefaultFrom">
         <div><div class="setting-label">زبان پیش‌فرض مبدأ</div></div>
@@ -369,10 +392,6 @@
       <div class="setting-row chevron-row" id="rowDefaultTo">
         <div><div class="setting-label">زبان پیش‌فرض مقصد</div></div>
         <div class="setting-value" id="defaultToValue"><span>English</span><svg class="rowchev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">تنظیمات خروجی پیش‌فرض</div></div>
-        <div class="setting-value"><span id="defaultToneValue">استاندارد</span> <span style="color:var(--success)">✓</span></div>
       </div>
     </div>
 
@@ -420,9 +439,9 @@
   <!-- ===================== ABOUT ===================== -->
   <section class="page" id="page-about">
     <div class="about-hero">
-      <div class="app-icon">A</div>
+      <div class="app-icon"><svg viewBox="0 0 48 48" width="58%" height="58%"><path d="M8 10h32a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H20l-7 6v-6h-5a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z" fill="none" stroke="white" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><text x="13" y="25" font-size="10" font-weight="700" fill="white" opacity="0.65">文</text><path d="M23 21q3 3 6 0" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.85"/><text x="27" y="27" font-size="15" font-weight="800" fill="white">A</text></svg></div>
       <h2>Translify</h2>
-      <div class="ver">نسخهٔ ۲.۰.۰</div>
+      <div class="ver">نسخهٔ 2.0.0</div>
       <p>این صفحه با هدف ارائهٔ یک تجربهٔ ترجمهٔ سریع، دقیق و حرفه‌ای برای کاربران فارسی‌زبان ساخته شده است.</p>
     </div>
     <div class="card">
@@ -447,7 +466,7 @@
       <div class="card-title">ارتباط با ما</div>
       <div class="card-sub">اگر سؤال یا پیشنهادی دارید، خوشحال می‌شویم از طریق راه‌های زیر با ما در ارتباط باشید.</div>
       <div class="contact-buttons">
-        <a class="contact-btn gh" href="https://github.com/codewave4" target="_blank" rel="noopener">
+        <a class="contact-btn gh" href="https://github.com/codewave4/zabanpeik" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.56-.01 2.81-.01 3.19 0 .31.21.66.79.55A10.51 10.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
           GitHub Repository
         </a>
@@ -488,10 +507,16 @@
   <div class="card">
     <div class="input-head">
       <span>متن خود را وارد کنید</span>
-      <button class="chip-btn" data-action="paste">
-        <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>
-        چسباندن
-      </button>
+      <div style="display:flex; gap:6px;">
+        <button class="chip-btn" data-action="mic" data-el="micBtn">
+          <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          صوتی
+        </button>
+        <button class="chip-btn" data-action="paste">
+          <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>
+          چسباندن
+        </button>
+      </div>
     </div>
     <textarea class="main-input" data-el="sourceText" maxlength="5000" placeholder="متن خود را وارد کنید…"></textarea>
     <div class="input-foot">
@@ -517,14 +542,8 @@
 
   <div class="card">
     <div class="card-title">تنظیمات خروجی</div>
-    <div class="card-sub">سبک ترجمه</div>
-    <div class="tone-row" data-el="toneRow">
-      <button class="tone-chip active" data-tone="standard">استاندارد <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>
-      <button class="tone-chip" data-tone="formal">رسمی</button>
-      <button class="tone-chip" data-tone="casual">صمیمی</button>
-      <button class="tone-chip" data-tone="summary">خلاصه</button>
-    </div>
-    <div style="margin-top:14px;">
+    <div class="card-sub">تنظیمات پیشرفتهٔ ترجمه</div>
+    <div>
       <div class="collapse-head" data-action="toggle-advanced">
         <span style="font-size:13px; font-weight:600;">تنظیمات پیشرفته</span>
         <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
@@ -532,7 +551,7 @@
       <div class="collapse-body" data-el="advancedBody">
         <div class="adv-note">
           ترجمه ابتدا از طریق موتور گوگل انجام می‌شود؛ اگر در دسترس نبود، به‌صورت خودکار از MyMemory استفاده می‌شود.
-          حالت‌های «رسمی» و «صمیمی» فعلاً فقط جنبهٔ نمایشی دارند و نیاز به مدل هوش مصنوعی دارند که در این نسخهٔ رایگان در دسترس نیست. حالت «خلاصه» فقط جملهٔ اول ترجمه را نمایش می‌دهد.
+          حالت‌های «رسمی»، «صمیمی» و «خلاصه» چون به مدل هوش مصنوعی نیاز داشتن که در این نسخهٔ رایگان در دسترس نیست، حذف شدن و فقط ترجمهٔ استاندارد ارائه می‌شود.
         </div>
       </div>
     </div>
@@ -643,7 +662,7 @@ const LANGS = [
 const LANG_MAP = Object.fromEntries(LANGS.map(l=>[l[0],l]));
 const TTS_LOCALE_OVERRIDES = { fa:'fa-IR', en:'en-US', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', ur:'ur-PK', ar:'ar-SA' };
 
-function flagUrl(cc){ return 'https://flagcdn.com/24x18/' + cc + '.png'; }
+function flagUrl(cc){ return 'https://cdn.jsdelivr.net/gh/HatScripts/circle-flags/flags/' + cc + '.svg'; }
 function ttsLocale(code){ return TTS_LOCALE_OVERRIDES[code] || (code + '-' + code.toUpperCase()); }
 
 /* ============================================================
@@ -680,19 +699,20 @@ function persistSettings(){
 /* ============================================================
    THEME
 ============================================================ */
+const THEME_ORDER = ['dark','green','light'];
+const THEME_LABELS = { dark:'تیره', green:'مشکی و سبز', light:'روشن' };
 function applyTheme(){
   document.documentElement.setAttribute('data-theme', state.theme);
   const txt = document.getElementById('themeValueText');
-  if(txt) txt.textContent = state.theme === 'dark' ? 'تیره' : 'روشن';
+  if(txt) txt.textContent = THEME_LABELS[state.theme] || state.theme;
 }
-document.getElementById('themeToggle').addEventListener('click', ()=>{
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+function cycleTheme(){
+  const idx = THEME_ORDER.indexOf(state.theme);
+  state.theme = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
   applyTheme(); persistSettings();
-});
-document.getElementById('rowTheme').addEventListener('click', ()=>{
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
-  applyTheme(); persistSettings();
-});
+}
+document.getElementById('themeToggle').addEventListener('click', cycleTheme);
+document.getElementById('rowTheme').addEventListener('click', cycleTheme);
 applyTheme();
 
 /* ============================================================
@@ -751,7 +771,6 @@ function buildPanel(pageId, showExtras){
     charCount: el('charCount'),
     fromLabel: el('fromLabel'),
     toLabel: el('toLabel'),
-    toneRow: el('toneRow'),
     advancedBody: el('advancedBody'),
     ctaLabel: el('ctaLabel'),
     targetText: el('targetText'),
@@ -797,6 +816,34 @@ function buildPanel(pageId, showExtras){
     updateCharCount(p);
   });
   p.sourceText.addEventListener('input', ()=> updateCharCount(p));
+  p.sourceText.addEventListener('keydown', (e)=>{
+    if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ runTranslate(p); }
+  });
+
+  const micBtn = container.querySelector('[data-action="mic"]');
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRec){
+    micBtn.style.display = 'none';
+  } else {
+    let recognizer = null, listening = false;
+    micBtn.addEventListener('click', ()=>{
+      if(listening){ recognizer && recognizer.stop(); return; }
+      const langCode = p.from === 'auto' ? (p.lastDetected || 'fa') : p.from;
+      recognizer = new SpeechRec();
+      recognizer.lang = ttsLocale(langCode);
+      recognizer.interimResults = false;
+      recognizer.maxAlternatives = 1;
+      recognizer.onstart = ()=>{ listening = true; micBtn.classList.add('recording'); };
+      recognizer.onerror = ()=>{ showToast('خطا در دریافت صدا'); };
+      recognizer.onend = ()=>{ listening = false; micBtn.classList.remove('recording'); };
+      recognizer.onresult = (ev)=>{
+        const transcript = ev.results[0][0].transcript;
+        p.sourceText.value = (p.sourceText.value ? p.sourceText.value + ' ' : '') + transcript;
+        updateCharCount(p);
+      };
+      try{ recognizer.start(); } catch(e){ showToast('امکان استفاده از میکروفون نبود'); }
+    });
+  }
 
   container.querySelector('[data-action="pick-from"]').addEventListener('click', ()=> openLangSheet(p, 'from'));
   container.querySelector('[data-action="pick-to"]').addEventListener('click', ()=> openLangSheet(p, 'to'));
@@ -810,17 +857,6 @@ function buildPanel(pageId, showExtras){
     p.targetText.textContent = s || 'ترجمه اینجا نمایش داده می‌شود…';
     p.targetText.classList.toggle('placeholder', !s);
     updateCharCount(p);
-  });
-
-  p.toneRow.querySelectorAll('.tone-chip').forEach(chip=>{
-    chip.addEventListener('click', ()=>{
-      p.toneRow.querySelectorAll('.tone-chip').forEach(c=> c.classList.remove('active'));
-      chip.classList.add('active');
-      p.tone = chip.dataset.tone;
-      if(chip.dataset.tone !== 'standard' && chip.dataset.tone !== 'summary'){
-        showToast('این حالت فعلاً فقط نمایشی است (نیاز به هوش مصنوعی دارد)');
-      }
-    });
   });
 
   container.querySelector('[data-action="toggle-advanced"]').addEventListener('click', function(){
@@ -853,6 +889,7 @@ function buildPanel(pageId, showExtras){
   panels[pageId] = p;
 }
 
+const RTL_LANGS = new Set(['fa','ar','ur','he','ps','sd','ug','ku','yi']);
 function updateLangLabels(p){
   if(p.from === 'auto'){
     p.fromLabel.parentElement.querySelector('img')?.remove();
@@ -865,6 +902,10 @@ function updateLangLabels(p){
   const lt = LANG_MAP[p.to];
   setFieldFlag(p.toLabel.parentElement, lt);
   p.toLabel.textContent = lt ? lt[1] : p.to;
+
+  const fromForDir = p.from === 'auto' ? (p.lastDetected || 'fa') : p.from;
+  p.sourceText.style.direction = RTL_LANGS.has(fromForDir) ? 'rtl' : 'ltr';
+  p.targetText.style.direction = RTL_LANGS.has(p.to) ? 'rtl' : 'ltr';
 }
 function setFieldFlag(field, lang){
   let img = field.querySelector('img');
@@ -1017,11 +1058,7 @@ async function runTranslate(p){
 
   try{
     const result = await translateText(text, p.from, p.to);
-    let finalText = result.translated;
-    if(p.tone === 'summary'){
-      const firstSentence = finalText.split(/(?<=[.!?۔])\s/)[0];
-      if(firstSentence && firstSentence.length < finalText.length) finalText = firstSentence;
-    }
+    const finalText = result.translated;
     p.lastDetected = result.detected;
     p.targetText.textContent = finalText;
     p.targetText.classList.remove('placeholder');
