@@ -25,7 +25,7 @@
 
 ## 🚀 نسخه آنلاین
 
-https://codewave4.github.io/translify/
+https://codewave4.github.io/zabanpeik/
 
 ---
 
