@@ -36,9 +36,6 @@ https://codewave4.github.io/zabanpeik/
 
 
 
-## 📂 ساختار پروژه
-
-
 
 ---
 
