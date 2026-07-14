@@ -1,38 +1,44 @@
-# 🌍 ZabanPeik | زبان‌پیک
+# 🌍 Translify
 
 <p align="center">
-  <strong>Fast, Simple & Responsive Online Text Translator</strong><br>
-  <strong>مترجم آنلاین سریع، ساده و واکنش‌گرا</strong>
+  <strong>ترجمه متن بین ۱۰۵ زبان با رابط کاربری سریع، ساده و واکنش‌گرا</strong>
 </p>
 
 ---
 
-## 🇬🇧 English
+## 📖 درباره پروژه
 
-### 📖 About
+**Translify** یک مترجم آنلاین سریع، سبک و رایگان است که با **HTML توسعه داده شده است. این پروژه امکان ترجمه متن بین **۱۰۵ زبان** را با رابط کاربری مدرن و کاربرپسند فراهم می‌کند و امکاناتی مانند تبدیل متن به گفتار و کپی متن ترجمه‌شده را در اختیار کاربران قرار می‌دهد.
 
-ZabanPeik is a lightweight online text translator built with HTML. It provides fast translation between multiple languages with a clean interface and useful features like Text-to-Speech and Copy.
+---
 
-### ✨ Features
+## ✨ امکانات
 
-- 🌐 Translate between multiple languages
-- ⚡ Fast and lightweight
-- 📱 Responsive design
-- 🔊 Text-to-Speech support
-- 📋 Copy translated text
-- 🌙 Dark mode
-- 🆓 Free to use
+- 🌐 ترجمه متن بین **۱۰۵ زبان**
+- ⚡ ترجمه سریع و روان
+- 📱 طراحی واکنش‌گرا برای موبایل، تبلت و دسکتاپ
+- 🔊 تبدیل متن به گفتار (Text-to-Speech)
+- 📋 کپی متن ترجمه‌شده با یک کلیک
+- 🌙 پشتیبانی از حالت تیره
 
-### 🚀 Live Demo
+---
 
-https://codewave4.github.io/zabanpeik/
+## 🚀 نسخه آنلاین
 
-### 🛠 Built With
+https://codewave4.github.io/translify/
 
-- HTML
+---
+
+## 🛠 فناوری‌های استفاده‌شده
+
+- HTML5
+- CSS3
+- JavaScript
 - MyMemory Translation API
 
-### 📸 Screenshots
+---
+
+## 📸 تصاویر
 
 ![Screenshot 1](images/screenshot-1.jpg)
 
@@ -42,37 +48,10 @@ https://codewave4.github.io/zabanpeik/
 
 ---
 
-## 🇮🇷 فارسی
-
-### 📖 درباره پروژه
-
-زبان‌پیک یک مترجم آنلاین سبک و سریع است که با HTML توسعه داده شده است. این پروژه امکان ترجمه متن بین زبان‌های مختلف را با رابط کاربری ساده و امکانات کاربردی فراهم می‌کند.
-
-### ✨ امکانات
-
-- 🌐 ترجمه بین زبان‌های مختلف
-- ⚡ سرعت بالا
-- 📱 طراحی واکنش‌گرا
-- 🔊 تبدیل متن به گفتار
-- 📋 کپی متن ترجمه‌شده
-- 🌙 حالت تیره
-- 🆓 استفاده رایگان
-
-### 🚀 نسخه آنلاین
-
-https://codewave4.github.io/zabanpeik/
-
-### 🛠 فناوری‌های استفاده‌شده
-
-- HTML
-- MyMemory Translation API
-
----
-
-## 📂 Project Structure
+## 📂 ساختار پروژه
 
 ```text
-zabanpeik/
+translify/
 │
 ├── index.html
 ├── README.md
@@ -85,8 +64,13 @@ zabanpeik/
 
 ---
 
-## ⭐ Support
+## 🤝 مشارکت
 
-If you like this project, please consider giving it a ⭐ on GitHub.
+اگر پیشنهادی برای بهبود پروژه دارید یا با مشکلی مواجه شدید، می‌توانید Issue ثبت کنید یا Pull Request ارسال کنید.
 
+---
+
+## ⭐ حمایت
+
+اگر این پروژه برای شما مفید بود، خوشحال می‌شوم با دادن یک ⭐ در GitHub از آن حمایت کنید.
 
