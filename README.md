@@ -27,14 +27,6 @@
 
 https://codewave4.github.io/zabanpeik/
 
----
-
-## 🛠 فناوری‌های استفاده‌شده
-
-- HTML5
-- CSS3
-- JavaScript
-- MyMemory Translation API
 
 ---
 
@@ -42,25 +34,11 @@ https://codewave4.github.io/zabanpeik/
 
 ![Screenshot 1](images/screenshot-1.jpg)
 
-![Screenshot 2](images/screenshot-2.jpg)
 
-![Screenshot 3](images/screenshot-3.jpg)
-
----
 
 ## 📂 ساختار پروژه
 
-```text
-translify/
-│
-├── index.html
-├── README.md
-├── LICENSE
-└── images/
-    ├── screenshot-1.jpg
-    ├── screenshot-2.jpg
-    └── screenshot-3.jpg
-```
+
 
 ---
 
