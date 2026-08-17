@@ -49,16 +49,6 @@
   <img src="https://img.shields.io/badge/Wiktionary-FF8000?style=flat-square&logo=wikipedia&logoColor=white" />
 </p>
 
-## 🖼 پیش‌نمایش
-
-<p align="center">
-  <img src="docs/screenshots/translate.png" width="32%" alt="صفحه ترجمه" />
-  <img src="docs/screenshots/history.png" width="32%" alt="تاریخچه" />
-  <img src="docs/screenshots/settings.png" width="32%" alt="تنظیمات" />
-</p>
-
-> 💡 هنوز اسکرین‌شات نگذاشته‌اید؟ بعد از ایجاد پوشهٔ `docs/screenshots/` و گذاشتن تصاویر، این بخش نمایش داده می‌شود.
-
 ## ⚡️ شروع سریع
 
 ### برای کاربر
