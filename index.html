@@ -2,7 +2,16 @@
 <html lang="fa" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Translify — ترجمهٔ سریع، دقیق و خصوصی بین بیش از ۱۰۰ زبان، کاملاً در مرورگر">
+<meta name="theme-color" content="#0c1220" id="metaTheme">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%2300e676"/><circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="6"/><ellipse cx="50" cy="50" rx="12" ry="30" fill="none" stroke="white" stroke-width="4"/><path d="M20 50h60" stroke="white" stroke-width="4"/></svg>'>
+<meta property="og:title" content="Translify — مترجم متن">
+<meta property="og:description" content="ترجمهٔ سریع، دقیق و خصوصی بین بیش از ۱۰۰ زبان — بدون سرور، بدون ردیابی">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://codewave4.github.io/zabanpeik/">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary">
 <title>Translify — مترجم متن</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -323,6 +332,10 @@
   }
   .toast.visible{ opacity:1; transform: translateX(-50%) translateY(-4px); }
 
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline: 2px solid var(--accent1); outline-offset: 2px;
+  }
+
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
 </head>
@@ -576,7 +589,7 @@
         <button data-action="copy" aria-label="کپی"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg></button>
       </div>
     </div>
-    <div class="out-box placeholder" data-el="targetText">ترجمه اینجا نمایش داده می‌شود…</div>
+    <div class="out-box placeholder" data-el="targetText" aria-live="polite">ترجمه اینجا نمایش داده می‌شود…</div>
   </div>
 
   <div class="card status-card" data-el="statusCard" style="display:none;">
@@ -705,10 +718,13 @@ function persistSettings(){
 ============================================================ */
 const THEME_ORDER = ['dark','green','light'];
 const THEME_LABELS = { dark:'تیره', green:'مشکی و سبز', light:'روشن' };
+const THEME_COLORS = { dark:'#0c1220', green:'#000000', light:'#f3f5f9' };
 function applyTheme(){
   document.documentElement.setAttribute('data-theme', state.theme);
   const txt = document.getElementById('themeValueText');
   if(txt) txt.textContent = THEME_LABELS[state.theme] || state.theme;
+  const m = document.getElementById('metaTheme');
+  if(m) m.setAttribute('content', THEME_COLORS[state.theme] || '#0c1220');
 }
 function cycleTheme(){
   const idx = THEME_ORDER.indexOf(state.theme);
@@ -1015,12 +1031,14 @@ function detectLanguage(text){
   return best;
 }
 
+function decodeEntities(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
+
 async function tryGoogleTranslate(text, sl, tl){
   const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
   const res = await fetch(url);
   if(!res.ok) throw new Error('google-http-' + res.status);
   const data = await res.json();
-  const translated = data[0].map(chunk=> chunk[0]).join('');
+  const translated = decodeEntities(data[0].map(chunk=> chunk[0]).join(''));
   const detected = data[2] || null;
   if(!translated) throw new Error('google-empty');
   return { translated, detected, engine: 'Google Translate' };
@@ -1031,7 +1049,7 @@ async function tryMyMemory(text, sl, tl){
   const res = await fetch(url);
   const data = await res.json();
   if(data && data.responseData && data.responseData.translatedText){
-    return { translated: data.responseData.translatedText, match: data.responseData.match, engine: 'MyMemory' };
+    return { translated: decodeEntities(data.responseData.translatedText), match: data.responseData.match, engine: 'MyMemory' };
   }
   throw new Error((data && data.responseDetails) || 'mymemory-failed');
 }
@@ -1208,6 +1226,12 @@ async function explainWord(p){
    HISTORY
 ============================================================ */
 function addHistoryEntry(entry){
+  const last = state.history[0];
+  if(last && last.src === entry.src && last.to === entry.to){
+    last.time = entry.time; last.tgt = entry.tgt;
+    LS.set('tf_history', state.history);
+    return;
+  }
   state.history.unshift(entry);
   if(state.history.length > 200) state.history.pop();
   LS.set('tf_history', state.history);
@@ -1253,7 +1277,7 @@ function renderHistoryPage(){
 
   listEl.innerHTML = '';
   if(!items.length){
-    listEl.innerHTML = '<div class="empty-state">هنوز نامه‌ای در تاریخچه ثبت نشده.</div>';
+    listEl.innerHTML = '<div class="empty-state">هنوز ترجمه‌ای در تاریخچه ثبت نشده.</div>';
     return;
   }
   let lastGroup = null;
