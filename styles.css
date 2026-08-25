@@ -130,6 +130,54 @@ textarea.main-input::placeholder{ color: var(--text-dim2); }
 }
 .swap-circle svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; }
 
+/* ============================================================
+   🎛️ Engine Selector (موتور ترجمه)
+============================================================ */
+.engine-box{ margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+.engine-head{
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:700; color:var(--text-dim);
+  margin-bottom:10px;
+}
+.engine-head svg{ width:14px; height:14px; stroke:var(--accent1); fill:none; stroke-width:2; }
+.engine-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+}
+.engine-chip{
+  display:flex; align-items:center; gap:8px;
+  padding:10px 12px;
+  border-radius:12px; border:1px solid var(--border);
+  background:var(--card-2); color:var(--text-dim);
+  font-size:12.5px; font-weight:600; cursor:pointer;
+  transition: all .2s ease;
+}
+.engine-chip:hover{ border-color: rgba(var(--accent1-rgb),0.4); }
+.engine-chip.active{
+  border-color: var(--accent1); color: var(--text);
+  background: rgba(var(--accent1-rgb),0.12);
+  box-shadow: 0 0 0 1px var(--accent1) inset;
+}
+.engine-logo{
+  width:22px; height:22px; border-radius:6px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(255,255,255,0.06);
+}
+.engine-logo svg{ display:block; }
+.engine-logo.ai{ color: var(--accent1); background: rgba(var(--accent1-rgb),0.14); }
+.engine-logo.ai svg{ width:14px; height:14px; fill: currentColor; stroke: none; }
+.engine-logo.ms{ background: #fff; }
+.engine-logo.ms svg{ width:15px; height:15px; }
+.engine-logo.gg{ background:#fff; padding:3px; }
+.engine-logo.gg svg{ width:15px; height:15px; }
+.engine-logo.mm{
+  font-family:'Inter',sans-serif; font-weight:800; font-size:13px; color:#fff;
+  background: linear-gradient(135deg,#ff9966,#ff5e62);
+}
+@media (max-width:380px){
+  .engine-chip{ padding:9px 10px; }
+  .engine-chip span:last-child{ font-size:11px; }
+}
+
 .tone-row{ display:flex; gap:8px; flex-wrap:wrap; }
 .tone-chip{
   border:1px solid var(--border); background: var(--card-2); color: var(--text-dim);
@@ -315,7 +363,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 
 /* ============================================================
-   OCR Upload Styles (NEW)
+   OCR Upload Styles
 ============================================================ */
 .image-upload-container {
   margin-top: 12px;
