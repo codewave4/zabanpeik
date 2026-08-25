@@ -20,6 +20,9 @@
 <!-- فایل CSS جداگانه -->
 <link rel="stylesheet" href="styles.css">
 
+<!-- Tesseract.js برای تشخیص متن از عکس -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
 </head>
 <body>
 
@@ -121,7 +124,7 @@
       </div>
       <div id="privacyBox" style="display:none; margin-top:10px;">
         <div class="adv-note">
-          تمامی داده‌ها و ترجمه‌های شما تنها در حافظهٔ مرورگر (localStorage) ذخیره می‌شوند. هیچ سروری به داده‌های شما دسترسی ندارد. فقط برای انجام ترجمه، متن شما به APIهای عمومی Google Translate یا MyMemory ارسال می‌شود.
+          تمامی داده‌ها و ترجمه‌های شما تنها در حافظهٔ مرورگر (localStorage) ذخیره می‌شوند. هیچ سروری به داده‌های شما دسترسی ندارد. فقط برای انجام ترجمه، متن شما به APIهای عمومی Google Translate یا MyMemory ارسال می‌شود. پردازش عکس (OCR) نیز کاملاً در مرورگر شما انجام می‌شود.
         </div>
       </div>
       <div class="setting-row chevron-row" id="rowAboutLink">
@@ -136,13 +139,17 @@
     <div class="about-hero">
       <div class="app-icon"><svg viewBox="0 0 100 100" width="66%" height="66%"><path d="M46 16a30 30 0 0 1 0 60" fill="rgba(255,255,255,0.22)"/><circle cx="46" cy="46" r="30" fill="none" stroke="white" stroke-width="3"/><ellipse cx="46" cy="46" rx="12" ry="30" fill="none" stroke="white" stroke-width="1.8" opacity="0.85"/><path d="M16 46h60" stroke="white" stroke-width="1.8" opacity="0.85"/><path d="M20 30q26 12 52 0" stroke="white" stroke-width="1.5" fill="none" opacity="0.7"/><path d="M20 62q26 -12 52 0" stroke="white" stroke-width="1.5" fill="none" opacity="0.7"/><path d="M70 12a34 34 0 0 1 10 20" fill="none" stroke="white" stroke-width="3.4" stroke-linecap="round"/><path d="M76 9l7 5-3 8z" fill="white"/><path d="M20 80a34 34 0 0 1-10-20" fill="none" stroke="white" stroke-width="3.4" stroke-linecap="round"/><path d="M13 83l-7-5 3-8z" fill="white"/></svg></div>
       <h2>Translify</h2>
-      <div class="ver">v2.0.0</div>
-      <p>ابزار ترجمهٔ مدرن، سریع و خصوصی که کاملاً در مرورگر شما اجرا می‌شود — بدون نیاز به سرور، ثبت‌نام یا ارسال داده به جایی.</p>
+      <div class="ver">v2.1.0</div>
+      <p>ابزار ترجمهٔ مدرن، سریع و خصوصی که کاملاً در مرورگر شما اجرا می‌شود — بدون نیاز به سرور، ثبت‌نام یا ارسال داده به جایی. با قابلیت تشخیص متن از عکس (OCR).</p>
     </div>
     <div class="card">
       <div class="feature-item">
         <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z"/></svg></div>
         <div class="feature-text"><b>چندزبانه</b><span>پشتیبانی از بیش از ۱۰۰ زبان زنده دنیا</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="feature-text"><b>تشخیص متن از عکس</b><span>ترجمه مستقیم عکس‌ها با فناوری OCR</span></div>
       </div>
       <div class="feature-item">
         <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></div>
@@ -151,10 +158,6 @@
       <div class="feature-item">
         <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <div class="feature-text"><b>حریم خصوصی</b><span>همه چیز در مرورگر شما باقی می‌ماند</span></div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 22l-6-4-6 4 1.5-8.5L2 9h7z"/></svg></div>
-        <div class="feature-text"><b>طراحی زیبا</b><span>رابط کاربری مدرن با پشتیبانی کامل از RTL</span></div>
       </div>
     </div>
     <div class="contact-buttons">
@@ -166,19 +169,35 @@
 
 </div>
 
-<!-- Translate Template (used by buildPanel) -->
+<!-- Translate Template -->
 <template id="translateTemplate">
   <div class="card">
     <div class="input-head">
       <span>متن شما</span>
-      <div style="display:flex; gap:6px;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button class="chip-btn" data-action="paste"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4H5.5A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg>چسباندن</button>
         <button class="chip-btn" data-action="clear"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>پاک</button>
         <button class="chip-btn" data-action="mic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>صدا</button>
+        <button class="chip-btn" data-action="upload-image"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>عکس</button>
       </div>
     </div>
-    <textarea class="main-input" data-el="sourceText" placeholder="متنی برای ترجمه وارد کنید..."></textarea>
+    <textarea class="main-input" data-el="sourceText" placeholder="متنی برای ترجمه وارد کنید یا عکس آپلود کنید..."></textarea>
     <div class="input-foot"><span>کاراکتر</span><span data-el="charCount">0 / 5000</span></div>
+
+    <!-- بخش آپلود عکس و OCR -->
+    <div class="image-upload-container">
+      <input type="file" class="file-input-hidden" data-el="imageInput" accept="image/*">
+      <img class="image-preview" data-el="imagePreview" alt="پیش‌نمایش عکس">
+      <button class="upload-btn" data-action="trigger-upload" data-el="uploadBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span>آپلود عکس برای استخراج متن (OCR)</span>
+      </button>
+      <div class="ocr-progress" data-el="ocrProgress">
+        <div class="ocr-progress-bar" data-el="ocrProgressBar"></div>
+      </div>
+      <div class="ocr-status" data-el="ocrStatus"></div>
+      <button class="clear-image-btn" data-action="clear-image" data-el="clearImageBtn" type="button">✕ پاک کردن عکس</button>
+    </div>
 
     <div class="lang-row">
       <div class="lang-field" data-action="pick-from">
