@@ -89,11 +89,22 @@ const LANGS = [
 const LANG_MAP = Object.fromEntries(LANGS.map(l=>[l[0],l]));
 const TTS_LOCALE_OVERRIDES = { fa:'fa-IR', en:'en-US', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', ur:'ur-PK', ar:'ar-SA' };
 
+// کد زبان Tesseract برای هر زبان
+const TESSERACT_LANG_MAP = {
+  fa:'fas', en:'eng', ar:'ara', fr:'fra', de:'deu', es:'spa', it:'ita', pt:'por',
+  ru:'rus', tr:'tur', zh:'chi_sim', ja:'jpn', ko:'kor', hi:'hin', ur:'urd', he:'heb',
+  nl:'nld', pl:'pol', sv:'swe', id:'ind', uk:'ukr', el:'ell', cs:'ces', ro:'ron',
+  hu:'hun', da:'dan', fi:'fin', no:'nor', bg:'bul', hr:'hrv', sk:'slk', sl:'slv',
+  lt:'lit', lv:'lav', et:'est', sr:'srp', th:'tha', vi:'vie', ta:'tam', te:'tel',
+  bn:'ben', default:'eng'
+};
+
 function flagUrl(cc){ 
   if(!cc) return 'https://cdn.jsdelivr.net/gh/HatScripts/circle-flags/flags/un.svg';
   return 'https://cdn.jsdelivr.net/gh/HatScripts/circle-flags/flags/' + cc + '.svg'; 
 }
 function ttsLocale(code){ return TTS_LOCALE_OVERRIDES[code] || (code + '-' + code.toUpperCase()); }
+function tesseractLang(code){ return TESSERACT_LANG_MAP[code] || TESSERACT_LANG_MAP.default; }
 
 /* ============================================================
    STORAGE HELPERS
@@ -191,6 +202,109 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
 
 /* ============================================================
+   OCR (Image to Text) - Tesseract.js
+============================================================ */
+function getOcrLangCode(panel){
+  // اگر auto باشه، ترکیب فارسی و انگلیسی استفاده می‌کنیم
+  if(panel.from === 'auto'){
+    return 'fas+eng';
+  }
+  return tesseractLang(panel.from);
+}
+
+async function handleImageUpload(panel, file) {
+  if (!file) return;
+  
+  if (!file.type.startsWith('image/')) {
+    showToast('لطفاً یک فایل تصویری انتخاب کنید');
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('حجم عکس نباید بیشتر از ۱۰ مگابایت باشد');
+    return;
+  }
+
+  // بررسی اینکه تِسِرَکت بارگذاری شده
+  if (typeof Tesseract === 'undefined') {
+    showToast('کتابخانه OCR بارگذاری نشده است. صفحه را رفرش کنید.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    panel.imagePreview.src = e.target.result;
+    panel.imagePreview.classList.add('visible');
+    panel.clearImageBtn.classList.add('visible');
+    panel.uploadBtn.style.display = 'none';
+    performOCR(panel, e.target.result);
+  };
+  reader.onerror = () => {
+    showToast('خطا در خواندن فایل');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function performOCR(panel, imageData) {
+  panel.ocrStatus.textContent = 'در حال بارگذاری موتور تشخیص متن...';
+  panel.ocrProgress.classList.add('visible');
+  panel.ocrProgressBar.style.width = '0%';
+
+  const ocrLang = getOcrLangCode(panel);
+
+  try {
+    const result = await Tesseract.recognize(
+      imageData,
+      ocrLang,
+      {
+        logger: (m) => {
+          if (m.status === 'recognizing text') {
+            const progress = Math.round(m.progress * 100);
+            panel.ocrProgressBar.style.width = progress + '%';
+            panel.ocrStatus.textContent = 'در حال استخراج متن... ' + progress + '%';
+          }
+        }
+      }
+    );
+
+    const extractedText = (result.data.text || '').trim();
+    
+    if (extractedText) {
+      panel.sourceText.value = extractedText;
+      updateCharCount(panel);
+      panel.ocrStatus.textContent = '✓ متن استخراج شد (' + extractedText.length + ' کاراکتر)';
+      
+      // ترجمه خودکار اگر متن کافی باشد
+      if (extractedText.length > 3) {
+        setTimeout(() => runTranslate(panel), 600);
+      }
+    } else {
+      panel.ocrStatus.textContent = 'متنی در عکس پیدا نشد';
+    }
+    
+    setTimeout(() => {
+      panel.ocrProgress.classList.remove('visible');
+    }, 1500);
+    
+  } catch (err) {
+    console.error('OCR Error:', err);
+    panel.ocrStatus.textContent = 'خطا در استخراج متن — دوباره تلاش کنید';
+    panel.ocrProgress.classList.remove('visible');
+    showToast('خطا در OCR — لطفاً عکس واضح‌تری آپلود کنید');
+  }
+}
+
+function clearImage(panel) {
+  panel.imagePreview.src = '';
+  panel.imagePreview.classList.remove('visible');
+  panel.clearImageBtn.classList.remove('visible');
+  panel.uploadBtn.style.display = 'flex';
+  panel.ocrStatus.textContent = '';
+  panel.ocrProgress.classList.remove('visible');
+  panel.ocrProgressBar.style.width = '0%';
+}
+
+/* ============================================================
    TRANSLATE PANEL
 ============================================================ */
 const panels = {};
@@ -225,6 +339,15 @@ function buildPanel(pageId, showExtras){
     recentList: el('recentList'),
     extraSuggestions: el('extraSuggestions'),
     extraRecent: el('extraRecent'),
+    // فیلدهای جدید مربوط به عکس
+    imageInput: el('imageInput'),
+    imagePreview: el('imagePreview'),
+    uploadBtn: el('uploadBtn'),
+    ocrProgress: el('ocrProgress'),
+    ocrProgressBar: el('ocrProgressBar'),
+    ocrStatus: el('ocrStatus'),
+    clearImageBtn: el('clearImageBtn'),
+    // وضعیت پنل
     from: state.defaultFrom,
     to: state.defaultTo,
     lastDetected: null,
@@ -257,6 +380,7 @@ function buildPanel(pageId, showExtras){
     if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ runTranslate(p); }
   });
 
+  // ============ میکروفون ============
   const micBtn = container.querySelector('[data-action="mic"]');
   const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRec){
@@ -282,6 +406,30 @@ function buildPanel(pageId, showExtras){
     });
   }
 
+  // ============ عکس (OCR) ============
+  const uploadChipBtn = container.querySelector('[data-action="upload-image"]');
+  if(uploadChipBtn){
+    uploadChipBtn.addEventListener('click', ()=>{ p.imageInput.click(); });
+  }
+
+  p.uploadBtn.addEventListener('click', ()=>{
+    p.imageInput.click();
+  });
+
+  p.imageInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if (file) {
+      handleImageUpload(p, file);
+    }
+    // ریست کردن input برای امکان انتخاب مجدد همان فایل
+    e.target.value = '';
+  });
+
+  p.clearImageBtn.addEventListener('click', ()=>{
+    clearImage(p);
+  });
+
+  // ============ انتخاب زبان ============
   container.querySelector('[data-action="pick-from"]').addEventListener('click', ()=> openLangSheet(p, 'from'));
   container.querySelector('[data-action="pick-to"]').addEventListener('click', ()=> openLangSheet(p, 'to'));
   container.querySelector('[data-action="swap"]').addEventListener('click', ()=>{
@@ -521,7 +669,7 @@ async function runTranslate(p){
 
     if(state.saveHistory){
       addHistoryEntry({ time: Date.now(), from: result.detected, to: p.to, src: text, tgt: finalText, fav:false });
-      if(!p.recentBody.classList.contains('open') === false) renderRecent(p);
+      if(p.recentBody.classList.contains('open')) renderRecent(p);
     }
     updateLangLabels(p);
   } catch(err){
