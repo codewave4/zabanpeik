@@ -2,89 +2,7 @@
    LANGUAGES DATA
 ============================================================ */
 const LANGS = [
-  ["auto","تشخیص خودکار","auto"],
-  ["fa","فارسی","ir"],
-  ["en","انگلیسی","gb"],
-  ["ar","عربی","sa"],
-  ["fr","فرانسوی","fr"],
-  ["de","آلمانی","de"],
-  ["es","اسپانیایی","es"],
-  ["it","ایتالیایی","it"],
-  ["pt","پرتغالی","pt"],
-  ["ru","روسی","ru"],
-  ["tr","ترکی استانبولی","tr"],
-  ["zh","چینی","cn"],
-  ["ja","ژاپنی","jp"],
-  ["ko","کره‌ای","kr"],
-  ["hi","هندی","in"],
-  ["ur","اردو","pk"],
-  ["he","عبری","il"],
-  ["nl","هلندی","nl"],
-  ["pl","لهستانی","pl"],
-  ["sv","سوئدی","se"],
-  ["id","اندونزیایی","id"],
-  ["ms","مالایی","my"],
-  ["th","تایلندی","th"],
-  ["vi","ویتنامی","vn"],
-  ["uk","اوکراینی","ua"],
-  ["el","یونانی","gr"],
-  ["cs","چکی","cz"],
-  ["ro","رومانیایی","ro"],
-  ["hu","مجارستانی","hu"],
-  ["da","دانمارکی","dk"],
-  ["fi","فنلاندی","fi"],
-  ["no","نروژی","no"],
-  ["bg","بلغاری","bg"],
-  ["hr","کروات","hr"],
-  ["sk","اسلواک","sk"],
-  ["sl","اسلوونیایی","si"],
-  ["lt","لیتوانیایی","lt"],
-  ["lv","لتونیایی","lv"],
-  ["et","استونیایی","ee"],
-  ["sr","صربی","rs"],
-  ["mk","مقدونی","mk"],
-  ["sq","آلبانیایی","al"],
-  ["hy","ارمنی","am"],
-  ["az","آذربایجانی","az"],
-  ["ka","گرجی","ge"],
-  ["kk","قزاقی","kz"],
-  ["uz","ازبکی","uz"],
-  ["tg","تاجیکی","tj"],
-  ["sw","سواحیلی","tz"],
-  ["af","آفریقانس","za"],
-  ["bn","بنگالی","bd"],
-  ["ta","تامیلی","lk"],
-  ["te","تلوگو","in"],
-  ["ml","مالایالم","in"],
-  ["si","سینهالی","lk"],
-  ["my","برمه‌ای","mm"],
-  ["km","خمری","kh"],
-  ["lo","لائوسی","la"],
-  ["tl","تاگالوگ","ph"],
-  ["ne","نپالی","np"],
-  ["mn","مغولی","mn"],
-  ["ps","پشتو","af"],
-  ["ku","کردی","iq"],
-  ["ckb","کردی سورانی","iq"],
-  ["sd","سندی","pk"],
-  ["ug","اویغوری","cn"],
-  ["yi","ییدیش",""],
-  ["ga","ایرلندی","ie"],
-  ["cy","ولزی","gb-wls"],
-  ["eu","باسکی","es-pv"],
-  ["ca","کاتالان","es-ct"],
-  ["gl","گالیسی","es-ga"],
-  ["mt","مالتی","mt"],
-  ["is","ایسلندی","is"],
-  ["lb","لوکزامبورگی","lu"],
-  ["bs","بوسنیایی","ba"],
-  ["eo","اسپرانتو",""],
-  ["la","لاتین","va"],
-  ["haw","هاوایی","us"],
-  ["mi","مائوری","nz"],
-  ["sm","ساموآیی","ws"],
-  ["to","تونگایی","to"],
-  ["fj","فیجیایی","fj"]
+  ["auto","تشخیص خودکار","auto"],["fa","فارسی","ir"],["en","انگلیسی","gb"],["ar","عربی","sa"],["fr","فرانسوی","fr"],["de","آلمانی","de"],["es","اسپانیایی","es"],["it","ایتالیایی","it"],["pt","پرتغالی","pt"],["ru","روسی","ru"],["tr","ترکی استانبولی","tr"],["zh","چینی","cn"],["ja","ژاپنی","jp"],["ko","کره‌ای","kr"],["hi","هندی","in"],["ur","اردو","pk"],["he","عبری","il"],["nl","هلندی","nl"],["pl","لهستانی","pl"],["sv","سوئدی","se"],["id","اندونزیایی","id"],["ms","مالایی","my"],["th","تایلندی","th"],["vi","ویتنامی","vn"],["uk","اوکراینی","ua"],["el","یونانی","gr"],["cs","چکی","cz"],["ro","رومانیایی","ro"],["hu","مجارستانی","hu"],["da","دانمارکی","dk"],["fi","فنلاندی","fi"],["no","نروژی","no"],["bg","بلغاری","bg"],["hr","کروات","hr"],["sk","اسلواک","sk"],["sl","اسلوونیایی","si"],["lt","لیتوانیایی","lt"],["lv","لتونیایی","lv"],["et","استونیایی","ee"],["sr","صربی","rs"],["mk","مقدونی","mk"],["sq","آلبانیایی","al"],["hy","ارمنی","am"],["az","آذربایجانی","az"],["ka","گرجی","ge"],["kk","قزاقی","kz"],["uz","ازبکی","uz"],["tg","تاجیکی","tj"],["sw","سواحیلی","tz"],["af","آفریقانس","za"],["bn","بنگالی","bd"],["ta","تامیلی","lk"],["te","تلوگو","in"],["ml","مالایالم","in"],["si","سینهالی","lk"],["my","برمه‌ای","mm"],["km","خمری","kh"],["lo","لائوسی","la"],["tl","تاگالوگ","ph"],["ne","نپالی","np"],["mn","مغولی","mn"],["ps","پشتو","af"],["ku","کردی","iq"],["ckb","کردی سورانی","iq"],["sd","سندی","pk"],["ug","اویغوری","cn"],["yi","ییدیش",""],["ga","ایرلندی","ie"],["cy","ولزی","gb-wls"],["eu","باسکی","es-pv"],["ca","کاتالان","es-ct"],["gl","گالیسی","es-ga"],["mt","مالتی","mt"],["is","ایسلندی","is"],["lb","لوکزامبورگی","lu"],["bs","بوسنیایی","ba"],["eo","اسپرانتو",""],["la","لاتین","va"],["haw","هاوایی","us"],["mi","مائوری","nz"],["sm","ساموآیی","ws"],["to","تونگایی","to"],["fj","فیجیایی","fj"]
 ];
 const LANG_MAP = Object.fromEntries(LANGS.map(l=>[l[0],l]));
 const TTS_LOCALE_OVERRIDES = { fa:'fa-IR', en:'en-US', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', ur:'ur-PK', ar:'ar-SA' };
@@ -122,6 +40,7 @@ const state = {
   ttsEnabled: LS.get('tf_tts', true),
   statsEnabled: LS.get('tf_stats', true),
   saveHistory: LS.get('tf_savehistory', true),
+  engine: LS.get('tf_engine', 'ai'),
   history: LS.get('tf_history', [])
 };
 
@@ -134,6 +53,7 @@ function persistSettings(){
   LS.set('tf_tts', state.ttsEnabled);
   LS.set('tf_stats', state.statsEnabled);
   LS.set('tf_savehistory', state.saveHistory);
+  LS.set('tf_engine', state.engine);
 }
 
 /* ============================================================
@@ -201,36 +121,30 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
 
 /* ============================================================
-   SMART TEXT PREPARATION (NEW - fix translation quality)
+   SMART TEXT PREPARATION
 ============================================================ */
 function prepareTextForTranslation(raw){
   let t = (raw || '').replace(/\r/g, '');
-
-  // ۱) حذف نویزهای OCR و علائم سرگردان
+  t = t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{2BFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{20E3}]/gu, '');
   t = t
-    .replace(/[|=]{2,}/g, ' ')              // ==  ||  ===
-    .replace(/\s\|\s/g, ' ')                // | تنها
-    .replace(/(^|\n)\s*&\s*/g, '$1')        // & اول خط
-    .replace(/\s&(\s|$)/g, ' ')             // & جدا افتاده
-    .replace(/^\s*[-–—]{2,}\s*$/gm, '');    // خطِ فقط خط‌تیره
-
-  // ۲) نرمال‌سازی فاصله‌ها
+    .replace(/[|=]{2,}/g, ' ')
+    .replace(/\s\|\s/g, ' ')
+    .replace(/(^|\n)\s*&\s*/g, '$1')
+    .replace(/\s&(\s|$)/g, ' ')
+    .replace(/^\s*[-–—]{2,}\s*$/gm, '');
+  t = t.replace(/^\s*[a-zA-Z0-9]\s*$/gm, '');
+  t = t.replace(/(^|\n)[\s\-–—=|_]+(?=\S)/g, '$1');
   t = t.replace(/[ \t]+/g, ' ');
-
-  // ۳) ادغام خط‌های شکسته؛ خط خالی = جداکنندهٔ پاراگراف
   const paras = t.split(/\n\s*\n+/);
   t = paras
     .map(p => p.split('\n').map(s => s.trim()).filter(Boolean).join(' '))
     .filter(Boolean)
     .join('\n\n');
-
-  // ۴) اصلاح فاصلهٔ علائم نگارشی
   t = t
     .replace(/ ([.,،؛:!؟»)\]])/g, '$1')
     .replace(/([\[(«]) /g, '$1')
     .replace(/ {2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n');
-
   return t.trim();
 }
 
@@ -257,50 +171,19 @@ function chunkText(text, maxLen){
   return chunks.length ? chunks : [text];
 }
 
-async function translateTextSmart(text, fromCode, toCode){
-  const chunks = chunkText(text, 1800);
-  if(chunks.length === 1){
-    return translateText(chunks[0], fromCode, toCode);
-  }
-  let detected = null, engine = null, confidence = null;
-  const parts = [];
-  for(const c of chunks){
-    const r = await translateText(c, fromCode, toCode);
-    detected = detected || r.detected;
-    engine = r.engine;
-    if(confidence == null && r.confidence != null) confidence = r.confidence;
-    parts.push(r.translated);
-  }
-  return { translated: parts.join('\n\n'), detected, engine, confidence };
-}
-
 /* ============================================================
    OCR (Image to Text) - Tesseract.js
 ============================================================ */
 function getOcrLangCode(panel){
-  if(panel.from === 'auto'){
-    return 'fas+eng';
-  }
+  if(panel.from === 'auto') return 'fas+eng';
   return tesseractLang(panel.from);
 }
 
 async function handleImageUpload(panel, file) {
   if (!file) return;
-  
-  if (!file.type.startsWith('image/')) {
-    showToast('لطفاً یک فایل تصویری انتخاب کنید');
-    return;
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    showToast('حجم عکس نباید بیشتر از ۱۰ مگابایت باشد');
-    return;
-  }
-
-  if (typeof Tesseract === 'undefined') {
-    showToast('کتابخانه OCR بارگذاری نشده است. صفحه را رفرش کنید.');
-    return;
-  }
+  if (!file.type.startsWith('image/')) { showToast('لطفاً یک فایل تصویری انتخاب کنید'); return; }
+  if (file.size > 10 * 1024 * 1024) { showToast('حجم عکس نباید بیشتر از ۱۰ مگابایت باشد'); return; }
+  if (typeof Tesseract === 'undefined') { showToast('کتابخانه OCR بارگذاری نشده است. صفحه را رفرش کنید.'); return; }
 
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -310,9 +193,7 @@ async function handleImageUpload(panel, file) {
     panel.uploadBtn.style.display = 'none';
     performOCR(panel, e.target.result);
   };
-  reader.onerror = () => {
-    showToast('خطا در خواندن فایل');
-  };
+  reader.onerror = () => { showToast('خطا در خواندن فایل'); };
   reader.readAsDataURL(file);
 }
 
@@ -324,21 +205,16 @@ async function performOCR(panel, imageData) {
   const ocrLang = getOcrLangCode(panel);
 
   try {
-    const result = await Tesseract.recognize(
-      imageData,
-      ocrLang,
-      {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            const progress = Math.round(m.progress * 100);
-            panel.ocrProgressBar.style.width = progress + '%';
-            panel.ocrStatus.textContent = 'در حال استخراج متن... ' + progress + '%';
-          }
+    const result = await Tesseract.recognize(imageData, ocrLang, {
+      logger: (m) => {
+        if (m.status === 'recognizing text') {
+          const progress = Math.round(m.progress * 100);
+          panel.ocrProgressBar.style.width = progress + '%';
+          panel.ocrStatus.textContent = 'در حال استخراج متن... ' + progress + '%';
         }
       }
-    );
+    });
 
-    // ✨ تمیز کردن متن استخراج‌شده قبل از نمایش و ترجمه
     let extractedText = prepareTextForTranslation(result.data.text);
     if(!extractedText) extractedText = (result.data.text || '').trim();
     
@@ -346,17 +222,11 @@ async function performOCR(panel, imageData) {
       panel.sourceText.value = extractedText;
       updateCharCount(panel);
       panel.ocrStatus.textContent = '✓ متن استخراج شد (' + extractedText.length + ' کاراکتر)';
-      
-      if (extractedText.length > 3) {
-        setTimeout(() => runTranslate(panel), 600);
-      }
+      if (extractedText.length > 3) setTimeout(() => runTranslate(panel), 600);
     } else {
       panel.ocrStatus.textContent = 'متنی در عکس پیدا نشد';
     }
-    
-    setTimeout(() => {
-      panel.ocrProgress.classList.remove('visible');
-    }, 1500);
+    setTimeout(() => { panel.ocrProgress.classList.remove('visible'); }, 1500);
     
   } catch (err) {
     console.error('OCR Error:', err);
@@ -431,6 +301,7 @@ function buildPanel(pageId, showExtras){
 
   updateLangLabels(p);
   updateCharCount(p);
+  syncEngineUI(p);
 
   container.querySelector('[data-action="paste"]').addEventListener('click', async ()=>{
     try{
@@ -476,24 +347,25 @@ function buildPanel(pageId, showExtras){
   }
 
   const uploadChipBtn = container.querySelector('[data-action="upload-image"]');
-  if(uploadChipBtn){
-    uploadChipBtn.addEventListener('click', ()=>{ p.imageInput.click(); });
-  }
-
-  p.uploadBtn.addEventListener('click', ()=>{
-    p.imageInput.click();
-  });
-
+  if(uploadChipBtn){ uploadChipBtn.addEventListener('click', ()=>{ p.imageInput.click(); }); }
+  p.uploadBtn.addEventListener('click', ()=>{ p.imageInput.click(); });
   p.imageInput.addEventListener('change', (e)=>{
     const file = e.target.files[0];
-    if (file) {
-      handleImageUpload(p, file);
-    }
+    if (file) handleImageUpload(p, file);
     e.target.value = '';
   });
+  p.clearImageBtn.addEventListener('click', ()=>{ clearImage(p); });
 
-  p.clearImageBtn.addEventListener('click', ()=>{
-    clearImage(p);
+  // 🎛️ انتخاب موتور ترجمه (هر پنل جداگانه)
+  container.querySelectorAll('.engine-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      state.engine = chip.dataset.engine;
+      persistSettings();
+      // آپدیت همهٔ پنل‌ها
+      Object.values(panels).forEach(pn=> syncEngineUI(pn));
+      const name = ENGINE_NAMES[state.engine] || state.engine;
+      showToast('موتور ترجمه: ' + name);
+    });
   });
 
   container.querySelector('[data-action="pick-from"]').addEventListener('click', ()=> openLangSheet(p, 'from'));
@@ -589,6 +461,18 @@ function isShortInput(text){
 }
 
 /* ============================================================
+   ENGINE SELECTOR (موتور ترجمه)
+============================================================ */
+const ENGINE_NAMES = { ai:'هوش مصنوعی', microsoft:'مایکروسافت', google:'گوگل', mymemory:'MyMemory' };
+
+function syncEngineUI(panel){
+  if(!panel || !panel.root) return;
+  panel.root.querySelectorAll('.engine-chip').forEach(ch=>{
+    ch.classList.toggle('active', ch.dataset.engine === state.engine);
+  });
+}
+
+/* ============================================================
    LANGUAGE PICKER SHEET
 ============================================================ */
 let sheetTarget = null;
@@ -636,7 +520,7 @@ function renderSheetList(query){
 }
 
 /* ============================================================
-   TRANSLATION ENGINES
+   TRANSLATION ENGINES (زنجیرهٔ هوشمند)
 ============================================================ */
 function detectLanguage(text){
   const t = text.trim();
@@ -668,6 +552,40 @@ function detectLanguage(text){
 
 function decodeEntities(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
 
+/* --- موتور ۱: هوش مصنوعی (Pollinations - رایگان بدون کلید) --- */
+async function tryAITranslate(text, fromCode, toCode){
+  const targetName = (LANG_MAP[toCode] && LANG_MAP[toCode][1]) || toCode;
+  const sourceName = (fromCode !== 'auto' && LANG_MAP[fromCode]) ? LANG_MAP[fromCode][1] : '';
+  const sys = 'You are a professional translator. Translate the user text from ' + (sourceName || 'the detected language') + ' to ' + targetName + '. Keep the tone, style and paragraph breaks natural and fluent. Return ONLY the translated text, nothing else — no explanations, no prefixes, no quotes.';
+  try{
+    const res = await fetch('https://text.pollinations.ai/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model:'openai', messages:[ {role:'system', content: sys}, {role:'user', content: text} ] })
+    });
+    if(res.ok){
+      const out = (await res.text()).trim();
+      if(out) return { translated: out, engine: 'هوش مصنوعی (AI)' };
+    }
+  }catch(e){}
+  const res2 = await fetch('https://text.pollinations.ai/' + encodeURIComponent(sys + '\n\n' + text));
+  if(!res2.ok) throw new Error('ai-http-' + res2.status);
+  const out2 = (await res2.text()).trim();
+  if(!out2) throw new Error('ai-empty');
+  return { translated: out2, engine: 'هوش مصنوعی (AI)' };
+}
+
+/* --- موتور ۲: مایکروسافت (Edge - رایگان بدون کلید) --- */
+async function tryEdgeTranslate(text, sl, tl){
+  const url = 'https://edge.microsoft.com/translate/translatetext?from=' + encodeURIComponent(sl) + '&to=' + encodeURIComponent(tl) + '&text=' + encodeURIComponent(text);
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('edge-http-' + res.status);
+  const out = (await res.text()).trim();
+  if(!out) throw new Error('edge-empty');
+  return { translated: out, engine: 'Microsoft Translator' };
+}
+
+/* --- موتور ۳: گوگل --- */
 async function tryGoogleTranslate(text, sl, tl){
   const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
   const res = await fetch(url);
@@ -679,6 +597,7 @@ async function tryGoogleTranslate(text, sl, tl){
   return { translated, detected, engine: 'Google Translate' };
 }
 
+/* --- موتور ۴: مای‌مموری --- */
 async function tryMyMemory(text, sl, tl){
   const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sl+'|'+tl;
   const res = await fetch(url);
@@ -689,24 +608,56 @@ async function tryMyMemory(text, sl, tl){
   throw new Error((data && data.responseDetails) || 'mymemory-failed');
 }
 
+/* --- زنجیرهٔ ترجمه: اول موتور انتخابی، بعد فال‌بک --- */
 async function translateText(text, fromCode, toCode){
-  let sourceForApi = fromCode === 'auto' ? 'auto' : fromCode;
-  try{
-    const g = await tryGoogleTranslate(text, sourceForApi, toCode);
-    const detected = fromCode === 'auto' ? (g.detected || detectLanguage(text)) : fromCode;
-    return { translated: g.translated, detected, engine: g.engine, confidence: null };
-  } catch(e){
-    const detected = fromCode === 'auto' ? detectLanguage(text) : fromCode;
-    const m = await tryMyMemory(text, detected, toCode);
-    return { translated: m.translated, detected, engine: m.engine, confidence: m.match };
+  const det = fromCode === 'auto' ? detectLanguage(text) : fromCode;
+  const seq = [state.engine, 'ai', 'microsoft', 'google', 'mymemory'].filter((v,i,a)=> a.indexOf(v) === i);
+  let lastErr = null;
+  for(const eng of seq){
+    try{
+      if(eng === 'ai'){
+        const a = await tryAITranslate(text, fromCode, toCode);
+        return { translated: a.translated, detected: det, engine: a.engine, confidence: null };
+      }
+      if(eng === 'microsoft'){
+        const e = await tryEdgeTranslate(text, det, toCode);
+        return { translated: e.translated, detected: det, engine: e.engine, confidence: null };
+      }
+      if(eng === 'google'){
+        const g = await tryGoogleTranslate(text, fromCode === 'auto' ? 'auto' : fromCode, toCode);
+        const d2 = fromCode === 'auto' ? (g.detected || det) : fromCode;
+        return { translated: g.translated, detected: d2, engine: g.engine, confidence: null };
+      }
+      if(eng === 'mymemory'){
+        const m = await tryMyMemory(text, det, toCode);
+        return { translated: m.translated, detected: det, engine: m.engine, confidence: m.match };
+      }
+    }catch(e){ lastErr = e; }
   }
+  throw lastErr || new Error('all-engines-failed');
+}
+
+async function translateTextSmart(text, fromCode, toCode){
+  const chunks = chunkText(text, 1800);
+  if(chunks.length === 1){
+    return translateText(chunks[0], fromCode, toCode);
+  }
+  let detected = null, engine = null, confidence = null;
+  const parts = [];
+  for(const c of chunks){
+    const r = await translateText(c, fromCode, toCode);
+    detected = detected || r.detected;
+    engine = r.engine;
+    if(confidence == null && r.confidence != null) confidence = r.confidence;
+    parts.push(r.translated);
+  }
+  return { translated: parts.join('\n\n'), detected, engine, confidence };
 }
 
 /* ============================================================
-   RUN TRANSLATE (با متن تمیزشده)
+   RUN TRANSLATE
 ============================================================ */
 async function runTranslate(p){
-  // ✨ تمیز و آماده‌سازی متن قبل از ارسال به موتور ترجمه
   const text = prepareTextForTranslation(p.sourceText.value);
   if(!text){ showToast('ابتدا متنی وارد کنید'); return; }
 
