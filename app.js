@@ -89,7 +89,6 @@ const LANGS = [
 const LANG_MAP = Object.fromEntries(LANGS.map(l=>[l[0],l]));
 const TTS_LOCALE_OVERRIDES = { fa:'fa-IR', en:'en-US', zh:'zh-CN', ja:'ja-JP', ko:'ko-KR', ur:'ur-PK', ar:'ar-SA' };
 
-// کد زبان Tesseract برای هر زبان
 const TESSERACT_LANG_MAP = {
   fa:'fas', en:'eng', ar:'ara', fr:'fra', de:'deu', es:'spa', it:'ita', pt:'por',
   ru:'rus', tr:'tur', zh:'chi_sim', ja:'jpn', ko:'kor', hi:'hin', ur:'urd', he:'heb',
@@ -202,10 +201,83 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
 
 /* ============================================================
+   SMART TEXT PREPARATION (NEW - fix translation quality)
+============================================================ */
+function prepareTextForTranslation(raw){
+  let t = (raw || '').replace(/\r/g, '');
+
+  // ۱) حذف نویزهای OCR و علائم سرگردان
+  t = t
+    .replace(/[|=]{2,}/g, ' ')              // ==  ||  ===
+    .replace(/\s\|\s/g, ' ')                // | تنها
+    .replace(/(^|\n)\s*&\s*/g, '$1')        // & اول خط
+    .replace(/\s&(\s|$)/g, ' ')             // & جدا افتاده
+    .replace(/^\s*[-–—]{2,}\s*$/gm, '');    // خطِ فقط خط‌تیره
+
+  // ۲) نرمال‌سازی فاصله‌ها
+  t = t.replace(/[ \t]+/g, ' ');
+
+  // ۳) ادغام خط‌های شکسته؛ خط خالی = جداکنندهٔ پاراگراف
+  const paras = t.split(/\n\s*\n+/);
+  t = paras
+    .map(p => p.split('\n').map(s => s.trim()).filter(Boolean).join(' '))
+    .filter(Boolean)
+    .join('\n\n');
+
+  // ۴) اصلاح فاصلهٔ علائم نگارشی
+  t = t
+    .replace(/ ([.,،؛:!؟»)\]])/g, '$1')
+    .replace(/([\[(«]) /g, '$1')
+    .replace(/ {2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n');
+
+  return t.trim();
+}
+
+function chunkText(text, maxLen){
+  if(text.length <= maxLen) return [text];
+  const paras = text.split(/\n\n+/);
+  const chunks = [];
+  let cur = '';
+  const push = ()=>{ if(cur.trim()) chunks.push(cur.trim()); cur = ''; };
+  for(const p of paras){
+    if(p.length > maxLen){
+      push();
+      const sentences = p.match(/[^.!?؟…]+[.!?؟…]*\s*/g) || [p];
+      for(const s of sentences){
+        if((cur + ' ' + s).length > maxLen && cur) push();
+        cur = cur ? cur + ' ' + s : s;
+      }
+      continue;
+    }
+    if((cur + '\n\n' + p).length > maxLen && cur) push();
+    cur = cur ? cur + '\n\n' + p : p;
+  }
+  push();
+  return chunks.length ? chunks : [text];
+}
+
+async function translateTextSmart(text, fromCode, toCode){
+  const chunks = chunkText(text, 1800);
+  if(chunks.length === 1){
+    return translateText(chunks[0], fromCode, toCode);
+  }
+  let detected = null, engine = null, confidence = null;
+  const parts = [];
+  for(const c of chunks){
+    const r = await translateText(c, fromCode, toCode);
+    detected = detected || r.detected;
+    engine = r.engine;
+    if(confidence == null && r.confidence != null) confidence = r.confidence;
+    parts.push(r.translated);
+  }
+  return { translated: parts.join('\n\n'), detected, engine, confidence };
+}
+
+/* ============================================================
    OCR (Image to Text) - Tesseract.js
 ============================================================ */
 function getOcrLangCode(panel){
-  // اگر auto باشه، ترکیب فارسی و انگلیسی استفاده می‌کنیم
   if(panel.from === 'auto'){
     return 'fas+eng';
   }
@@ -225,7 +297,6 @@ async function handleImageUpload(panel, file) {
     return;
   }
 
-  // بررسی اینکه تِسِرَکت بارگذاری شده
   if (typeof Tesseract === 'undefined') {
     showToast('کتابخانه OCR بارگذاری نشده است. صفحه را رفرش کنید.');
     return;
@@ -267,14 +338,15 @@ async function performOCR(panel, imageData) {
       }
     );
 
-    const extractedText = (result.data.text || '').trim();
+    // ✨ تمیز کردن متن استخراج‌شده قبل از نمایش و ترجمه
+    let extractedText = prepareTextForTranslation(result.data.text);
+    if(!extractedText) extractedText = (result.data.text || '').trim();
     
     if (extractedText) {
       panel.sourceText.value = extractedText;
       updateCharCount(panel);
       panel.ocrStatus.textContent = '✓ متن استخراج شد (' + extractedText.length + ' کاراکتر)';
       
-      // ترجمه خودکار اگر متن کافی باشد
       if (extractedText.length > 3) {
         setTimeout(() => runTranslate(panel), 600);
       }
@@ -339,7 +411,6 @@ function buildPanel(pageId, showExtras){
     recentList: el('recentList'),
     extraSuggestions: el('extraSuggestions'),
     extraRecent: el('extraRecent'),
-    // فیلدهای جدید مربوط به عکس
     imageInput: el('imageInput'),
     imagePreview: el('imagePreview'),
     uploadBtn: el('uploadBtn'),
@@ -347,7 +418,6 @@ function buildPanel(pageId, showExtras){
     ocrProgressBar: el('ocrProgressBar'),
     ocrStatus: el('ocrStatus'),
     clearImageBtn: el('clearImageBtn'),
-    // وضعیت پنل
     from: state.defaultFrom,
     to: state.defaultTo,
     lastDetected: null,
@@ -380,7 +450,6 @@ function buildPanel(pageId, showExtras){
     if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ runTranslate(p); }
   });
 
-  // ============ میکروفون ============
   const micBtn = container.querySelector('[data-action="mic"]');
   const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRec){
@@ -406,7 +475,6 @@ function buildPanel(pageId, showExtras){
     });
   }
 
-  // ============ عکس (OCR) ============
   const uploadChipBtn = container.querySelector('[data-action="upload-image"]');
   if(uploadChipBtn){
     uploadChipBtn.addEventListener('click', ()=>{ p.imageInput.click(); });
@@ -421,7 +489,6 @@ function buildPanel(pageId, showExtras){
     if (file) {
       handleImageUpload(p, file);
     }
-    // ریست کردن input برای امکان انتخاب مجدد همان فایل
     e.target.value = '';
   });
 
@@ -429,7 +496,6 @@ function buildPanel(pageId, showExtras){
     clearImage(p);
   });
 
-  // ============ انتخاب زبان ============
   container.querySelector('[data-action="pick-from"]').addEventListener('click', ()=> openLangSheet(p, 'from'));
   container.querySelector('[data-action="pick-to"]').addEventListener('click', ()=> openLangSheet(p, 'to'));
   container.querySelector('[data-action="swap"]').addEventListener('click', ()=>{
@@ -637,10 +703,11 @@ async function translateText(text, fromCode, toCode){
 }
 
 /* ============================================================
-   RUN TRANSLATE
+   RUN TRANSLATE (با متن تمیزشده)
 ============================================================ */
 async function runTranslate(p){
-  const text = p.sourceText.value.trim();
+  // ✨ تمیز و آماده‌سازی متن قبل از ارسال به موتور ترجمه
+  const text = prepareTextForTranslation(p.sourceText.value);
   if(!text){ showToast('ابتدا متنی وارد کنید'); return; }
 
   const btn = p.root.querySelector('[data-action="translate"]');
@@ -648,7 +715,7 @@ async function runTranslate(p){
   p.ctaLabel.textContent = 'در حال ترجمه…';
 
   try{
-    const result = await translateText(text, p.from, p.to);
+    const result = await translateTextSmart(text, p.from, p.to);
     const finalText = result.translated;
     p.lastDetected = result.detected;
     p.targetText.textContent = finalText;
