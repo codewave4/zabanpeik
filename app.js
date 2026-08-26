@@ -121,28 +121,28 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
 
 /* ============================================================
-   SMART TEXT PREPARATION (تقویت‌شده با قوانین ضد-OCR)
+   SMART TEXT PREPARATION (ضد-OCR)
 ============================================================ */
 function prepareTextForTranslation(raw){
   let t = (raw || '').replace(/\r/g, '');
 
-  // ۱) حذف ایموجی و علائم تصویری (OCR اون‌ها رو به گلیف مزخرف تبدیل می‌کنه)
+  // ۱) حذف ایموجی و علائم تصویری
   t = t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{2BFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{20E3}]/gu, '');
 
-  // ۲) حذف کاراکترهای کنترلی و نامرئی (به‌جز newline و tab)
+  // ۲) حذف کاراکترهای کنترلی و نامرئی
   t = t.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
   t = t.replace(/[\u200B\u200D\u200E\u200F\uFEFF]/g, '');
 
-  // ۳) چسباندن کلماتی که سر خط با خط‌تیره شکسته شدن: "unprece-\ndented" → "unprecedented"
+  // ۳) چسباندن کلمات شکسته با خط‌تیره سر خط
   t = t.replace(/([A-Za-z])-\s*\n\s*([A-Za-z])/g, '$1$2');
 
-  // ۴) حذف کلمهٔ کوتاه مزخرفِ اول پاراگراف که به "--" چسبیده (مثل "fran--،")
+  // ۴) حذف کلمهٔ کوتاه مزخرفِ قبل از "--"
   t = t.replace(/(^|\n\n)[A-Za-z]{1,6}(?=--)/g, '$1');
 
-  // ۵) حذف "--" های اضافه (نشونهٔ گلیف خراب OCR)
+  // ۵) حذف "--" های اضافه
   t = t.replace(/-{2,}/g, ' ');
 
-  // ۶) حذف a / an / n سرگردانِ اول پاراگراف (از شکست خط OCR مونده)
+  // ۶) حذف a / an / n سرگردان اول پاراگراف
   t = t.replace(/(^|\n)(?:a|an|n)\s+(?=[A-Z][a-z])/g, '$1');
 
   // ۷) حذف نویزهای عمومی
@@ -153,16 +153,16 @@ function prepareTextForTranslation(raw){
     .replace(/\s&(\s|$)/g, ' ')
     .replace(/^\s*[-–—]{2,}\s*$/gm, '');
 
-  // ۸) خط‌هایی که فقط یک حرف تنها هستن = نویز
+  // ۸) خط‌های تک‌حرفی = نویز
   t = t.replace(/^\s*[a-zA-Z0-9]\s*$/gm, '');
 
-  // ۹) حذف خط‌تیره/نویز اولِ پاراگراف
+  // ۹) حذف نویز اول پاراگراف
   t = t.replace(/(^|\n)[\s\-–—=|_]+(?=\S)/g, '$1');
 
   // ۱۰) نرمال‌سازی فاصله‌ها
   t = t.replace(/[ \t]+/g, ' ');
 
-  // ۱۱) ادغام خط‌های شکسته؛ خط خالی = جداکنندهٔ پاراگراف
+  // ۱۱) ادغام خط‌های شکسته
   const paras = t.split(/\n\s*\n+/);
   t = paras
     .map(p => p.split('\n').map(s => s.trim()).filter(Boolean).join(' '))
@@ -203,6 +203,56 @@ function chunkText(text, maxLen){
 }
 
 /* ============================================================
+   🧹 IMAGE PREPROCESSING — حذف ایموجی/آیکون رنگی قبل از OCR
+============================================================ */
+function preprocessImageForOcr(dataUrl){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        // بزرگ‌نمایی عکس‌های کوچیک برای دقت بیشتر OCR
+        let scale = 1;
+        if(img.width < 700) scale = 2;
+        const maxW = 2000;
+        if(img.width * scale > maxW) scale = maxW / img.width;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const d = id.data;
+
+        // تشخیص تم تیره/روشن از میانگین روشنایی
+        let sum = 0, cnt = 0;
+        for(let i = 0; i < d.length; i += 16){
+          sum += 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+          cnt++;
+        }
+        const dark = (sum / cnt) < 128;
+        const bg = dark ? 14 : 255;
+
+        // حذف پیکسل‌های رنگی (ایموجی، آیکون، لینک رنگی) → فقط متن خالص
+        for(let i = 0; i < d.length; i += 4){
+          const r = d[i], g = d[i+1], b = d[i+2];
+          const max = Math.max(r,g,b), min = Math.min(r,g,b);
+          const sat = max === 0 ? 0 : (max - min) / max;
+          if(sat > 0.30 && max > 50){
+            d[i] = bg; d[i+1] = bg; d[i+2] = bg;
+          }
+        }
+        ctx.putImageData(id, 0, 0);
+        resolve(canvas);
+      }catch(e){ reject(e); }
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+/* ============================================================
    OCR (Image to Text) - Tesseract.js
 ============================================================ */
 function getOcrLangCode(panel){
@@ -229,14 +279,22 @@ async function handleImageUpload(panel, file) {
 }
 
 async function performOCR(panel, imageData) {
-  panel.ocrStatus.textContent = 'در حال بارگذاری موتور تشخیص متن...';
+  panel.ocrStatus.textContent = '🧹 در حال پاک‌سازی عکس و حذف ایموجی‌ها...';
   panel.ocrProgress.classList.add('visible');
   panel.ocrProgressBar.style.width = '0%';
 
   const ocrLang = getOcrLangCode(panel);
 
   try {
-    const result = await Tesseract.recognize(imageData, ocrLang, {
+    // ✨ حذف ایموجی‌ها و عناصر رنگی از خودِ عکس، قبل از OCR
+    let ocrInput = imageData;
+    try {
+      ocrInput = await preprocessImageForOcr(imageData);
+    } catch(e){
+      ocrInput = imageData;
+    }
+
+    const result = await Tesseract.recognize(ocrInput, ocrLang, {
       logger: (m) => {
         if (m.status === 'recognizing text') {
           const progress = Math.round(m.progress * 100);
@@ -246,14 +304,13 @@ async function performOCR(panel, imageData) {
       }
     });
 
-    // ✨ تمیز کردن قوی متن قبل از نمایش و ترجمه
     let extractedText = prepareTextForTranslation(result.data.text);
     if(!extractedText) extractedText = (result.data.text || '').trim();
     
     if (extractedText) {
       panel.sourceText.value = extractedText;
       updateCharCount(panel);
-      panel.ocrStatus.textContent = '✓ متن استخراج شد (' + extractedText.length + ' کاراکتر)';
+      panel.ocrStatus.textContent = '✓ متن خالص استخراج شد (' + extractedText.length + ' کاراکتر)';
       if (extractedText.length > 3) setTimeout(() => runTranslate(panel), 600);
     } else {
       panel.ocrStatus.textContent = 'متنی در عکس پیدا نشد';
@@ -388,7 +445,6 @@ function buildPanel(pageId, showExtras){
   });
   p.clearImageBtn.addEventListener('click', ()=>{ clearImage(p); });
 
-  // 🎛️ انتخاب موتور ترجمه
   container.querySelectorAll('.engine-chip').forEach(chip=>{
     chip.addEventListener('click', ()=>{
       state.engine = chip.dataset.engine;
@@ -583,7 +639,6 @@ function detectLanguage(text){
 
 function decodeEntities(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
 
-/* --- گوگل --- */
 async function tryGoogleTranslate(text, sl, tl){
   const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
   const res = await fetch(url);
@@ -595,7 +650,6 @@ async function tryGoogleTranslate(text, sl, tl){
   return { translated, detected, engine: 'Google Translate' };
 }
 
-/* --- Lingva --- */
 const LINGVA_INSTANCES = [
   'https://translate.plausibility.cloud',
   'https://lingva.ml',
@@ -619,7 +673,6 @@ async function tryLingvaTranslate(text, sl, tl){
   throw lastErr || new Error('lingva-failed');
 }
 
-/* --- LibreTranslate --- */
 const LIBRE_INSTANCES = [
   'https://translate.plausibility.cloud',
   'https://translate.cutie.dating',
@@ -648,7 +701,6 @@ async function tryLibreTranslate(text, sl, tl){
   throw lastErr || new Error('libre-failed');
 }
 
-/* --- MyMemory --- */
 async function tryMyMemory(text, sl, tl){
   const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sl+'|'+tl;
   const res = await fetch(url);
@@ -659,7 +711,6 @@ async function tryMyMemory(text, sl, tl){
   throw new Error((data && data.responseDetails) || 'mymemory-failed');
 }
 
-/* --- زنجیرهٔ ترجمه --- */
 async function translateText(text, fromCode, toCode){
   const det = fromCode === 'auto' ? detectLanguage(text) : fromCode;
   const seq = [state.engine, 'google', 'lingva', 'libre', 'mymemory'].filter((v,i,a)=> a.indexOf(v) === i);
