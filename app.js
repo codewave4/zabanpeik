@@ -121,30 +121,61 @@ document.querySelectorAll('.nav-btn').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('settings'));
 
 /* ============================================================
-   SMART TEXT PREPARATION
+   SMART TEXT PREPARATION (تقویت‌شده با قوانین ضد-OCR)
 ============================================================ */
 function prepareTextForTranslation(raw){
   let t = (raw || '').replace(/\r/g, '');
+
+  // ۱) حذف ایموجی و علائم تصویری (OCR اون‌ها رو به گلیف مزخرف تبدیل می‌کنه)
   t = t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{2BFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{20E3}]/gu, '');
+
+  // ۲) حذف کاراکترهای کنترلی و نامرئی (به‌جز newline و tab)
+  t = t.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
+  t = t.replace(/[\u200B\u200D\u200E\u200F\uFEFF]/g, '');
+
+  // ۳) چسباندن کلماتی که سر خط با خط‌تیره شکسته شدن: "unprece-\ndented" → "unprecedented"
+  t = t.replace(/([A-Za-z])-\s*\n\s*([A-Za-z])/g, '$1$2');
+
+  // ۴) حذف کلمهٔ کوتاه مزخرفِ اول پاراگراف که به "--" چسبیده (مثل "fran--،")
+  t = t.replace(/(^|\n\n)[A-Za-z]{1,6}(?=--)/g, '$1');
+
+  // ۵) حذف "--" های اضافه (نشونهٔ گلیف خراب OCR)
+  t = t.replace(/-{2,}/g, ' ');
+
+  // ۶) حذف a / an / n سرگردانِ اول پاراگراف (از شکست خط OCR مونده)
+  t = t.replace(/(^|\n)(?:a|an|n)\s+(?=[A-Z][a-z])/g, '$1');
+
+  // ۷) حذف نویزهای عمومی
   t = t
     .replace(/[|=]{2,}/g, ' ')
     .replace(/\s\|\s/g, ' ')
     .replace(/(^|\n)\s*&\s*/g, '$1')
     .replace(/\s&(\s|$)/g, ' ')
     .replace(/^\s*[-–—]{2,}\s*$/gm, '');
+
+  // ۸) خط‌هایی که فقط یک حرف تنها هستن = نویز
   t = t.replace(/^\s*[a-zA-Z0-9]\s*$/gm, '');
+
+  // ۹) حذف خط‌تیره/نویز اولِ پاراگراف
   t = t.replace(/(^|\n)[\s\-–—=|_]+(?=\S)/g, '$1');
+
+  // ۱۰) نرمال‌سازی فاصله‌ها
   t = t.replace(/[ \t]+/g, ' ');
+
+  // ۱۱) ادغام خط‌های شکسته؛ خط خالی = جداکنندهٔ پاراگراف
   const paras = t.split(/\n\s*\n+/);
   t = paras
     .map(p => p.split('\n').map(s => s.trim()).filter(Boolean).join(' '))
     .filter(Boolean)
     .join('\n\n');
+
+  // ۱۲) اصلاح فاصلهٔ علائم نگارشی
   t = t
     .replace(/ ([.,،؛:!؟»)\]])/g, '$1')
     .replace(/([\[(«]) /g, '$1')
     .replace(/ {2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n');
+
   return t.trim();
 }
 
@@ -215,6 +246,7 @@ async function performOCR(panel, imageData) {
       }
     });
 
+    // ✨ تمیز کردن قوی متن قبل از نمایش و ترجمه
     let extractedText = prepareTextForTranslation(result.data.text);
     if(!extractedText) extractedText = (result.data.text || '').trim();
     
@@ -460,7 +492,7 @@ function isShortInput(text){
 }
 
 /* ============================================================
-   ENGINE SELECTOR (موتور ترجمه)
+   ENGINE SELECTOR
 ============================================================ */
 const ENGINE_NAMES = { google:'گوگل', lingva:'Lingva', libre:'LibreTranslate', mymemory:'MyMemory' };
 
@@ -519,7 +551,7 @@ function renderSheetList(query){
 }
 
 /* ============================================================
-   TRANSLATION ENGINES (همه تأییدشده توسط Claude)
+   TRANSLATION ENGINES
 ============================================================ */
 function detectLanguage(text){
   const t = text.trim();
@@ -551,7 +583,7 @@ function detectLanguage(text){
 
 function decodeEntities(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
 
-/* --- موتور ۱: گوگل (تأییدشده ✅) --- */
+/* --- گوگل --- */
 async function tryGoogleTranslate(text, sl, tl){
   const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
   const res = await fetch(url);
@@ -563,7 +595,7 @@ async function tryGoogleTranslate(text, sl, tl){
   return { translated, detected, engine: 'Google Translate' };
 }
 
-/* --- موتور ۲: Lingva (کیفیت نسخهٔ وب گوگل ✅ با mirror چرخشی) --- */
+/* --- Lingva --- */
 const LINGVA_INSTANCES = [
   'https://translate.plausibility.cloud',
   'https://lingva.ml',
@@ -587,7 +619,7 @@ async function tryLingvaTranslate(text, sl, tl){
   throw lastErr || new Error('lingva-failed');
 }
 
-/* --- موتور ۳: LibreTranslate (موتور عصبی متن‌باز ✅ با mirror چرخشی) --- */
+/* --- LibreTranslate --- */
 const LIBRE_INSTANCES = [
   'https://translate.plausibility.cloud',
   'https://translate.cutie.dating',
@@ -616,7 +648,7 @@ async function tryLibreTranslate(text, sl, tl){
   throw lastErr || new Error('libre-failed');
 }
 
-/* --- موتور ۴: MyMemory (تأییدشده ✅) --- */
+/* --- MyMemory --- */
 async function tryMyMemory(text, sl, tl){
   const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sl+'|'+tl;
   const res = await fetch(url);
@@ -627,7 +659,7 @@ async function tryMyMemory(text, sl, tl){
   throw new Error((data && data.responseDetails) || 'mymemory-failed');
 }
 
-/* --- زنجیرهٔ ترجمه: اول موتور انتخابی، بعد فال‌بک هوشمند --- */
+/* --- زنجیرهٔ ترجمه --- */
 async function translateText(text, fromCode, toCode){
   const det = fromCode === 'auto' ? detectLanguage(text) : fromCode;
   const seq = [state.engine, 'google', 'lingva', 'libre', 'mymemory'].filter((v,i,a)=> a.indexOf(v) === i);
