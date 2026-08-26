@@ -40,7 +40,7 @@ const state = {
   ttsEnabled: LS.get('tf_tts', true),
   statsEnabled: LS.get('tf_stats', true),
   saveHistory: LS.get('tf_savehistory', true),
-  engine: LS.get('tf_engine', 'ai'),
+  engine: LS.get('tf_engine', 'google'),
   history: LS.get('tf_history', [])
 };
 
@@ -356,12 +356,11 @@ function buildPanel(pageId, showExtras){
   });
   p.clearImageBtn.addEventListener('click', ()=>{ clearImage(p); });
 
-  // 🎛️ انتخاب موتور ترجمه (هر پنل جداگانه)
+  // 🎛️ انتخاب موتور ترجمه
   container.querySelectorAll('.engine-chip').forEach(chip=>{
     chip.addEventListener('click', ()=>{
       state.engine = chip.dataset.engine;
       persistSettings();
-      // آپدیت همهٔ پنل‌ها
       Object.values(panels).forEach(pn=> syncEngineUI(pn));
       const name = ENGINE_NAMES[state.engine] || state.engine;
       showToast('موتور ترجمه: ' + name);
@@ -463,7 +462,7 @@ function isShortInput(text){
 /* ============================================================
    ENGINE SELECTOR (موتور ترجمه)
 ============================================================ */
-const ENGINE_NAMES = { ai:'هوش مصنوعی', microsoft:'مایکروسافت', google:'گوگل', mymemory:'MyMemory' };
+const ENGINE_NAMES = { google:'گوگل', lingva:'Lingva', libre:'LibreTranslate', mymemory:'MyMemory' };
 
 function syncEngineUI(panel){
   if(!panel || !panel.root) return;
@@ -520,7 +519,7 @@ function renderSheetList(query){
 }
 
 /* ============================================================
-   TRANSLATION ENGINES (زنجیرهٔ هوشمند)
+   TRANSLATION ENGINES (همه تأییدشده توسط Claude)
 ============================================================ */
 function detectLanguage(text){
   const t = text.trim();
@@ -552,40 +551,7 @@ function detectLanguage(text){
 
 function decodeEntities(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
 
-/* --- موتور ۱: هوش مصنوعی (Pollinations - رایگان بدون کلید) --- */
-async function tryAITranslate(text, fromCode, toCode){
-  const targetName = (LANG_MAP[toCode] && LANG_MAP[toCode][1]) || toCode;
-  const sourceName = (fromCode !== 'auto' && LANG_MAP[fromCode]) ? LANG_MAP[fromCode][1] : '';
-  const sys = 'You are a professional translator. Translate the user text from ' + (sourceName || 'the detected language') + ' to ' + targetName + '. Keep the tone, style and paragraph breaks natural and fluent. Return ONLY the translated text, nothing else — no explanations, no prefixes, no quotes.';
-  try{
-    const res = await fetch('https://text.pollinations.ai/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model:'openai', messages:[ {role:'system', content: sys}, {role:'user', content: text} ] })
-    });
-    if(res.ok){
-      const out = (await res.text()).trim();
-      if(out) return { translated: out, engine: 'هوش مصنوعی (AI)' };
-    }
-  }catch(e){}
-  const res2 = await fetch('https://text.pollinations.ai/' + encodeURIComponent(sys + '\n\n' + text));
-  if(!res2.ok) throw new Error('ai-http-' + res2.status);
-  const out2 = (await res2.text()).trim();
-  if(!out2) throw new Error('ai-empty');
-  return { translated: out2, engine: 'هوش مصنوعی (AI)' };
-}
-
-/* --- موتور ۲: مایکروسافت (Edge - رایگان بدون کلید) --- */
-async function tryEdgeTranslate(text, sl, tl){
-  const url = 'https://edge.microsoft.com/translate/translatetext?from=' + encodeURIComponent(sl) + '&to=' + encodeURIComponent(tl) + '&text=' + encodeURIComponent(text);
-  const res = await fetch(url);
-  if(!res.ok) throw new Error('edge-http-' + res.status);
-  const out = (await res.text()).trim();
-  if(!out) throw new Error('edge-empty');
-  return { translated: out, engine: 'Microsoft Translator' };
-}
-
-/* --- موتور ۳: گوگل --- */
+/* --- موتور ۱: گوگل (تأییدشده ✅) --- */
 async function tryGoogleTranslate(text, sl, tl){
   const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
   const res = await fetch(url);
@@ -597,7 +563,60 @@ async function tryGoogleTranslate(text, sl, tl){
   return { translated, detected, engine: 'Google Translate' };
 }
 
-/* --- موتور ۴: مای‌مموری --- */
+/* --- موتور ۲: Lingva (کیفیت نسخهٔ وب گوگل ✅ با mirror چرخشی) --- */
+const LINGVA_INSTANCES = [
+  'https://translate.plausibility.cloud',
+  'https://lingva.ml',
+  'https://lingva.lunar.icu',
+  'https://lingva.garudalinux.org'
+];
+async function tryLingvaTranslate(text, sl, tl){
+  let lastErr = null;
+  for(const base of LINGVA_INSTANCES){
+    try{
+      const url = base + '/api/v1/' + sl + '/' + tl + '/' + encodeURIComponent(text);
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('lingva-http-' + res.status);
+      const data = await res.json();
+      if(data && data.translation && data.translation.trim()){
+        return { translated: data.translation, engine: 'Lingva (گوگل پیشرفته)' };
+      }
+      throw new Error('lingva-empty');
+    }catch(e){ lastErr = e; }
+  }
+  throw lastErr || new Error('lingva-failed');
+}
+
+/* --- موتور ۳: LibreTranslate (موتور عصبی متن‌باز ✅ با mirror چرخشی) --- */
+const LIBRE_INSTANCES = [
+  'https://translate.plausibility.cloud',
+  'https://translate.cutie.dating',
+  'https://translate.fedilab.app',
+  'https://translate.igna.wtf',
+  'https://translate.dr460nf1r3.org',
+  'https://translate.jae.fi'
+];
+async function tryLibreTranslate(text, sl, tl){
+  let lastErr = null;
+  for(const base of LIBRE_INSTANCES){
+    try{
+      const res = await fetch(base + '/api/v1/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: text, source: sl, target: tl, format: 'text' })
+      });
+      if(!res.ok) throw new Error('libre-http-' + res.status);
+      const data = await res.json();
+      if(data && data.translatedText && data.translatedText.trim()){
+        return { translated: data.translatedText, engine: 'LibreTranslate' };
+      }
+      throw new Error('libre-empty');
+    }catch(e){ lastErr = e; }
+  }
+  throw lastErr || new Error('libre-failed');
+}
+
+/* --- موتور ۴: MyMemory (تأییدشده ✅) --- */
 async function tryMyMemory(text, sl, tl){
   const url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+sl+'|'+tl;
   const res = await fetch(url);
@@ -608,25 +627,25 @@ async function tryMyMemory(text, sl, tl){
   throw new Error((data && data.responseDetails) || 'mymemory-failed');
 }
 
-/* --- زنجیرهٔ ترجمه: اول موتور انتخابی، بعد فال‌بک --- */
+/* --- زنجیرهٔ ترجمه: اول موتور انتخابی، بعد فال‌بک هوشمند --- */
 async function translateText(text, fromCode, toCode){
   const det = fromCode === 'auto' ? detectLanguage(text) : fromCode;
-  const seq = [state.engine, 'ai', 'microsoft', 'google', 'mymemory'].filter((v,i,a)=> a.indexOf(v) === i);
+  const seq = [state.engine, 'google', 'lingva', 'libre', 'mymemory'].filter((v,i,a)=> a.indexOf(v) === i);
   let lastErr = null;
   for(const eng of seq){
     try{
-      if(eng === 'ai'){
-        const a = await tryAITranslate(text, fromCode, toCode);
-        return { translated: a.translated, detected: det, engine: a.engine, confidence: null };
-      }
-      if(eng === 'microsoft'){
-        const e = await tryEdgeTranslate(text, det, toCode);
-        return { translated: e.translated, detected: det, engine: e.engine, confidence: null };
-      }
       if(eng === 'google'){
         const g = await tryGoogleTranslate(text, fromCode === 'auto' ? 'auto' : fromCode, toCode);
         const d2 = fromCode === 'auto' ? (g.detected || det) : fromCode;
         return { translated: g.translated, detected: d2, engine: g.engine, confidence: null };
+      }
+      if(eng === 'lingva'){
+        const l = await tryLingvaTranslate(text, fromCode, toCode);
+        return { translated: l.translated, detected: det, engine: l.engine, confidence: null };
+      }
+      if(eng === 'libre'){
+        const lb = await tryLibreTranslate(text, det, toCode);
+        return { translated: lb.translated, detected: det, engine: lb.engine, confidence: null };
       }
       if(eng === 'mymemory'){
         const m = await tryMyMemory(text, det, toCode);
