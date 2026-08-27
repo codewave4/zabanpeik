@@ -125,57 +125,32 @@ document.getElementById('menuBtn').addEventListener('click', ()=> goToPage('sett
 ============================================================ */
 function prepareTextForTranslation(raw){
   let t = (raw || '').replace(/\r/g, '');
-
-  // ۱) حذف ایموجی و علائم تصویری
   t = t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{2BFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\u{20E3}]/gu, '');
-
-  // ۲) حذف کاراکترهای کنترلی و نامرئی
   t = t.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '');
   t = t.replace(/[\u200B\u200D\u200E\u200F\uFEFF]/g, '');
-
-  // ۳) چسباندن کلمات شکسته با خط‌تیره سر خط
   t = t.replace(/([A-Za-z])-\s*\n\s*([A-Za-z])/g, '$1$2');
-
-  // ۴) حذف کلمهٔ کوتاه مزخرفِ قبل از "--"
   t = t.replace(/(^|\n\n)[A-Za-z]{1,6}(?=--)/g, '$1');
-
-  // ۵) حذف "--" های اضافه
   t = t.replace(/-{2,}/g, ' ');
-
-  // ۶) حذف a / an / n سرگردان اول پاراگراف
   t = t.replace(/(^|\n)(?:a|an|n)\s+(?=[A-Z][a-z])/g, '$1');
-
-  // ۷) حذف نویزهای عمومی
   t = t
     .replace(/[|=]{2,}/g, ' ')
     .replace(/\s\|\s/g, ' ')
     .replace(/(^|\n)\s*&\s*/g, '$1')
     .replace(/\s&(\s|$)/g, ' ')
     .replace(/^\s*[-–—]{2,}\s*$/gm, '');
-
-  // ۸) خط‌های تک‌حرفی = نویز
   t = t.replace(/^\s*[a-zA-Z0-9]\s*$/gm, '');
-
-  // ۹) حذف نویز اول پاراگراف
   t = t.replace(/(^|\n)[\s\-–—=|_]+(?=\S)/g, '$1');
-
-  // ۱۰) نرمال‌سازی فاصله‌ها
   t = t.replace(/[ \t]+/g, ' ');
-
-  // ۱۱) ادغام خط‌های شکسته
   const paras = t.split(/\n\s*\n+/);
   t = paras
     .map(p => p.split('\n').map(s => s.trim()).filter(Boolean).join(' '))
     .filter(Boolean)
     .join('\n\n');
-
-  // ۱۲) اصلاح فاصلهٔ علائم نگارشی
   t = t
     .replace(/ ([.,،؛:!؟»)\]])/g, '$1')
     .replace(/([\[(«]) /g, '$1')
     .replace(/ {2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n');
-
   return t.trim();
 }
 
@@ -210,7 +185,6 @@ function preprocessImageForOcr(dataUrl){
     const img = new Image();
     img.onload = ()=>{
       try{
-        // بزرگ‌نمایی عکس‌های کوچیک برای دقت بیشتر OCR
         let scale = 1;
         if(img.width < 700) scale = 2;
         const maxW = 2000;
@@ -225,7 +199,6 @@ function preprocessImageForOcr(dataUrl){
         const id = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const d = id.data;
 
-        // تشخیص تم تیره/روشن از میانگین روشنایی
         let sum = 0, cnt = 0;
         for(let i = 0; i < d.length; i += 16){
           sum += 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
@@ -234,7 +207,6 @@ function preprocessImageForOcr(dataUrl){
         const dark = (sum / cnt) < 128;
         const bg = dark ? 14 : 255;
 
-        // حذف پیکسل‌های رنگی (ایموجی، آیکون، لینک رنگی) → فقط متن خالص
         for(let i = 0; i < d.length; i += 4){
           const r = d[i], g = d[i+1], b = d[i+2];
           const max = Math.max(r,g,b), min = Math.min(r,g,b);
@@ -286,7 +258,6 @@ async function performOCR(panel, imageData) {
   const ocrLang = getOcrLangCode(panel);
 
   try {
-    // ✨ حذف ایموجی‌ها و عناصر رنگی از خودِ عکس، قبل از OCR
     let ocrInput = imageData;
     try {
       ocrInput = await preprocessImageForOcr(imageData);
@@ -1097,6 +1068,42 @@ document.getElementById('rowPrivacy').addEventListener('click', ()=>{
 });
 
 document.getElementById('rowAboutLink').addEventListener('click', ()=> goToPage('about'));
+
+/* ============================================================
+   📲 PWA — نصب اپلیکیشن + سرویس‌ورکر
+============================================================ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstall = e;
+  const row = document.getElementById('rowInstall');
+  if (row) row.style.display = 'flex';
+});
+
+const rowInstallEl = document.getElementById('rowInstall');
+if (rowInstallEl) {
+  rowInstallEl.addEventListener('click', async () => {
+    if (!deferredInstall) {
+      showToast('از منوی مرورگر گزینهٔ «افزودن به صفحهٔ خانگی» را بزنید');
+      return;
+    }
+    deferredInstall.prompt();
+    try {
+      const choice = await deferredInstall.userChoice;
+      if (choice.outcome === 'accepted') showToast('در حال نصب Translify…');
+    } catch(e){}
+    deferredInstall = null;
+    rowInstallEl.style.display = 'none';
+  });
+}
+
+window.addEventListener('appinstalled', () => showToast('✓ Translify با موفقیت نصب شد!'));
 
 /* ============================================================
    INIT
