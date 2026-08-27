@@ -1,0 +1,21 @@
+{
+  "name": "Translify — مترجم متن",
+  "short_name": "Translify",
+  "description": "ترجمهٔ سریع، دقیق و خصوصی بین بیش از ۱۰۰ زبان — همراه با تشخیص متن از عکس",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c1220",
+  "theme_color": "#0c1220",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
